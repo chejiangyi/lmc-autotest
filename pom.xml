@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.lmc.business</groupId>
+		<artifactId>lmc-business-dependencies</artifactId>
+		<version>1.1.0-SNAPSHOT</version>
+		<relativePath/>
+	</parent>
+
+	<groupId>com.lmc.autotest</groupId>
+	<artifactId>lmc-autotest</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<modules>
+		<module>lmc-autotest-api</module>
+		<module>lmc-autotest-service</module>
+		<module>lmc-autotest-dao</module>
+		<module>lmc-autotest-core</module>
+		<module>lmc-autotest-provider</module>
+		<module>lmc-autotest-task</module>
+	</modules>
+</project>
