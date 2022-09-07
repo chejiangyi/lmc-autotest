@@ -1,0 +1,9 @@
+/*分页 begin*/
+.page_list{width:75%;}
+.page_list a{ text-decoration: none;font-size:75%;color:#666; display: block;float: left;width:46px;height:46px;line-height:46px;
+    margin-right: 10px;text-align: center;background-color: #fff;border:1px solid #dedede;}
+.page_list a.top_page,.page_list a.end_page{width:62px;}
+.page_list a.page_prev,.page_list a.page_next{width:76px;}
+.page_list span.page_ellipsis{display: block;float: left;width:46px;height:46px;margin-right: 10px;background-position:5px -88px;border:none;}
+.page_list a:hover ,.page_list a.current{background-color: #dedede;color:#333;}
+/*分页 end*/

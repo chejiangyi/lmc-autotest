@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="/content/css/css.css" rel="stylesheet"/>
+    <link href="/content/themes/base/jquery.ui.all.css" rel="stylesheet"/>
+    <title>流程使用帮助文档</title>
+</head>
+<body>
+<div id="apihelp">
+    流程引擎配置文档
+    1. 动态接口支持
+    使用目的:用于动态调用第三方接口获取值，使用方式【api.方法】
+    使用范围:动态脚本,人工节点获取审批人value
+
+    1) 【api.httpGet】
+    描述: 动态调用http get请求
+    传入参数:
+
+    返回结果:
+
+    动态参数示例:
+    【api.httpGet('http://www.baidu.com/?a=【@aaa】&b=【@bbb】')】
+    字符串示例:
+    【api.httpGet('http://www.baidu.com/')】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【api.httpGet('http://www.baidu.com/')】"
+
+    2)  【user.getByDepartment】
+    描述: 动态调用获取“流程引擎”用户部门用户集合
+    传入参数:
+
+    返回结果: String
+
+    动态参数示例:
+    【user.getByDepartment('组织1','部门1')】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【user.getByDepartment('组织1','部门1')】"
+
+    3) 【user.getByParentDepartment】
+    描述: 动态调用获取“流程引擎”用户上级部门用户集合
+    传入参数:
+
+    返回结果:
+
+    动态参数示例:
+    【user.getByParentDepartment('组织1','111',-2)】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【user.getByParentDepartment('组织1','222',1)】"
+
+    4) 【api.num】
+    描述: 动态调用获取用户审批结果数量 （仅在路由动态脚本中有效）
+    传入参数:
+
+    返回结果:
+
+    动态参数示例:
+    【api.httpGet('http://www.baidu.com/?a=【@aaa】&b=【@bbb】')】
+    字符串示例:
+    【api.httpGet('http://www.baidu.com/')】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【api.httpGet('http://www.baidu.com/')】"
+
+    5) 【@动态变量】
+    描述: 动态调用获取动态变量
+    获取动态参数示例:
+    【@bbb】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【@bbb】"
+
+    流程引擎配置文档
+    1. 动态接口支持
+    使用目的:用于动态调用第三方接口获取值，使用方式【api.方法】
+    使用范围:动态脚本,人工节点获取审批人value
+
+    1) 【api.httpGet】
+    描述: 动态调用http get请求
+    传入参数:
+
+    返回结果:
+
+    动态参数示例:
+    【api.httpGet('http://www.baidu.com/?a=【@aaa】&b=【@bbb】')】
+    字符串示例:
+    【api.httpGet('http://www.baidu.com/')】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【api.httpGet('http://www.baidu.com/')】"
+
+    2)  【user.getByDepartment】
+    描述: 动态调用获取“流程引擎”用户部门用户集合
+    传入参数:
+
+    返回结果: String
+
+    动态参数示例:
+    【user.getByDepartment('组织1','部门1')】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【user.getByDepartment('组织1','部门1')】"
+
+    3) 【user.getByParentDepartment】
+    描述: 动态调用获取“流程引擎”用户上级部门用户集合
+    传入参数:
+
+    返回结果:
+
+    动态参数示例:
+    【user.getByParentDepartment('组织1','111',-2)】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【user.getByParentDepartment('组织1','222',1)】"
+
+    4) 【api.num】
+    描述: 动态调用获取用户审批结果数量 （仅在路由动态脚本中有效）
+    传入参数:
+
+    返回结果:
+
+    动态参数示例:
+    【api.httpGet('http://www.baidu.com/?a=【@aaa】&b=【@bbb】')】
+    字符串示例:
+    【api.httpGet('http://www.baidu.com/')】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【api.httpGet('http://www.baidu.com/')】"
+
+    5) 【@动态变量】
+    描述: 动态调用获取动态变量
+    获取动态参数示例:
+    【@bbb】
+    返回结果赋值动态参数示例: (注意:仅在动态脚本中有效)
+    param['aaa']="【@bbb】"
+
+</div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+﻿.NameList li{float: left;padding-left: 10px;height: 25px;line-height: 25px;min-width: 105px;}
+.NameList li label{display: inline;}
+
+.Select li{ float: left;padding-left: 10px;height: 25px;line-height: 25px;min-width: 105px; }
+.Select li label{display: inline;}

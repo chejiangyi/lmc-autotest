@@ -1,0 +1,74 @@
+.lkform{
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction:row;
+    justify-content:flex-start;
+    align-content: flex-start;
+}
+.lkform .lkicon{
+    width:25px;
+    height:25px;
+
+}
+.lkform .lkformTool{
+    left: 0px;
+    top: -5px;
+    position: absolute;
+    display: flex;
+    flex-direction:row;
+    align-items: flex-start;
+    z-index: 1000;
+}
+.lktool{
+    padding: 5px 5px 5px 5px;
+    left:5px;
+    top:100px;
+    position: absolute;
+    /*border: #000000 0px solid;*/
+    background-color: #7abaff;
+    width: 100px;
+    /*禁止焦点*/
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    z-index: 1000;
+}
+.lktool .lktoolConatiner{
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+}
+.lktool .lktoolMove{
+    cursor: pointer;
+    width: 150px;
+    width:20px;
+    height:20px;
+    left:-10px;
+    top:-10px;
+    position: absolute;
+}
+.lkdrag{
+    /*cursor: move;*/
+    cursor: url("http://localhost:8082/content/form/img/drag.png"),auto;
+    /*http://localhost:8082*/
+
+}
+
+.lkControl{
+    /*position: absolute;*/
+}
+.lkEdit{
+    border: 1px dashed red;
+}
+.lkControl .lkControlTool{
+    left: 0px;
+    top: -20px;
+    position:absolute;
+    display: flex;
+    flex-direction:row;
+    align-items: flex-start;
+    justify-content:center;
+    order:1000;
+}
+label{min-width: auto;}

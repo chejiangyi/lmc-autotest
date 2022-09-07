@@ -1,0 +1,294 @@
+<!--https://my.oschina.net/u/4365953/blog/3540874-->
+<!--https://blog.csdn.net/sinat_20522337/article/details/79158122-->
+<!--https://blog.csdn.net/weixin_30616969/article/details/101332393-->
+<!--https://gojs.net.cn/samples/customContextMenu.html-->
+<!--https://blog.csdn.net/pdw2009/article/details/82982215-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>发布流程定义</title>
+    <meta charset="UTF-8">
+    <link href="/content/css/css.css" rel="stylesheet"/>
+    <link href="/content/themes/base/jquery.ui.all.css" rel="stylesheet"/>
+    <script src="/scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
+    <script src="/scripts/jquery-ui-1.8.24.js" type="text/javascript"></script>
+    <script src="/content/gojs/1.8.13/go.js"></script>
+    <script src="/content/js/flow2.js"></script>
+    <script type="text/javascript">
+        //浏览
+        var isview=false;
+        $(function (){
+            if(window.location.href.indexOf('onlyview')>-1) {
+                isview =true;
+                $(".ui-dialog-buttonpane button").hide();
+                $('#left').hide();
+            }
+            init();
+            if(isview){
+                //myDiagram.isModified=false;
+                myDiagram.isReadOnly=true;
+                //仅测试
+                //var test = {"nodes":[{"text":"开始","next":"sql","location":"0 200","type":"start"},{"text":"sql","next":"结束","location":"100 200","type":"sql","db":"wms","sql":"select * from aaa;,ddd;inse (a) value(2);\'\';calue (2);"},{"text":"结束","next":"","location":"300 300","type":"end"}]};
+                var test={"nodes":[{"type":"start","location":"0 0","text":"开始","next":"sql升级1","key":-1},{"text":"sql升级1","type":"sql","db":"ops-db","sql":"insert t_log(content,type) value('22111111',0);\ninsert t_log(content,type) value('33',0);\ninsert t_log(content,type) value('44',0);","location":"-32 134","next":"结束","key":-2},{"type":"end","location":"0 300","text":"结束","next":null,"key":-3}]};
+                load(test);
+
+            }
+        });
+        var lastDialog =null;
+        function nodeDoubleClick(e,node){
+            var info = node.part.data;
+            if(lastDialog!=null){
+                $(lastDialog).dialog("close");
+            }
+            lastDialog = $("#"+info.dialog);
+            lastDialog.dialog('open');
+            jsonToDialog(info.dialog,info.key);
+
+        }
+        /** 右键菜单*/
+        function menu(name,e, obj){
+            if(name=="发布"){
+
+            }else if(name=="测试"){
+                if(isview){
+                    alert('流程查看状态不支持测试！');
+                    return;
+                }
+            }
+        }
+    </script>
+ <style>
+     .midtext{
+         width: 50px;
+     }
+     label{min-width: auto;}
+     .mydetail label{width:auto;}
+     .mydetail li{margin-top: 5px;}
+ </style>
+
+</head>
+<body>
+<div>
+    <div style="width:100%; white-space:nowrap;">
+    <span id="left" style="display: inline-block; vertical-align: top; width:105px">
+      <div id="myPaletteDiv" style="border: solid 1px black; height: 620px"></div>
+    </span>
+    <span style="display: inline-block; vertical-align: top; width:100%">
+      <div id="myDiagramDiv" style="border: solid 1px black; height: 620px"></div>
+    </span>
+    </div>
+</div>
+<!--start配置-->
+<div id="start-dialog" title="开始配置">
+    <div>
+        <button onclick="save()">保存</button>
+        <button onclick="debug()">调试</button>
+<!--        <button onclick="load()">Load</button>-->
+    </div>
+    <script type="text/javascript">
+        function save(){
+            var j = modelToJson();
+            console.log(j);
+        }
+        function debug() {
+            myDiagram.model.modelData.position = go.Point.stringify(myDiagram.position);
+            alert(myDiagram.model.toJson());
+            //myDiagram.isModified = false;
+        }
+        function load(json) {
+            var jsonModel = jsonToModel(json);
+            //myDiagram.model = go.Model.fromJson();
+            myDiagram.model.nodeDataArray =jsonModel.nodeDataArray;
+            myDiagram.model.linkDataArray =jsonModel.linkDataArray;
+            //var pos = myDiagram.model.modelData.position;
+            //if (pos) myDiagram.initialPosition = go.Point.parse(pos);
+        }
+        $('#start-dialog').dialog({
+            autoOpen:false,
+            height: 150,
+            width: 150,
+            modal: true,
+            draggable: true,
+            minWidth: 150,
+            buttons: {
+                "关闭": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    </script>
+</div>
+<!--jenkins配置-->
+<div id="jenkins-dialog" title="jenkins配置">
+    <ul class="mydetail" name="key">
+        <li>
+            <label>节点</label>
+            <input class="midtext" type="text" name="text" json="text"/>
+            <input type="hidden" json="type" data="jenkins" />
+        </li>
+        <li>
+            <label>应用</label><select name="app" json="app"></select>
+        </li>
+        <li>
+            <label>参数</label><textarea rows="5" cols="15" name="param" json="param"></textarea>
+        </li>
+    </ul>
+    <script type="text/javascript">
+        $('#jenkins-dialog').dialog({
+            autoOpen:false,
+            height: 350,
+            width: 400,
+            modal: true,
+            draggable: true,
+            minWidth: 300,
+            buttons: {
+                "关闭": function() {
+                    $(this).dialog("close");
+                },
+                "保存": function() {
+                    dialogToJson('jenkins-dialog');
+                    $(this).dialog("close");
+                }
+            }
+        });
+    </script>
+</div>
+<!--shell配置-->
+<div id="shell-dialog" title="shell配置">
+    <ul class="mydetail" name="key">
+        <li>
+            <label>节点</label><input class="midtext" type="text" name="text" json="text"/>
+            <input type="hidden" json="type" data="shell" />
+        </li>
+        <li>
+            <label>服务器</label><select name="server" json="server"></select>
+        </li>
+        <li>
+            <label>shell脚本</label><textarea rows="5" cols="15" name="shell" json="shell"></textarea>
+        </li>
+    </ul>
+    <script type="text/javascript">
+        $('#shell-dialog').dialog({
+            autoOpen:false,
+            height: 350,
+            width: 400,
+            modal: true,
+            draggable: true,
+            minWidth: 300,
+            buttons: {
+                "关闭": function() {
+                    $(this).dialog("close");
+                },
+                "保存": function() {
+                    dialogToJson('shell-dialog');
+                    $(this).dialog("close");
+                }
+            }
+        });
+    </script>
+</div>
+<!--apollo配置-->
+<div id="apollo-dialog" title="apollo配置">
+    <ul class="mydetail" name="key">
+        <li>
+            <label>节点</label><input class="midtext" type="text" name="text" json="text"/>
+            <input type="hidden" json="type" data="apollo" />
+        </li>
+        <li>
+            <label>app</label><select name="app" json="app"></select>
+        </li>
+        <li>
+            <label>配置</label><textarea rows="5" cols="15" name="config" json="config"></textarea>
+        </li>
+    </ul>
+    <script type="text/javascript">
+        $('#apollo-dialog').dialog({
+            autoOpen:false,
+            height: 350,
+            width: 400,
+            modal: true,
+            draggable: true,
+            minWidth: 300,
+            buttons: {
+                "关闭": function() {
+                    $(this).dialog("close");
+                },
+                "保存": function() {
+                    dialogToJson('apollo-dialog');
+                    $(this).dialog("close");
+                }
+            }
+        });
+    </script>
+</div>
+<!--sql配置-->
+<div id="sql-dialog" title="sql配置">
+    <ul class="mydetail" name="key">
+        <li>
+            <label>节点</label><input class="midtext" type="text" name="text" json="text"/>
+            <input type="hidden" json="type" name="type" data="sql" />
+        </li>
+        <li>
+            <label>数据库</label><select name="db" json="db"></select>
+        </li>
+        <li>
+            <label>sql</label><textarea rows="5" cols="15" name="sql" json="sql"></textarea>
+        </li>
+    </ul>
+    <script type="text/javascript">
+        $('#sql-dialog').dialog({
+            autoOpen:false,
+            height: 350,
+            width: 400,
+            modal: true,
+            draggable: true,
+            minWidth: 300,
+            buttons: {
+                "关闭": function() {
+                    $(this).dialog("close");
+                },
+                "保存": function() {
+                    dialogToJson('sql-dialog');
+                    $(this).dialog("close");
+                }
+            }
+        });
+    </script>
+</div>
+<!--notify配置-->
+<div id="notify-dialog" title="notify配置">
+    <ul class="mydetail" name="key">
+        <li>
+            <label>节点</label><input class="midtext" type="text" name="text" json="text"/>
+            <input type="hidden" json="type" data="notify" />
+        </li>
+        <li>
+            <label>内容</label><textarea rows="5" cols="15" name="content" json="content"></textarea>
+        </li>
+        <li>
+            <label>接收人</label><input class="midtext" type="text" name="senders" json="senders">
+        </li>
+    </ul>
+    <script type="text/javascript">
+        $('#notify-dialog').dialog({
+            autoOpen:false,
+            height: 350,
+            width: 400,
+            modal: true,
+            draggable: true,
+            minWidth: 300,
+            buttons: {
+                "关闭": function() {
+                    $(this).dialog("close");
+                },
+                "保存": function() {
+                    dialogToJson('notify-dialog');
+                    $(this).dialog("close");
+                }
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

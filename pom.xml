@@ -4,9 +4,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.lmc.business</groupId>
-		<artifactId>lmc-business-dependencies</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<groupId>com.free.bsf</groupId>
+		<artifactId>free-bsf-dependencies</artifactId>
+		<version>1.2-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
@@ -15,11 +15,19 @@
 	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<modules>
-		<module>lmc-autotest-api</module>
-		<module>lmc-autotest-service</module>
-		<module>lmc-autotest-dao</module>
 		<module>lmc-autotest-core</module>
+		<module>lmc-autotest-dao</module>
+		<module>lmc-autotest-service</module>
 		<module>lmc-autotest-provider</module>
 		<module>lmc-autotest-task</module>
 	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.free.bsf</groupId>
+				<artifactId>free-bsf-starter</artifactId>
+				<version>1.2-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

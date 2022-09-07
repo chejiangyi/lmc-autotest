@@ -12,15 +12,6 @@
 	<artifactId>lmc-autotest-core</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>com.lmc.autotest</groupId>
-			<artifactId>lmc-autotest-api</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.lmc.business</groupId>
-			<artifactId>lmc-business-starter</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
@@ -37,16 +28,8 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.pagehelper</groupId>
-			<artifactId>pagehelper-spring-boot-starter</artifactId>
+			<groupId>com.free.bsf</groupId>
+			<artifactId>free-bsf-starter</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -1,0 +1,134 @@
+.lkform{
+    position: relative;
+}
+.lkform .lkicon{
+    width:25px;
+    height:25px;
+
+}
+.lkform .lkformTool{
+    left: 0px;
+    top: -5px;
+    position: absolute;
+    display: flex;
+    flex-direction:row;
+    align-items: flex-start;
+    z-index: 1000;
+}
+.lktool{
+    padding: 5px 5px 5px 5px;
+    left:5px;
+    top:100px;
+    position: absolute;
+    /*border: #000000 0px solid;*/
+    background-color: #7abaff;
+    width: 100px;
+    /*禁止焦点*/
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    z-index: 1000;
+}
+.lktool .lktoolConatiner{
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+
+}
+.lktool .lktoolMove{
+    cursor: pointer;
+    width: 150px;
+    width:20px;
+    height:20px;
+    left:-10px;
+    top:-10px;
+    position: absolute;
+}
+.lkdrag{
+    /*cursor: move;*/
+    cursor: url("http://localhost:8082/content/form/img/drag.png"),auto;
+    /*http://localhost:8082*/
+
+}
+
+.lkControl{
+    position: absolute;
+}
+.lkEdit{
+    border: 1px dashed red;
+}
+.lkControl .lkControlTool{
+    left: 0px;
+    top: -20px;
+    position:absolute;
+    display: flex;
+    flex-direction:row;
+    align-items: flex-start;
+    justify-content:center;
+}
+label{min-width: auto;}
+
+
+.table {
+    width: 100%;
+
+
+}
+table {
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+th,
+td {
+    width: 20%;
+    padding: 16px;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+    border-right: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    text-align: center;
+    position: relative;
+}
+
+tr th:not(:first-child) {
+    cursor: pointer;
+}
+.ant-table-column-sorter-inner {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    color: #bfbfbf;
+    position: absolute;
+    top: 11px;
+    right: 54px;
+}
+.anticon {
+    display: inline-block;
+    color: inherit;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+    vertical-align: -0.125em;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.ant-table-column-sorter-up,
+.ant-table-column-sorter-down {
+    font-size: 11px;
+}
+.ant-table-column-sorter-up + .ant-table-column-sorter-down {
+    margin-top: -0.3em;
+}
+.modal-content-all {
+    width: 1000px;
+    height: 812px;
+}
+.modal-mask-all {
+    display: none;
+}
