@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_task 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-07 20:31:51
+ * @since 2022-09-08 22:44:00
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_task_base_dal {
@@ -203,7 +203,7 @@ public class tb_task_base_dal {
         }
         /**是否清理数据*/
         if (dr.containsKey("clear_data_first")) {
-            o.clear_data_first = ConvertUtils.convert(dr.get("clear_data_first"), Integer.class);
+            o.clear_data_first = ConvertUtils.convert(dr.get("clear_data_first"), Boolean.class);
         }
         /**执行节点*/
         if (dr.containsKey("nodes")) {

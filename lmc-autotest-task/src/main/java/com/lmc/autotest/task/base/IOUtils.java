@@ -12,6 +12,16 @@ public class IOUtils {
 
     public static double memory(){
         val systemBean = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
+        return (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
+    }
+
+    public static int localCpuCores(){
+        val systemBean = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
+        return Runtime.getRuntime().availableProcessors();
+    }
+
+    public static Long LocalMemorySize(){
+        val systemBean = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
         return systemBean.getTotalPhysicalMemorySize()/1024/1024;
     }
 

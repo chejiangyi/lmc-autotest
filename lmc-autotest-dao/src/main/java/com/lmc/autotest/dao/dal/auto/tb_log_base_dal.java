@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_log 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-07 20:31:50
+ * @since 2022-09-08 22:43:59
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_log_base_dal {

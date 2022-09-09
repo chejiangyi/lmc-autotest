@@ -1,0 +1,44 @@
+package com.lmc.autotest.provider.controller;
+
+import com.free.bsf.core.base.Ref;
+import com.free.bsf.core.db.DbHelper;
+import com.free.bsf.core.util.StringUtils;
+import com.lmc.autotest.core.Config;
+import com.lmc.autotest.dao.tb_log_dal;
+import com.lmc.autotest.dao.tb_sample_dal;
+import com.lmc.autotest.provider.SpringMvcController;
+import com.lmc.autotest.provider.pager.Pager1;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Slf4j
+@Controller
+@RequestMapping("/sample")
+public class SampleController extends SpringMvcController {
+    @RequestMapping("/index")
+    public ModelAndView index(String table, String sql, Integer pageindex, Integer pagesize) {
+        val pageIndex2 = (pageindex == null ? 1 : pageindex);
+        val pageSize2 = (pagesize == null ? 10 : pagesize);
+        html.s2("table", StringUtils.nullToEmpty(table)).s2("sql", StringUtils.nullToEmpty(sql))
+                .s2("pageindex", pageindex).s2("pagesize", pagesize);
+                //.s2("create_time_from",create_time_from).s2("create_time_to",create_time_to);
+        return pageVisit((m) -> {
+                    Ref<Integer> totalSize = new Ref<>(0);
+                    val list = DbHelper.get(Config.mysqlDataSource(), c -> {
+                        return new tb_sample_dal().searchPage(c, table, sql, pageIndex2, pageSize2, totalSize);
+                    });
+                    val tables = DbHelper.get(Config.mysqlDataSource(), c -> {
+                        return new tb_sample_dal().tables(c);
+                    });
+                    new Pager1(pageIndex2, totalSize.getData()).setPageSize(pageSize2).out();
+                    request.setAttribute("model", list);
+                    request.setAttribute("tables",tables);
+                }
+        );
+    }
+
+
+}

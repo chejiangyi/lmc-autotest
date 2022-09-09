@@ -3,8 +3,10 @@ package com.lmc.autotest.task.base.provider;
 import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.DateUtils;
+import com.free.bsf.core.util.JsonUtils;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.lmc.autotest.core.Config;
+import com.lmc.autotest.core.NodeInfo;
 import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_report_node_example_model;
 import com.lmc.autotest.dao.model.auto.tb_report_url_example_model;
@@ -20,10 +22,12 @@ import lombok.val;
 import lombok.var;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class ReportProvider {
     tb_report_model report_model = null;
@@ -31,6 +35,17 @@ public class ReportProvider {
     volatile ReportUrlMap reportUrlMap = null;
     public void init(tb_task_model task_model){
         report_model = DbHelper.transactionGet(Config.mysqlDataSource(), (c) -> {
+            var nodes = new tb_node_dal().getOnlineNodes(c);
+            var nodeNames = Arrays.asList(task_model.nodes.split(","));
+            nodes=nodes.stream().filter(n->nodeNames.contains(n)).collect(Collectors.toList());
+            val nodeInfos = new ArrayList<NodeInfo>();
+            for(val n:nodes){
+                val ni = new NodeInfo();
+                ni.node=n.node;
+                ni.cpu=n.local_cpu;
+                ni.memory=n.local_memory;
+                ni.threads=task_model.run_threads_count;
+            }
             var report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id);
             if(report==null) {
                 String time= DateUtil.format(new Date(),"yyyy-MM-dd-HH-mm-ss");
@@ -39,12 +54,14 @@ public class ReportProvider {
                 model.setBegin_time(new Date());
                 model.setEnd_time(DateUtils.strToDate("1900-01-01","yyyy-MM-dd"));
                 model.setFilter_store(task_model.filter_store);
-                model.setNodes_info(task_model.nodes);
                 model.setReport_name(task_model.task+"_"+time);
                 model.setReport_node_table(new tb_report_node_dal().copyNewTable(c,time));
                 model.setReport_url_table(new tb_report_url_dal().copyNewTable(c,time));
                 model.setTask_id(task_model.id);
                 model.setFilter_table(task_model.filter_table);
+                model.setTask_name(task_model.task);
+                model.setNodes(task_model.nodes);
+                model.setNodes_info(JsonUtils.serialize(nodeInfos));
                 new tb_report_dal().add(c,model);
             }
             report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id);

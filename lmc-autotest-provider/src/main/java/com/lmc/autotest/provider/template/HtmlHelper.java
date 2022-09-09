@@ -3,7 +3,9 @@ package com.lmc.autotest.provider.template;
 import com.free.bsf.core.util.JsonUtils;
 import lombok.val;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +28,24 @@ public class HtmlHelper extends SimpleTemplateProvider {
 
     public Boolean isnull(Object o){
         return o == null;
+    }
+
+    public Boolean inArray(Object as,Object value){
+        if(value == null || as == null){
+            return false;
+        }
+       if (as.getClass().isArray()) {
+           int length = Array.getLength(as);
+           Object[] os = new Object[length];
+           for (int i = 0; i < os.length; i++)
+           {
+               os[i] = Array.get(as, i);
+               if(os[i] == value){
+                   return true;
+               }
+           }
+       }
+       return false;
     }
 
     public Object empty(Object o){

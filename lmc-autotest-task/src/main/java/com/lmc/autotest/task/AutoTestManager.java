@@ -23,12 +23,12 @@ public class AutoTestManager {
             }
         }
     }
-    public void close(Integer taskId){
+    public void close(Integer taskId,String reason){
         if (running.contains(taskId)) {
             synchronized (lock) {
                 if (running.contains(taskId)) {
-                    running.get(taskId).close();
-                    running.remove(taskId);
+                    running.remove(taskId);//先移除，否则死循环
+                    running.get(taskId).close(reason);
                 }
             }
         }

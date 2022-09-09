@@ -1,8 +1,11 @@
 package com.lmc.autotest.core;
 
+import com.free.bsf.core.base.BsfException;
 import lombok.val;
 import org.apache.commons.lang.time.DateUtils;
+import org.quartz.CronExpression;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class AutoTestTool {
@@ -12,5 +15,18 @@ public class AutoTestTool {
             return true;
         }else
             return false;
+    }
+
+    public static Date cornNextTime(Date date, String cron)  {
+        try {
+            CronExpression cronExpression = new CronExpression(cron);
+            return cronExpression.getNextValidTimeAfter(date);
+        }catch (Exception exp){
+            throw new BsfException(exp);
+        }
+    }
+
+    public static boolean isOnline(Date heartbeatDate){
+        return new Date().getTime()-heartbeatDate.getTime()<=2* Config.heartbeat()*1000;
     }
 }

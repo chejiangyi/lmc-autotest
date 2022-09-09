@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-07 20:31:51
+ * @since 2022-09-08 22:43:59
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_base_dal {
@@ -46,10 +46,12 @@ public class tb_report_base_dal {
                 /**report_node 表*/
                 model.report_node_table,
                 /**report_url表*/
-                model.report_url_table
+                model.report_url_table,
+                /***/
+                model.task_name
         };
-        int rev = conn.executeSql("insert into tb_report(report_name,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_report(report_name,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -77,9 +79,11 @@ public class tb_report_base_dal {
                 model.report_node_table,
                 /**report_url表*/
                 model.report_url_table,
+                /***/
+                model.task_name,
                 model.id
         };
-        int rev = conn.executeSql("update tb_report set report_name=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=? where id=?", par);
+        int rev = conn.executeSql("update tb_report set report_name=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=?,task_name=? where id=?", par);
         return rev == 1;
 
     }
@@ -164,6 +168,10 @@ public class tb_report_base_dal {
         /**report_url表*/
         if (dr.containsKey("report_url_table")) {
             o.report_url_table = ConvertUtils.convert(dr.get("report_url_table"), String.class);
+        }
+        /***/
+        if (dr.containsKey("task_name")) {
+            o.task_name = ConvertUtils.convert(dr.get("task_name"), String.class);
         }
         return o;
     }

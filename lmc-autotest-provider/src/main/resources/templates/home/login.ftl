@@ -103,13 +103,11 @@
 <div class="login-content">
     <div class="login-modal-body">
         <div class="modal-content">
-            <h3>LinkHub的小伙伴</h3>
+            <h3>自动化测试登陆</h3>
             <div>
-                <img src="/content/images/name.svg" alt="用户名" />
                 <input class="login-name" type="text" placeholder="请输入用户名" />
             </div>
             <div>
-                <img src="/content/images/password.svg" alt="密码" />
                 <input
                         class="login-password"
                         type="password"
@@ -133,15 +131,12 @@
             };
             console.log(loginData);
             $.ajax({
-                url: "/login/userLogin",
+                url: "/login/",
                 type: "post",
                 contentType: "application/json",
                 data: JSON.stringify(loginData),
-                headers: {"token":sessionStorage.getItem("token")},
                 success: function (res) {
-                    console.log(res);
                     if (res.code === 200) {
-                        sessionStorage.setItem("token",res.data.token)
                         window.location.href = "/index/";
                     }else{
                         alert(res.message)

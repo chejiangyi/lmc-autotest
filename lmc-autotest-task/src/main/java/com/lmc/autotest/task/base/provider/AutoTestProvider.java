@@ -2,10 +2,7 @@ package com.lmc.autotest.task.base.provider;
 
 import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.db.DbHelper;
-import com.free.bsf.core.util.DateUtils;
-import com.free.bsf.core.util.JsonUtils;
-import com.free.bsf.core.util.StringUtils;
-import com.free.bsf.core.util.ThreadUtils;
+import com.free.bsf.core.util.*;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
@@ -64,19 +61,29 @@ public class AutoTestProvider {
                 filterError();
                 autoTest();
             }catch (Exception e){
-                close();
+                close("启动执行异常");
                 LogTool.error(AutoTestProvider.class,Config.appName(),task_model.task+"-自动化压测运行任务异常",e);
                 //throw e;
             }
         });
     }
 
-    public void close(){
+    public void close(String reason){
         isRun=false;
-        AutoTestManager.Default.close(taskid);
+        AutoTestManager.Default.close(taskid,reason);
         FileUtils.delete(getFileName(task_model.filter_table));
         FileUtils.delete(getFileName(task_model.filter_table)+".temp");
         FileUtils.clearExpireFile("/");
+        try{
+            String reason2=Config.nodeName()+":"+StringUtils.nullToEmpty(reason);
+            DbHelper.transactionCall(Config.mysqlDataSource(), (c) -> {
+                val task = new tb_task_dal().getWithLock(c,taskid);
+                new tb_task_dal().addResult(c, taskid,task.exec_result+"\r\n"+reason2);
+            });
+        }
+        catch (Exception e){
+            LogUtils.error(this.getClass(),Config.appName(),"关闭原因更新数据库出错",e);
+        }
     }
 
     private void autoTest(){
@@ -138,7 +145,7 @@ public class AutoTestProvider {
                         val sMap = new LinkedHashMap();sMap.put("nodeReport",nodeReport);sMap.put("runtime",(startTime.getTime()-new Date().getTime())/1000);
                         val r2 = DynamicScript.run("执行后脚本", task_model.http_end_script, sMap);
                         if(r2!=null&&(r2 instanceof Boolean)&&(boolean)r2==true){
-                            close();
+                            close("匹配执行后脚本规则");
                         }
                     }
                 }catch (Exception e){
@@ -157,24 +164,26 @@ public class AutoTestProvider {
     }
     //过滤错误日志
     private void filterError(){
-        //生成临时文件
-        String filename = getFileName(task_model.filter_table);
-        String temp = filename+".temp";
-        val file = new File(filename);
-        if(!file.exists()){
-            throw new BsfException("文件不存在:"+filename);
-        }
-        file.renameTo(new File(temp));
-        //重新生成文件
-        SampleUtils.readline(temp,(line)->{
-            if(isRun) {
-                tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
-                val r = HttpUtils.request(j);
-                if (r.getCode() == 200) {
-                    SampleUtils.writeline(filename, line);
-                }
+        if(task_model.clear_data_first) {
+            //生成临时文件
+            String filename = getFileName(task_model.filter_table);
+            String temp = filename + ".temp";
+            val file = new File(filename);
+            if (!file.exists()) {
+                throw new BsfException("文件不存在:" + filename);
             }
-        });
+            file.renameTo(new File(temp));
+            //重新生成文件
+            SampleUtils.readline(temp, (line) -> {
+                if (isRun) {
+                    tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
+                    val r = HttpUtils.request(j);
+                    if (r.getCode() == 200) {
+                        SampleUtils.writeline(filename, line);
+                    }
+                }
+            });
+        }
     }
     private String getFileName(String filename){
         return tempid+"-"+filename+".autotest";

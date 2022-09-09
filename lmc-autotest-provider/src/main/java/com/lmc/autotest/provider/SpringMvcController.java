@@ -5,6 +5,8 @@ import com.free.bsf.core.util.ContextUtils;
 import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.TimeWatchUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
+import com.lmc.autotest.provider.base.User;
+import com.lmc.autotest.provider.base.Utils;
 import com.lmc.autotest.provider.template.HtmlHelper;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -50,13 +52,14 @@ public class SpringMvcController {
 
                 //页面模板扩展方法
                 request.setAttribute("Html",html);
+                request.setAttribute("Utils",new Utils());
                 //request.setAttribute("user", User.getCurrent());
-//                if(request.getAttribute("checkuser")==null||
-//                        ((boolean)request.getAttribute("checkuser"))==true) {
-//                    if (User.getCurrent() == null) {
-//                        return new ModelAndView("redirect:/");
-//                    }
-//                }
+                if(request.getAttribute("checkuser")==null||
+                        ((boolean)request.getAttribute("checkuser"))==true) {
+                    if (User.getCurrent() == null) {
+                        return new ModelAndView("redirect:/");
+                    }
+                }
 
                 //默认视图地址为/contoller name/method name,即结构对应一致
                 modelAndView = new ModelAndView();
@@ -95,12 +98,12 @@ public class SpringMvcController {
             //response.addHeader("Access-Control-Allow-Origin", "*");//跨域支持
             response.setHeader("Content-Type", "application/json;charset=UTF-8");
             try {
-                if(request.getAttribute("checkuser")==null||
-                        ((boolean)request.getAttribute("checkuser"))==true) {
-                    //checkUser();
-                }
+//                if(request.getAttribute("checkuser")==null||
+//                        ((boolean)request.getAttribute("checkuser"))==true) {
+//                    //checkUser();
+//                }
                 Object jsondata = visit.invoke(modelAndView);
-                val data = new ApiResponseEntity(2000,"",jsondata);
+                val data = new ApiResponseEntity(200,"",jsondata);
                 String json = JsonUtils.serialize(data);
                 response.getWriter().write(json);
 
@@ -133,6 +136,10 @@ public class SpringMvcController {
             });
             return modelAndView;
         });
+    }
+
+    protected User getUser(){
+        return User.getCurrent();
     }
 
 //    protected void checkAdmin()

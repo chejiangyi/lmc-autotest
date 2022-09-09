@@ -24,7 +24,7 @@ public class ApiController  {
 	@PostMapping("/closetask/")
 	public ApiResponseEntity<Integer> closeTask(Integer taskId) {
 		try {
-			AutoTestManager.Default.close(taskId);
+			AutoTestManager.Default.close(taskId,"用户执行关闭");
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(e.getMessage());

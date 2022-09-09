@@ -532,6 +532,18 @@ h2{font-size: 18px;}
     width:500px;
 }
 
+.mydetail .ltext {
+    width:200px;
+}
+
+.mydetail .mtext {
+    width:200px;
+}
+
+.mydetail .stext {
+    width:50px;
+}
+
 /*.help{background-image: url(../images/help.png);background-repeat: no-repeat; width:25px; height:25px;}*/
 .help {
  

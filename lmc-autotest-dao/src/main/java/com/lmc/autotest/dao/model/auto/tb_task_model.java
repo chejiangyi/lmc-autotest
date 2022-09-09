@@ -10,7 +10,7 @@ import lombok.*;
  * tb_task 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-07 20:31:51
+ * @since 2022-09-08 22:44:00
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -70,7 +70,7 @@ public class tb_task_model implements Serializable {
     /**
      * 是否清理数据
      */
-    public Integer clear_data_first;
+    public Boolean clear_data_first;
     /**
      * 执行节点
      */
