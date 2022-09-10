@@ -1,6 +1,7 @@
 package com.lmc.autotest.task.base.provider;
 
 import com.free.bsf.core.base.BsfException;
+import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.*;
 import com.lmc.autotest.core.Config;
@@ -162,8 +163,10 @@ public class AutoTestProvider {
         val map = new LinkedHashMap();map.put("task",task_model);
         DynamicScript.run("采样表文件生成",task_model.filter_script,map);
     }
-    //过滤错误日志
+    //过滤错误样本
     private void filterError(){
+        int fileLines = FileUtils.fileCount(getFileName(task_model.filter_table));
+        Ref<Integer> errorLines=new Ref<Integer>(0);
         if(task_model.clear_data_first) {
             //生成临时文件
             String filename = getFileName(task_model.filter_table);
@@ -180,10 +183,15 @@ public class AutoTestProvider {
                     val r = HttpUtils.request(j);
                     if (r.getCode() == 200) {
                         SampleUtils.writeline(filename, line);
+                    }else{
+                        errorLines.setData(errorLines.getData()+1);
                     }
                 }
             });
         }
+        DbHelper.call(Config.mysqlDataSource(),(c)-> {
+            new tb_report_dal().updateFilterTableInfo(c,reportProvider.report_model.id,fileLines,errorLines.getData());
+        });
     }
     private String getFileName(String filename){
         return tempid+"-"+filename+".autotest";

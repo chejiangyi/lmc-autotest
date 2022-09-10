@@ -97,7 +97,7 @@ public class ReportProvider {
             model.active_threads=this.reportNodeInfo.active_threads;
             model.cpu=this.reportNodeInfo.cpu;
             model.error=this.reportNodeInfo.all_error.get()/this.reportNodeInfo.getTimeSpan();
-            model.memery=this.reportNodeInfo.memory;
+            model.memory=this.reportNodeInfo.memory;
             model.create_time=new Date();
             model.network_read=this.reportNodeInfo.all_network_read.get()/this.reportNodeInfo.getTimeSpan();
             model.network_write=this.reportNodeInfo.all_network_write.get()/this.reportNodeInfo.getTimeSpan();
@@ -128,6 +128,9 @@ public class ReportProvider {
         val returnInfo = this.reportNodeInfo;
         this.reportNodeInfo=new ReportNodeInfo();
         this.reportUrlMap=new ReportUrlMap();
+        DbHelper.call(Config.mysqlDataSource(),(c)->{
+            new tb_report_dal().updateEndTime(c,this.report_model.id);
+        });
         return returnInfo;
     }
 

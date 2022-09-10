@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report_node_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-08 22:43:59
+ * @since 2022-09-09 15:46:20
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_node_example_base_dal {
@@ -29,34 +29,6 @@ public class tb_report_node_example_base_dal {
                 model.node,
                 /***/
                 model.cpu,
-                /***/
-                model.memery,
-                /***/
-                model.network_read,
-                /***/
-                model.network_write,
-                /***/
-                model.active_threads,
-                /***/
-                model.throughput,
-                /***/
-                model.error,
-                /***/
-                model.create_time
-        };
-        int rev = conn.executeSql("insert into tb_report_node_example(node,cpu,memery,network_read,network_write,active_threads,throughput,error,create_time)" +
-                "values(?,?,?,?,?,?,?,?,?)", par);
-        return rev == 1;
-    }
-
-    public boolean edit(DbConn conn, tb_report_node_example_model model) {
-        val par = new Object[]{
-                /***/
-                model.node,
-                /***/
-                model.cpu,
-                /***/
-                model.memery,
                 /***/
                 model.network_read,
                 /***/
@@ -69,9 +41,37 @@ public class tb_report_node_example_base_dal {
                 model.error,
                 /***/
                 model.create_time,
+                /***/
+                model.memory
+        };
+        int rev = conn.executeSql("insert into tb_report_node_example(node,cpu,network_read,network_write,active_threads,throughput,error,create_time,memory)" +
+                "values(?,?,?,?,?,?,?,?,?)", par);
+        return rev == 1;
+    }
+
+    public boolean edit(DbConn conn, tb_report_node_example_model model) {
+        val par = new Object[]{
+                /***/
+                model.node,
+                /***/
+                model.cpu,
+                /***/
+                model.network_read,
+                /***/
+                model.network_write,
+                /***/
+                model.active_threads,
+                /***/
+                model.throughput,
+                /***/
+                model.error,
+                /***/
+                model.create_time,
+                /***/
+                model.memory,
                 model.id
         };
-        int rev = conn.executeSql("update tb_report_node_example set node=?,cpu=?,memery=?,network_read=?,network_write=?,active_threads=?,throughput=?,error=?,create_time=? where id=?", par);
+        int rev = conn.executeSql("update tb_report_node_example set node=?,cpu=?,network_read=?,network_write=?,active_threads=?,throughput=?,error=?,create_time=?,memory=? where id=?", par);
         return rev == 1;
 
     }
@@ -122,10 +122,6 @@ public class tb_report_node_example_base_dal {
             o.cpu = ConvertUtils.convert(dr.get("cpu"), Double.class);
         }
         /***/
-        if (dr.containsKey("memery")) {
-            o.memery = ConvertUtils.convert(dr.get("memery"), Double.class);
-        }
-        /***/
         if (dr.containsKey("network_read")) {
             o.network_read = ConvertUtils.convert(dr.get("network_read"), Double.class);
         }
@@ -148,6 +144,10 @@ public class tb_report_node_example_base_dal {
         /***/
         if (dr.containsKey("create_time")) {
             o.create_time = ConvertUtils.convert(dr.get("create_time"), Date.class);
+        }
+        /***/
+        if (dr.containsKey("memory")) {
+            o.memory = ConvertUtils.convert(dr.get("memory"), Double.class);
         }
         return o;
     }

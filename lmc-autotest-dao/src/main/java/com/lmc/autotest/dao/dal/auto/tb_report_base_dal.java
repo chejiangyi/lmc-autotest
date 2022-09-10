@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-08 22:43:59
+ * @since 2022-09-09 15:46:20
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_base_dal {
@@ -48,10 +48,14 @@ public class tb_report_base_dal {
                 /**report_url表*/
                 model.report_url_table,
                 /***/
-                model.task_name
+                model.task_name,
+                /***/
+                model.filter_table_lines,
+                /***/
+                model.filter_table_error_lines
         };
-        int rev = conn.executeSql("insert into tb_report(report_name,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_report(report_name,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -81,21 +85,25 @@ public class tb_report_base_dal {
                 model.report_url_table,
                 /***/
                 model.task_name,
+                /***/
+                model.filter_table_lines,
+                /***/
+                model.filter_table_error_lines,
                 model.id
         };
-        int rev = conn.executeSql("update tb_report set report_name=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=?,task_name=? where id=?", par);
+        int rev = conn.executeSql("update tb_report set report_name=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=?,task_name=?,filter_table_lines=?,filter_table_error_lines=? where id=?", par);
         return rev == 1;
 
     }
 
-    public boolean delete(DbConn conn, Object id) {
+    public boolean delete(DbConn conn, Integer id) {
         val par = new Object[]{id};
         String Sql = "delete from tb_report where id=?";
         int rev = conn.executeSql(Sql, par);
         return rev == 1;
     }
 
-    public tb_report_model get(DbConn conn, Object id) {
+    public tb_report_model get(DbConn conn, Integer id) {
         val par = new Object[]{id};
         val stringSql = new StringBuilder();
         stringSql.append("select s.* from tb_report s where s.id=?");
@@ -123,7 +131,7 @@ public class tb_report_base_dal {
         val o = new tb_report_model();
         /***/
         if (dr.containsKey("id")) {
-            o.id = ConvertUtils.convert(dr.get("id"), Object.class);
+            o.id = ConvertUtils.convert(dr.get("id"), Integer.class);
         }
         /***/
         if (dr.containsKey("report_name")) {
@@ -172,6 +180,14 @@ public class tb_report_base_dal {
         /***/
         if (dr.containsKey("task_name")) {
             o.task_name = ConvertUtils.convert(dr.get("task_name"), String.class);
+        }
+        /***/
+        if (dr.containsKey("filter_table_lines")) {
+            o.filter_table_lines = ConvertUtils.convert(dr.get("filter_table_lines"), Integer.class);
+        }
+        /***/
+        if (dr.containsKey("filter_table_error_lines")) {
+            o.filter_table_error_lines = ConvertUtils.convert(dr.get("filter_table_error_lines"), Integer.class);
         }
         return o;
     }

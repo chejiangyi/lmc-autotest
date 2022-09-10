@@ -10,7 +10,7 @@ import lombok.*;
  * tb_report_node_example 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-08 22:44:00
+ * @since 2022-09-09 15:46:21
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -24,8 +24,6 @@ public class tb_report_node_example_model implements Serializable {
 
     public Double cpu;
 
-    public Double memery;
-
     public Double network_read;
 
     public Double network_write;
@@ -37,4 +35,6 @@ public class tb_report_node_example_model implements Serializable {
     public Double error;
 
     public Date create_time;
+
+    public Double memory;
 }

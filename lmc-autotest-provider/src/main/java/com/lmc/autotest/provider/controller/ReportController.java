@@ -4,15 +4,18 @@ import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.core.Config;
-import com.lmc.autotest.dao.tb_report_dal;
-import com.lmc.autotest.dao.tb_sample_dal;
+import com.lmc.autotest.dao.*;
+import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.provider.SpringMvcController;
 import com.lmc.autotest.provider.pager.Pager1;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import lombok.var;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -35,6 +38,105 @@ public class ReportController extends SpringMvcController {
                 }
         );
     }
+    @RequestMapping("/view")
+    public ModelAndView view(Integer id) {
+        html.s2("id", id);
+        return pageVisit((m) -> {
+            DbHelper.call(Config.mysqlDataSource(), c -> {
+                val report = new tb_report_dal().get(c, id);
+                val task = new tb_task_dal().get(c,report.task_id);
+                val urlcount = new tb_report_url_dal().countUrls(c,report.report_url_table);
+                val maxthroughput = new tb_report_node_dal().getMaxThroughput(c,report.getReport_node_table());
+                val maxthroughputWithNoError = new tb_report_node_dal().getMaxThroughput(c,report.getReport_node_table());
 
+                request.setAttribute("task", task);
+                request.setAttribute("model", report);
+                request.setAttribute("urlcount", urlcount);
+                request.setAttribute("maxthroughput",maxthroughput);
+                request.setAttribute("maxthroughputWithNoError",maxthroughputWithNoError);
+            });
 
+        });
+    }
+
+    @RequestMapping("/nodesReport")
+    public ModelAndView nodesReport(Integer id,String weidu) {
+        return jsonVisit((m) -> {
+            return DbHelper.get(Config.mysqlDataSource(), c -> {
+                val report = new tb_report_dal().get(c, id);
+                val nodes = report.nodes.split(",");
+                val nodesreports  = new tb_report_node_dal().nodesReport(c,report.report_node_table,weidu);
+                Map<String, Map<Object,Object>> nodesValues = new HashMap<>();
+                for(val node2:nodes) {
+                    val values = new HashMap<Object,Object>();
+                    nodesValues.put(node2, values);
+                    for (val o : nodesreports) {
+                        if(node2.equals(o.get("node"))){
+                            values.put(o.get("create_time"),o.get(weidu));
+                        }
+                    }
+                }
+                Map<String,Object> nodeReport= new HashMap<>();
+                nodeReport.put("nodes",nodesValues);
+                return nodeReport;
+            });
+
+        });
+    }
+
+    @RequestMapping("/nodeReport")
+    public ModelAndView nodeReport(Integer id,String node) {
+        return jsonVisit((m) -> {
+            return DbHelper.get(Config.mysqlDataSource(), c -> {
+                val report = new tb_report_dal().get(c, id);
+                List<Map<String,Object>>  nodesreports  = null;
+                if(!StringUtils.isEmpty(node)) {
+                    nodesreports = new tb_report_node_dal().nodeReport(c, node, report.report_node_table);
+                }else{
+                    nodesreports = new tb_report_node_dal().nodeSumReport(c, report.report_node_table);
+                }
+                val weidus = new String[]{"cpu","memory","active_threads","throughput","error","network_read","network_write"};
+                Map<String, Map<Object,Object>> nodesValues = new HashMap<>();
+                for(val weidu:weidus) {
+                    val values = new HashMap<>();
+                    nodesValues.put(weidu, values);
+                    for (val o : nodesreports) {
+                        values.put(o.get("create_time"),o.get(weidu));
+                    }
+                }
+                Map<String,Object> nodeReport= new HashMap<>();
+                nodeReport.put("node",nodesValues);
+                return nodeReport;
+            });
+
+        });
+    }
+
+    @RequestMapping("/urlReport")
+    public ModelAndView urlReport(Integer id,String node) {
+        return jsonVisit((m) -> {
+            return DbHelper.get(Config.mysqlDataSource(), c -> {
+                val report = new tb_report_dal().get(c, id);
+                List<Map<String,Object>> r = new tb_report_url_dal().nodeReport(c, node, report.report_node_table);
+                Map<String,Object> urlreport= new HashMap<>();
+                urlreport.put("report",r);
+                return urlreport;
+            });
+
+        });
+    }
+
+    @RequestMapping("/urlChart")
+    public ModelAndView urlChart(Integer id,String node,String url) {
+        return jsonVisit((m) -> {
+            return DbHelper.get(Config.mysqlDataSource(), c -> {
+                val report = new tb_report_dal().get(c, id);
+                List<Map<String,Object>> r = new tb_report_url_dal().urlChart(c, node,url, report.report_node_table);
+                Map<String,Object> urlreport= new HashMap<>();
+                urlreport.put("chart",r);
+                return urlreport;
+            });
+
+        });
+    }
 }

@@ -61,4 +61,24 @@ public class tb_report_dal extends tb_report_base_dal {
         }
         return null;
     }
+
+    public boolean updateFilterTableInfo(DbConn conn, int id,int filter_table_lines,int filter_table_error_lines) {
+        val par = new Object[]{
+                filter_table_lines,
+                filter_table_error_lines,
+                id
+        };
+        int rev = conn.executeSql("update tb_report set filter_table_lines=?,filter_table_error_lines=? where id=?", par);
+        return rev == 1;
+
+    }
+
+    public boolean updateEndTime(DbConn conn, int id) {
+        val par = new Object[]{
+                id
+        };
+        int rev = conn.executeSql("update tb_report set end_time=now() where id=?", par);
+        return rev == 1;
+
+    }
 }

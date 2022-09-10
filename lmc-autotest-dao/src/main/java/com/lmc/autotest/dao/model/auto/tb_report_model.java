@@ -10,7 +10,7 @@ import lombok.*;
  * tb_report 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-08 22:43:59
+ * @since 2022-09-09 15:46:20
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -18,7 +18,7 @@ import lombok.*;
 @NoArgsConstructor
 public class tb_report_model implements Serializable {
 
-    public Object id;
+    public Integer id;
 
     public String report_name;
 
@@ -53,4 +53,8 @@ public class tb_report_model implements Serializable {
     public String report_url_table;
 
     public String task_name;
+
+    public Integer filter_table_lines;
+
+    public Integer filter_table_error_lines;
 }

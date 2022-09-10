@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_sample_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-08 22:44:00
+ * @since 2022-09-09 15:46:21
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_sample_example_base_dal {
@@ -72,14 +72,14 @@ public class tb_sample_example_base_dal {
 
     }
 
-    public boolean delete(DbConn conn, Integer id) {
+    public boolean delete(DbConn conn, Long id) {
         val par = new Object[]{id};
         String Sql = "delete from tb_sample_example where id=?";
         int rev = conn.executeSql(Sql, par);
         return rev == 1;
     }
 
-    public tb_sample_example_model get(DbConn conn, Integer id) {
+    public tb_sample_example_model get(DbConn conn, Long id) {
         val par = new Object[]{id};
         val stringSql = new StringBuilder();
         stringSql.append("select s.* from tb_sample_example s where s.id=?");
@@ -107,7 +107,7 @@ public class tb_sample_example_base_dal {
         val o = new tb_sample_example_model();
         /***/
         if (dr.containsKey("id")) {
-            o.id = ConvertUtils.convert(dr.get("id"), Integer.class);
+            o.id = ConvertUtils.convert(dr.get("id"), Long.class);
         }
         /***/
         if (dr.containsKey("url")) {

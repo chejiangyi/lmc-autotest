@@ -1,16 +1,57 @@
 package com.lmc.autotest.dao;
 
 import com.free.bsf.core.db.DbConn;
+import com.free.bsf.core.util.ConvertUtils;
+import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.dao.dal.auto.tb_report_url_example_base_dal;
 import com.lmc.autotest.dao.model.auto.tb_report_url_example_model;
 import lombok.val;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class tb_report_url_dal extends tb_report_url_example_base_dal {
     public String copyNewTable(DbConn conn, String name){
         conn.executeSql("CREATE TABLE tb_report_url_"+name+" LIKE tb_report_url_example",new Object[]{});
         return "tb_report_url_"+name;
+    }
+
+    public int countUrls(DbConn conn,String table){
+        val obj = conn.executeScalar("select count(distinct(url)) from {table}".replace("{table}",table),new Object[]{});
+        return ConvertUtils.convert(obj,int.class);
+    }
+
+    public List<Map<String,Object>> nodeReport(DbConn conn, String node, String tableName){
+        val stringSql = new StringBuilder();
+        stringSql.append(
+                "select url,sum(visit_num) as all_visit_num,max(throughput) as max_throughput,max(error) as max_error,min(visit_time) as min_visit_time,max(visit_time) as max_visit_time,\n" +
+                "avg(visit_time) as avg_visit_time,max(network_read) as max_network_read,min(network_write) as min_network_write\n" +
+                "from {table}");
+        if(!StringUtils.isEmpty(node)){
+            stringSql.append(" where node='{node}'");
+        }
+        stringSql.append(" group by url order by url");
+        val ds = conn.executeList(stringSql.toString().replace("{table}",tableName).replace("{node}",node), new Object[]{});
+        return ds;
+    }
+
+    public List<Map<String,Object>> urlChart(DbConn conn, String node, String url, String tableName){
+        val stringSql = new StringBuilder();
+        val par = new ArrayList();
+        stringSql.append(
+                "select * from {table} where 1=1");
+        if(!StringUtils.isEmpty(node)){
+            par.add(node);
+            stringSql.append(" and node=?");
+        }
+        if(!StringUtils.isEmpty(url)){
+            par.add(url);
+            stringSql.append(" and url=?");
+        }
+        stringSql.append(" group by url order by url");
+        val ds = conn.executeList(stringSql.toString().replace("{table}",tableName), par.toArray());
+        return ds;
     }
 
     public void batch(DbConn conn, List<tb_report_url_example_model> models){
