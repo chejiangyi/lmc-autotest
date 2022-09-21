@@ -20,11 +20,16 @@ public class FileUtils {
     public static void clearExpireFile(String dir){
         val dir2 = new File(dir);
         if(dir2.isDirectory()) {
-            val files = com.free.bsf.core.util.FileUtils.getAllFiles(dir2);
+            val files = dir2.listFiles();
             for(val file:files){
-                //超过三天的文件
-                if(new Date().getTime()- new Date(file.lastModified()).getTime()>1000*60*60*24*3){
-                    file.delete();
+                if(!file.isDirectory()) {
+                    if(file.getName().toLowerCase().endsWith(".temp")
+                            ||file.getName().toLowerCase().endsWith(".sample")) {
+                        //超过三天的文件
+                        if (new Date().getTime() - new Date(file.lastModified()).getTime() > 1000 * 60 * 60 * 24 * 3) {
+                            file.delete();
+                        }
+                    }
                 }
             }
         }

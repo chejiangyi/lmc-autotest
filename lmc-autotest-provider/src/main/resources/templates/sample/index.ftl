@@ -16,7 +16,7 @@ ${Html.s("pagetitle","采样查询")}
                 </#list>
             </select>
             <label>Where SQl</label>
-            <input type="text" class="text longtext" name="task" value="${sql!}" />
+            <input type="text" class="text longtext" name="sql" value="${sql!}" />
             <input type="submit" class="btn1" value="搜索" accesskey="S" />
         </div>
     </form>
@@ -31,13 +31,13 @@ ${Html.s("pagetitle","采样查询")}
 <table class="mytable" width="100%">
     <tr>
         <th style="width:3%">Id</th>
-        <th style="width:10%">app_name(服务名)</th>
-        <th style="width:10%">formip(来源IP)</th>
+        <th style="width:80px">app_name<br/>服务名</th>
+        <th style="width:100px">formip<br/>来源IP</th>
         <th style="width:10%">url</th>
-        <th style="width:5%">method</th>
+        <th style="width:50px">method</th>
         <th style="width:30%">header</th>
         <th style="width:40%">body</th>
-        <th style="width:7%">创建时间</th>
+        <th style="width:100px">创建时间</th>
     </tr>
     <#list model as item>
         <tr data-id="${item.id}">
@@ -46,8 +46,8 @@ ${Html.s("pagetitle","采样查询")}
             <td>${item.fromip}</td>
             <td>${item.url}</td>
             <td>${item.method}</td>
-            <td title="${item.header}">${Html.cutstring(item.header,300)}</td>
-            <td title="${item.body}">${Html.cutstring(item.body,300)}</td>
+            <td title="${item.header?html}">${Html.cutstring(item.header,300)}</td>
+            <td title="${item.body?html}">${Html.cutstring(item.body,300)}</td>
             <td>${Html.p(item.create_time)}</td>
         </tr>
     </#list>

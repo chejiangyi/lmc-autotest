@@ -11,6 +11,31 @@ import java.util.List;
 import java.util.Map;
 
 public class tb_report_node_dal extends tb_report_node_example_base_dal {
+    public boolean addHeartBeat(DbConn conn, String table,tb_report_node_example_model model) {
+        val par = new Object[]{
+                /***/
+                model.node,
+                /***/
+                model.cpu,
+                /***/
+                model.network_read,
+                /***/
+                model.network_write,
+                /***/
+                model.active_threads,
+                /***/
+                model.throughput,
+                /***/
+                model.error,
+                /***/
+                model.create_time,
+                /***/
+                model.memory
+        };
+        int rev = conn.executeSql("insert into "+table+"(node,cpu,network_read,network_write,active_threads,throughput,error,create_time,memory)" +
+                "values(?,?,?,?,?,?,?,?,?)", par);
+        return rev == 1;
+    }
     public String copyNewTable(DbConn conn, String name){
         conn.executeSql("CREATE TABLE tb_report_node_"+name+" LIKE tb_report_node_example",new Object[]{});
         return "tb_report_node_"+name;

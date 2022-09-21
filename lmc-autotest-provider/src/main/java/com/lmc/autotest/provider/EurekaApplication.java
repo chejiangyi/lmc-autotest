@@ -17,7 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
  * 注意要配合properties 的配置使用
  **/
 /****************调试时候去掉SpringBootApplication注释*************/
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
+@SpringBootApplication()//exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class}
 /**
  * 【关键配置】需要使用的项目api 协议类,一般放provider包下面;多个项目则配置多个
  * 注意:spring.main.allow-bean-definition-overriding=true 必须要配置否则会报错

@@ -6,7 +6,9 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.http.HttpClient;
 import com.free.bsf.core.util.HttpClientUtils;
 import com.free.bsf.core.util.JsonUtils;
+import com.free.bsf.core.util.LogUtils;
 import com.free.bsf.core.util.StringUtils;
+import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
 import com.netflix.discovery.converters.Auto;
@@ -30,6 +32,7 @@ public class HttpUtils {
         r.header = JsonUtils.deserialize(request.header, new TypeReference<HashMap<String,String>>() {});
         r.body = request.getBody();
         r.appName = StringUtils.nullToEmpty(request.app_name);
+        LogUtils.info(HttpUtils.class, Config.nodeName(),"访问:"+r.httpUrl);
         return httpRequest(r);
     }
     @Data
@@ -115,7 +118,7 @@ public class HttpUtils {
                     out.flush();
                 }
             }
-
+            response.requestSize=requestSize;
             response.code=conn.getResponseCode();
             response.header = new HashMap<>();
             for(val filed:conn.getHeaderFields().entrySet()){
@@ -124,15 +127,16 @@ public class HttpUtils {
             long responseSize =0;
             try(InputStream in = conn.getInputStream()) {
                 val bs = AutoTestIOUtils.toArrays(in);
-                requestSize+=bs.length;
+                responseSize+=bs.length;
                 response.body = AutoTestIOUtils.toString(bs);
             }
             response.responseSize=responseSize;
-            response.requestSize=requestSize;
 
             return response;
         }catch (Exception e){
-            throw new BsfException(e);
+            response.code=404;
+            return  response;
+            //throw new BsfException(e); 不报错
         }finally {
             response.timeMs = new Date().getTime()-beginTime;
             //释放连接以为不能复用连接池,但是可以避免连接溢出风险

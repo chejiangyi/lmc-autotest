@@ -22,7 +22,7 @@ public class AutoTestTool {
             CronExpression cronExpression = new CronExpression(cron);
             return cronExpression.getNextValidTimeAfter(date);
         }catch (Exception exp){
-            throw new BsfException(exp);
+            throw new BsfException("corn表达式解析出错",exp);
         }
     }
 

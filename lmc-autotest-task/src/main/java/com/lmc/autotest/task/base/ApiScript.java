@@ -31,7 +31,7 @@ public class ApiScript {
     }
     //调试日志
     public void error(Object info){
-        LogTool.error(ApiScript.class,"bsf","动态脚本调试日志:"+scriptInfo+"=>"+JsonUtils.serialize(info),null);
+        LogTool.error(ApiScript.class,"bsf","动态脚本错误日志:"+scriptInfo+"=>"+JsonUtils.serialize(info),null);
         //DebugUtil.webDebug(info);
     }
     //转json
@@ -79,6 +79,17 @@ public class ApiScript {
     //写样本文件
     public void writeSample(String filename,Object sample){
         SampleUtils.writeline(filename,JsonUtils.serialize(sample));
+    }
+
+    //delete样本文件
+    public void deleteSample(String filename){
+        FileUtils.delete(filename);
+    }
+
+
+    //当前时间格式化
+    public String nowFormat(String format){
+        return DateUtil.format(new Date(),format);
     }
 
     //执行sql

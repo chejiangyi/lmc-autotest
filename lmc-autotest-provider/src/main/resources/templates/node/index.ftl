@@ -7,6 +7,11 @@ ${Html.s("pagetitle","节点列表")}
     </div>
 </div>
 <div class="orderlist m10 myorder">
+    <div class="tab_cont">
+        <div class="List">
+            <@_list/>
+        </div>
+    </div>
 </div>
 </@layout._layout>
 <#macro _list >
@@ -36,9 +41,9 @@ ${Html.s("pagetitle","节点列表")}
         </tr>
     </#list>
 </table>
-<div class="total pt10">
-    <@layout._pager/>
-</div>
+<#--<div class="total pt10">-->
+<#--    <@layout._pager/>-->
+<#--</div>-->
     <script type="text/javascript">
         function del(id) {
             if(!confirm("请确认节点不再使用,删除后不可恢复？"))

@@ -27,6 +27,7 @@ import sun.swing.StringUIClientPropertyKey;
 import java.io.File;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.UUID;
 
 public class AutoTestProvider {
@@ -35,10 +36,12 @@ public class AutoTestProvider {
     private Integer taskid=-1;
     @Getter
     private boolean isRun =false;
-    private String tempid= UUID.randomUUID().toString().replace("-","");
+    //private String tempid= UUID.randomUUID().toString().replace("-","");
     private Date startTime = new Date();
-    public AutoTestProvider(Integer taskid){
+    private String tranId = "";
+    public AutoTestProvider(Integer taskid,String tranId){
         this.taskid=taskid;
+        this.tranId = tranId;
     }
 
     public AutoTestProvider init(){
@@ -49,7 +52,7 @@ public class AutoTestProvider {
         if (task_model == null)
             throw new BsfException(taskid + "任务不存在");
         this.reportProvider = new ReportProvider();
-        this.reportProvider.init(task_model);
+        this.reportProvider.init(task_model,this.tranId);
         return this;
     }
 
@@ -74,7 +77,7 @@ public class AutoTestProvider {
         AutoTestManager.Default.close(taskid,reason);
         FileUtils.delete(getFileName(task_model.filter_table));
         FileUtils.delete(getFileName(task_model.filter_table)+".temp");
-        FileUtils.clearExpireFile("/");
+        FileUtils.clearExpireFile(new File("").getAbsolutePath());
         try{
             String reason2=Config.nodeName()+":"+StringUtils.nullToEmpty(reason);
             DbHelper.transactionCall(Config.mysqlDataSource(), (c) -> {
@@ -95,7 +98,7 @@ public class AutoTestProvider {
                     try {
                         SampleUtils.readline(getFileName(task_model.filter_table),(line)->{
                             try {
-                                if (isRun)
+                                if (!isRun||StringUtils.isEmpty(line))
                                     return;
                                 tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
                                 if (j == null || StringUtils.isEmpty(j.url))
@@ -152,7 +155,7 @@ public class AutoTestProvider {
                 }catch (Exception e){
                     LogTool.error(AutoTestProvider.class,Config.appName(),"心跳更新任务",e);
                 }
-                ThreadUtils.sleep(Config.heartbeat());
+                ThreadUtils.sleep(Config.heartbeat()*1000);
             }
 
         });
@@ -177,15 +180,16 @@ public class AutoTestProvider {
             }
             file.renameTo(new File(temp));
             //重新生成文件
+            SampleUtils.reCreate(filename);
             SampleUtils.readline(temp, (line) -> {
                 if (isRun) {
                     tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
                     val r = HttpUtils.request(j);
                     if (r.getCode() == 200) {
                         SampleUtils.writeline(filename, line);
-                    }else{
-                        errorLines.setData(errorLines.getData()+1);
+                        return;
                     }
+                    errorLines.setData(errorLines.getData() + 1);
                 }
             });
         }
@@ -194,6 +198,9 @@ public class AutoTestProvider {
         });
     }
     private String getFileName(String filename){
-        return tempid+"-"+filename+".autotest";
+        if(filename.toLowerCase().endsWith(".sample")){
+            return filename;
+        }
+        return filename+".sample";
     }
 }

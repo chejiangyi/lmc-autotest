@@ -8,6 +8,7 @@ import com.lmc.autotest.dao.tb_task_dal;
 import lombok.val;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.quartz.CronExpression;
@@ -39,5 +40,11 @@ public class Utils {
         });
 
         return nodes.toArray(new String[]{});
+    }
+
+    public boolean isContainNode(String nodes,String node){
+        if(nodes == null)
+            return false;
+        return Arrays.asList(nodes.split(",")).contains(node);
     }
 }

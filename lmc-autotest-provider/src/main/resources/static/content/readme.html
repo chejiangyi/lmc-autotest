@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>js动态脚本语法参详</title>
+</head>
+<style>
+    div {margin: 10px}
+    i{background-color: #9E9E9E}
+</style>
+<body>
+<h1>支持js es5语法,参考函数如下</h1>
+<div>
+<b>流式sql读取处理</b>
+    <p>
+        api.streamSql(String sql,Object[] ps,ScriptObjectMirror objectMirror)
+    </p>
+    <i>api.streamSql("select * from tb_sample_2022_09_15 where url=?",["http://localhost:8081/test4"],function (dataMap){<br/>
+    //todo <br/>
+    })</i>
+</div>
+<div>
+<b>流式函数处理</b>
+    <p>
+        api.writeSample(String filename,Object sample)
+    </p>
+    <i>api.writeSample("aa.txt",{a=1,b=""})</i>
+</div>
+<div>
+<b>日志打印</b>
+    <p>
+        api.log(Object info)
+    </p>
+    <i>api.log("输出一段文字到日志中...")</i>
+</div>
+<div>
+    <b>当前时间格式化</b>
+    <p>
+        api.nowFormat(String format)
+    </p>
+    <i>api.nowFormat("yyyy-MM-dd")</i>
+</div>
+<div>
+    <b>动态参数</b>
+    <p>
+        api.ps.?
+    </p>
+    <p>采样脚本参数: task</p>
+    <p>执行前脚本参数: request</p>
+    <p>执行后脚本参数: request,response</p>
+    <p>结束规则脚本参数: nodeReport,runtime</p>
+    <i>api.ps.task</i>
+</div>
+</body>
+</html>

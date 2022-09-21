@@ -10,7 +10,7 @@ import lombok.*;
  * tb_report 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-09 15:46:20
+ * @since 2022-09-21 13:01:11
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -21,6 +21,10 @@ public class tb_report_model implements Serializable {
     public Integer id;
 
     public String report_name;
+    /**
+     * 事务id
+     */
+    public String tran_id;
 
     public Integer task_id;
 

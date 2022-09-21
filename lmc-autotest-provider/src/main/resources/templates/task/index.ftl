@@ -29,25 +29,27 @@ ${Html.s("pagetitle","任务列表")}
     <tr>
         <th style="width:3%">Id</th>
         <th style="width:10%">任务名</th>
-        <th style="width:5%">存储引擎</th>
-        <th style="width:5%">运行状态</th>
-        <th style="width:20%">执行时间</th>
-        <th style="width:5%">任务状态</th>
-        <th style="width:5%">创建人</th>
+        <th style="width:3%">存储引擎</th>
+        <th style="width:3%">运行状态</th>
+        <th style="width:15%">执行时间</th>
+        <th style="width:3%">任务状态</th>
+        <th style="width:7%">创建人</th>
+        <th style="width:7%">更新人</th>
         <th style="width:20%">执行结果</th>
-        <th style="width:20%">操作</th>
+        <th style="width:8%">操作</th>
     </tr>
     <#list model as item>
         <tr data-id="${item.id}">
             <td>${item.id}</td>
+            <td>${item.task!}</td>
             <td>${item.filter_store!}</td>
             <td>${Utils.showRunState(item.run_heart_time)}</td>
             <td>下次执行时间:${Html.p(item.next_time)}<br/>执行周期:${item.corn!}</td>
             <td>${item.use_state!}</td>
-            <td>${item.create_user}<br/>${Html.p(item.create_time)}<br/>更新:${item.update_user}(${Html.p(item.update_time)})</td>
+            <td>${item.create_user}<br/>${Html.p(item.create_time)}</td>
+            <td>${item.update_user}<br/>${Html.p(item.update_time)}</td>
             <td>${item.task_result!}</td>
             <td>
-                <a href="javascript:setUseState(${item.id})" class="usestate" title="">${item.use_state}</a>
                 <a href="javascript:setRunState(${item.id})" class="del"> ${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}</a>
                 <a href="/task/edit/?id=${item.id}" class="btn1" target="_blank">编辑</a>
                 <#if Utils.showRunState(item.run_heart_time)=="停止" >

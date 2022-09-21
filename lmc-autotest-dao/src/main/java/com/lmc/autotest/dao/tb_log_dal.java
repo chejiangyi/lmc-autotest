@@ -30,11 +30,11 @@ public class tb_log_dal extends tb_log_base_dal {
         }
         if(!StringUtils.isEmpty(create_time_from)){
             par.add(DateUtil.parse(create_time_from,"yyyy-MM-dd HH:mm:ss"));
-            sb.append(" and create_time_from > ?");
+            sb.append(" and create_time > ?");
         }
         if(!StringUtils.isEmpty(create_time_to)){
             par.add(DateUtil.parse(create_time_to,"yyyy-MM-dd HH:mm:ss"));
-            sb.append(" and create_time_to < ?");
+            sb.append(" and create_time < ?");
         }
 
         String sql = "select * "+sb.toString() +" order by id desc "+String.format(" limit %s,%s",(pageindex-1)*pagesize,pagesize);

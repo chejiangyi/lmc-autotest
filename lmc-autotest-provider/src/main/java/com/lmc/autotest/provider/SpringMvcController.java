@@ -53,7 +53,7 @@ public class SpringMvcController {
                 //页面模板扩展方法
                 request.setAttribute("Html",html);
                 request.setAttribute("Utils",new Utils());
-                //request.setAttribute("user", User.getCurrent());
+                request.setAttribute("user", User.getCurrent());
                 if(request.getAttribute("checkuser")==null||
                         ((boolean)request.getAttribute("checkuser"))==true) {
                     if (User.getCurrent() == null) {

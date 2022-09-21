@@ -12,6 +12,32 @@ import java.util.List;
 import java.util.Map;
 
 public class tb_report_url_dal extends tb_report_url_example_base_dal {
+    public boolean addHeartBeat(DbConn conn,String table, tb_report_url_example_model model) {
+        val par = new Object[]{
+                /***/
+                model.url,
+                /***/
+                model.node,
+                /**访问次数*/
+                model.visit_num,
+                /**吞吐量/s*/
+                model.throughput,
+                /**错误量/s*/
+                model.error,
+                /**avg 访问耗时/s */
+                model.visit_time,
+                /**网络读/s*/
+                model.network_read,
+                /***/
+                model.create_time,
+                /**网络写/s*/
+                model.network_write
+        };
+        int rev = conn.executeSql("insert into "+table+"(url,node,visit_num,throughput,error,visit_time,network_read,create_time,network_write)" +
+                "values(?,?,?,?,?,?,?,?,?)", par);
+        return rev == 1;
+    }
+
     public String copyNewTable(DbConn conn, String name){
         conn.executeSql("CREATE TABLE tb_report_url_"+name+" LIKE tb_report_url_example",new Object[]{});
         return "tb_report_url_"+name;

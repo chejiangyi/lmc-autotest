@@ -32,7 +32,7 @@ public class NodeProvider {
                 }catch (Exception e){
                     LogTool.error(AutoTestProvider.class, Config.appName(),"心跳更新节点",e);
                 }
-                ThreadUtils.sleep(Config.heartbeat());
+                ThreadUtils.sleep(Config.heartbeat()*1000);
             }
 
         });

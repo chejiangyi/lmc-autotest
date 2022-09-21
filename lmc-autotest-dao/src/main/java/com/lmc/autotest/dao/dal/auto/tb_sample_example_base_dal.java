@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_sample_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-09 15:46:21
+ * @since 2022-09-13 19:01:15
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_sample_example_base_dal {
@@ -40,10 +40,12 @@ public class tb_sample_example_base_dal {
                 /***/
                 model.traceId,
                 /***/
-                model.method
+                model.method,
+                /**枚举:未知,操作,仅查询*/
+                model.operator_type
         };
-        int rev = conn.executeSql("insert into tb_sample_example(url,app_name,header,body,create_time,fromip,traceId,method)" +
-                "values(?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_sample_example(url,app_name,header,body,create_time,fromip,traceId,method,operator_type)" +
+                "values(?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -65,9 +67,11 @@ public class tb_sample_example_base_dal {
                 model.traceId,
                 /***/
                 model.method,
+                /**枚举:未知,操作,仅查询*/
+                model.operator_type,
                 model.id
         };
-        int rev = conn.executeSql("update tb_sample_example set url=?,app_name=?,header=?,body=?,create_time=?,fromip=?,traceId=?,method=? where id=?", par);
+        int rev = conn.executeSql("update tb_sample_example set url=?,app_name=?,header=?,body=?,create_time=?,fromip=?,traceId=?,method=?,operator_type=? where id=?", par);
         return rev == 1;
 
     }
@@ -140,6 +144,10 @@ public class tb_sample_example_base_dal {
         /***/
         if (dr.containsKey("method")) {
             o.method = ConvertUtils.convert(dr.get("method"), String.class);
+        }
+        /**枚举:未知,操作,仅查询*/
+        if (dr.containsKey("operator_type")) {
+            o.operator_type = ConvertUtils.convert(dr.get("operator_type"), String.class);
         }
         return o;
     }

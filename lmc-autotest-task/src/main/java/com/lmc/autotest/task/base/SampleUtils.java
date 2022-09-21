@@ -38,6 +38,19 @@ public class SampleUtils {
         }
     }
 
+    public static void delete(String fileName){
+        com.lmc.autotest.task.base.FileUtils.delete(fileName);
+    }
+
+    public static void reCreate(String fileName){
+        try {
+            delete(fileName);
+            new File(fileName).createNewFile();
+        }catch (Exception e){
+            throw new BsfException(e);
+        }
+    }
+
     private static String encode(String line,boolean encode){
         if(encode){
             return line.replace("\r","[换行]").replace("\n","[回车]");

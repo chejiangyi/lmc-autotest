@@ -1,9 +1,12 @@
 package com.lmc.autotest.task;
+import com.free.bsf.core.util.ExceptionUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -12,12 +15,16 @@ public class ApiController  {
 
 
 	@PostMapping("/opentask/")
-	public ApiResponseEntity<Integer> openTask(Integer taskId) {
+	public ApiResponseEntity<Integer> openTask(Integer taskId,String tranId) {
 		try {
-			AutoTestManager.Default.open(taskId);
+			if(tranId==null)
+			{
+				tranId= UUID.randomUUID().toString().replace("-","").substring(0,10);
+			}
+			AutoTestManager.Default.open(taskId,tranId);
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
-			return ApiResponseEntity.fail(e.getMessage());
+			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
 		}
 	}
 
@@ -27,7 +34,7 @@ public class ApiController  {
 			AutoTestManager.Default.close(taskId,"用户执行关闭");
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
-			return ApiResponseEntity.fail(e.getMessage());
+			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
 		}
 	}
 

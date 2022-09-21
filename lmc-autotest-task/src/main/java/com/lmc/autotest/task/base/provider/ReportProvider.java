@@ -7,14 +7,11 @@ import com.free.bsf.core.util.JsonUtils;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.core.NodeInfo;
+import com.lmc.autotest.dao.*;
 import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_report_node_example_model;
 import com.lmc.autotest.dao.model.auto.tb_report_url_example_model;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
-import com.lmc.autotest.dao.tb_node_dal;
-import com.lmc.autotest.dao.tb_report_dal;
-import com.lmc.autotest.dao.tb_report_node_dal;
-import com.lmc.autotest.dao.tb_report_url_dal;
 import com.lmc.autotest.task.base.HttpUtils;
 import com.lmc.autotest.task.base.IOUtils;
 import com.xxl.job.core.util.DateUtil;
@@ -33,39 +30,43 @@ public class ReportProvider {
     tb_report_model report_model = null;
     volatile ReportNodeInfo reportNodeInfo = null;
     volatile ReportUrlMap reportUrlMap = null;
-    public void init(tb_task_model task_model){
-        report_model = DbHelper.transactionGet(Config.mysqlDataSource(), (c) -> {
-            var nodes = new tb_node_dal().getOnlineNodes(c);
-            var nodeNames = Arrays.asList(task_model.nodes.split(","));
-            nodes=nodes.stream().filter(n->nodeNames.contains(n)).collect(Collectors.toList());
-            val nodeInfos = new ArrayList<NodeInfo>();
-            for(val n:nodes){
-                val ni = new NodeInfo();
-                ni.node=n.node;
-                ni.cpu=n.local_cpu;
-                ni.memory=n.local_memory;
-                ni.threads=task_model.run_threads_count;
-            }
-            var report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id);
-            if(report==null) {
-                String time= DateUtil.format(new Date(),"yyyy-MM-dd-HH-mm-ss");
-                tb_report_model model = new tb_report_model();
-                model.setCreate_time(new Date());
-                model.setBegin_time(new Date());
-                model.setEnd_time(DateUtils.strToDate("1900-01-01","yyyy-MM-dd"));
-                model.setFilter_store(task_model.filter_store);
-                model.setReport_name(task_model.task+"_"+time);
-                model.setReport_node_table(new tb_report_node_dal().copyNewTable(c,time));
-                model.setReport_url_table(new tb_report_url_dal().copyNewTable(c,time));
-                model.setTask_id(task_model.id);
-                model.setFilter_table(task_model.filter_table);
-                model.setTask_name(task_model.task);
-                model.setNodes(task_model.nodes);
-                model.setNodes_info(JsonUtils.serialize(nodeInfos));
-                new tb_report_dal().add(c,model);
-            }
-            report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id);
-            return report;
+    public void init(tb_task_model task_model,String tranId){
+        DbHelper.transaction(Config.mysqlDataSource(),8,()->{
+            report_model = DbHelper.transactionGet(Config.mysqlDataSource(), (c) -> {
+                val taskTemp = new tb_task_dal().getWithLock(c,task_model.id);
+                var nodes = new tb_node_dal().getOnlineNodes(c);
+                var nodeNames = Arrays.asList(task_model.nodes.split(","));
+                nodes=nodes.stream().filter(n->nodeNames.contains(n)).collect(Collectors.toList());
+                val nodeInfos = new ArrayList<NodeInfo>();
+                for(val n:nodes){
+                    val ni = new NodeInfo();
+                    ni.node=n.node;
+                    ni.cpu=n.local_cpu;
+                    ni.memory=n.local_memory;
+                    ni.threads=task_model.run_threads_count;
+                }
+                var report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);
+                if(report==null) {
+                    String time= DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");
+                    tb_report_model model = new tb_report_model();
+                    model.setCreate_time(new Date());
+                    model.setBegin_time(new Date());
+                    model.setEnd_time(DateUtils.strToDate("1900-01-01","yyyy-MM-dd"));
+                    model.setFilter_store(task_model.filter_store);
+                    model.setReport_name(task_model.task+"_"+time);
+                    model.setReport_node_table(new tb_report_node_dal().copyNewTable(c,time));
+                    model.setReport_url_table(new tb_report_url_dal().copyNewTable(c,time));
+                    model.setTask_id(task_model.id);
+                    model.setFilter_table(task_model.filter_table);
+                    model.setTask_name(task_model.task);
+                    model.setNodes(task_model.nodes);
+                    model.setNodes_info(JsonUtils.serialize(nodeInfos));
+                    model.setTran_id(tranId);
+                    new tb_report_dal().add(c,model);
+                }
+                report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);
+                return report;
+            });
         });
     }
 
@@ -104,7 +105,7 @@ public class ReportProvider {
             model.node=this.reportNodeInfo.node;
             model.throughput=this.reportNodeInfo.all_throughput.get()/this.reportNodeInfo.getTimeSpan();
             DbHelper.call(Config.mysqlDataSource(),(c)->{
-                new tb_report_node_dal().add(c,model);
+                new tb_report_node_dal().addHeartBeat(c,report_model.report_node_table,model);
             });
         }if(this.reportUrlMap!=null){
             val urls = new ArrayList<tb_report_url_example_model>();
@@ -122,7 +123,9 @@ public class ReportProvider {
                 urls.add(model);
             }
             DbHelper.call(Config.mysqlDataSource(),(c)->{
-                new tb_report_url_dal().batch(c,urls);
+                for(val url:urls) {
+                    new tb_report_url_dal().addHeartBeat(c,report_model.report_url_table,url);
+                }
             });
         }
         val returnInfo = this.reportNodeInfo;

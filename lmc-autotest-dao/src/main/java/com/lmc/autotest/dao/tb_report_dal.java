@@ -51,10 +51,10 @@ public class tb_report_dal extends tb_report_base_dal {
         totalSize.setData(ConvertUtils.convert(db.executeScalar(countSql,par.toArray()),int.class));
         return rs;
     }
-    public tb_report_model getByTaskIdWithLock(DbConn conn, Object taskid) {
-        val par = new Object[]{taskid};
+    public tb_report_model getByTaskIdWithLock(DbConn conn, Object taskid,String tranId) {
+        val par = new Object[]{taskid,tranId};
         val stringSql = new StringBuilder();
-        stringSql.append("select s.* from tb_report s where s.taskid=? FOR UPDATE");
+        stringSql.append("select s.* from tb_report s where s.task_id=? and s.tran_id=? FOR UPDATE");
         val ds = conn.executeList(stringSql.toString(), par);
         if (ds != null && ds.size() > 0) {
             return createModel(ds.get(0));

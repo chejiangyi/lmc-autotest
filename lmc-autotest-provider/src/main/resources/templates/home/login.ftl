@@ -16,7 +16,7 @@
             width: 100vw;
             height: 100vh;
             margin: 0 auto;
-            background-image: url("/content/images/login_bg.jpg");
+            background-image: url("/content/images/login_bg.png");
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
@@ -117,6 +117,7 @@
             <button class="login-button">登录</button>
         </div>
     </div>
+    </form>
 </div>
 </body>
 <script>
@@ -125,26 +126,20 @@
         $(".login-button").click(function () {
             var name = $(".login-name").val();
             var password = $(".login-password").val();
-            var loginData = {
-                username: name,
-                password: password,
-            };
-            console.log(loginData);
             $.ajax({
-                url: "/login/",
+                url: '/login/',
                 type: "post",
-                contentType: "application/json",
-                data: JSON.stringify(loginData),
-                success: function (res) {
-                    if (res.code === 200) {
-                        window.location.href = "/index/";
-                    }else{
-                        alert(res.message)
+                data: {
+                    username: name,
+                    password: password,
+                },
+                success: function (data) {
+                    if (data.code === 200) {
+                        window.location.href = "/task/index/";
+                    } else {
+                        alert(data.message)
                     }
-                },
-                error: function (err) {
-                    console.error(err);
-                },
+                }
             });
         });
     });

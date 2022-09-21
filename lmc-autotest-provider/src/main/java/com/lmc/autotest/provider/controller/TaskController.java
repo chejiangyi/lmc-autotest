@@ -59,7 +59,8 @@ public class TaskController extends SpringMvcController {
             val model = DbHelper.get(Config.mysqlDataSource(), c -> {
                 return new tb_task_dal().get(c, id);
             });
-            request.setAttribute("model", model);
+            val temp = new tb_task_model();temp.setClear_data_first(false);
+            request.setAttribute("model", model==null?temp:model);
         });
     }
 
@@ -89,12 +90,16 @@ public class TaskController extends SpringMvcController {
                 model.filter_store = filter_store;
                 model.http_end_script = http_end_script;
                 model.next_time = AutoTestTool.cornNextTime(new Date(), corn);
-                model.nodes = String.join(",", nodes);
+                model.nodes = String.join(",", nodes==null?new String[]{}:nodes);
                 model.run_threads_count = run_threads_count;
                 model.update_time = new Date();
                 model.task = task;
                 model.update_user = this.getUser().getUsername();
-                new tb_task_dal().get(c, id);
+                if(model.id==null||model.id==0){
+                    new tb_task_dal().add(c,model);
+                }else {
+                    new tb_task_dal().edit(c, model);
+                }
             });
             return true;
         });

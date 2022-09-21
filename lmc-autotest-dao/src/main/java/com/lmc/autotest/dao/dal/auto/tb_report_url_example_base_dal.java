@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report_url_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-09 15:46:21
+ * @since 2022-09-13 19:01:15
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_url_example_base_dal {

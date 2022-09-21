@@ -20,6 +20,7 @@ public class HomeController extends SpringMvcController {
     @RequestMapping("/")
     public ModelAndView loginPage()
     {
+        request.setAttribute("checkuser",false);
         return pageVisit((m) -> {
             m.setViewName("/home/login");
         });

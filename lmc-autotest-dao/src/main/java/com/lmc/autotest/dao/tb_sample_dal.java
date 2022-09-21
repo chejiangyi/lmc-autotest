@@ -13,6 +13,7 @@ import lombok.val;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class tb_sample_dal extends tb_sample_example_base_dal {
     public List<tb_sample_example_model> searchPage(DbConn db, String table2, String sql2, Integer pageindex, Integer pagesize, Ref<Integer> totalSize){
@@ -37,15 +38,30 @@ public class tb_sample_dal extends tb_sample_example_base_dal {
     public List<String> tables(DbConn db){
         val par = new ArrayList<>();
         val rs = new ArrayList<String>();
-        String sql = "select TABLE_NAME from information_schema.tables where table_schema like concat('%', 'tb_sample_', '%');";
+        String sql = "SHOW TABLES like 'tb_sample_20%'";
         val ds = db.executeList(sql, par.toArray());
         if (ds != null && ds.size() > 0)
         {
             for (Map<String,Object> dr : ds)
             {
-                rs.add(ConvertUtils.convert(dr.get("TABLE_NAME"),String.class));
+                rs.add(ConvertUtils.convert(dr.values().stream().collect(Collectors.toList()).get(0),String.class));
             }
         }
         return rs;
+    }
+
+    public String copyNewTable(DbConn conn, String name){
+        conn.executeSql("CREATE TABLE tb_sample_"+name+" LIKE tb_sample_example",new Object[]{});
+        return "tb_sample_"+name;
+    }
+
+    public boolean tableIsExist(DbConn db, String name){
+        String sql = "SHOW TABLES like ? ";
+        val ds = db.executeList(sql, new Object[]{"tb_sample_"+name});
+        if (ds != null && ds.size() > 0)
+        {
+           return true;
+        }
+        return false;
     }
 }

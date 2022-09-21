@@ -22,9 +22,9 @@
                 <ul class="level2">
                     <li><a href="/sample/index">采样查询</a></li>
                 </ul>
-                <ul class="level2">
-                    <li><a href="/user/index/">用户管理</a></li>
-                </ul>
+<#--                <ul class="level2">-->
+<#--                    <li><a href="/user/index/">用户管理</a></li>-->
+<#--                </ul>-->
             </li>
         </ul>
     </div>

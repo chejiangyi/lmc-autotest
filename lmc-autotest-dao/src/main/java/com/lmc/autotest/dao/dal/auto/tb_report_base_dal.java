@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-09 15:46:20
+ * @since 2022-09-21 13:01:11
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_base_dal {
@@ -27,6 +27,8 @@ public class tb_report_base_dal {
         val par = new Object[]{
                 /***/
                 model.report_name,
+                /**事务id*/
+                model.tran_id,
                 /***/
                 model.task_id,
                 /***/
@@ -54,8 +56,8 @@ public class tb_report_base_dal {
                 /***/
                 model.filter_table_error_lines
         };
-        int rev = conn.executeSql("insert into tb_report(report_name,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_report(report_name,tran_id,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -63,6 +65,8 @@ public class tb_report_base_dal {
         val par = new Object[]{
                 /***/
                 model.report_name,
+                /**事务id*/
+                model.tran_id,
                 /***/
                 model.task_id,
                 /***/
@@ -91,7 +95,7 @@ public class tb_report_base_dal {
                 model.filter_table_error_lines,
                 model.id
         };
-        int rev = conn.executeSql("update tb_report set report_name=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=?,task_name=?,filter_table_lines=?,filter_table_error_lines=? where id=?", par);
+        int rev = conn.executeSql("update tb_report set report_name=?,tran_id=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=?,task_name=?,filter_table_lines=?,filter_table_error_lines=? where id=?", par);
         return rev == 1;
 
     }
@@ -136,6 +140,10 @@ public class tb_report_base_dal {
         /***/
         if (dr.containsKey("report_name")) {
             o.report_name = ConvertUtils.convert(dr.get("report_name"), String.class);
+        }
+        /**事务id*/
+        if (dr.containsKey("tran_id")) {
+            o.tran_id = ConvertUtils.convert(dr.get("tran_id"), String.class);
         }
         /***/
         if (dr.containsKey("task_id")) {
