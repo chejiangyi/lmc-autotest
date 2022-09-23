@@ -10,6 +10,9 @@ import java.io.LineNumberReader;
 import java.util.Date;
 
 public class FileUtils {
+    public static String getSampleFile(Integer taskId,String tranId){
+        return tranId+"-"+taskId+".sample";
+    }
     public static void delete(String filename){
         val file = new File(filename);
         if(file.exists()) {

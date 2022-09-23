@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_task 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-22 14:29:28
+ * @since 2022-09-23 22:31:58
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_task_base_dal {
@@ -43,8 +43,6 @@ public class tb_task_base_dal {
                 model.exec_result,
                 /**过滤筛选脚本*/
                 model.filter_script,
-                /**过滤筛选表*/
-                model.filter_table,
                 /**是否清理数据*/
                 model.clear_data_first,
                 /**执行节点*/
@@ -58,8 +56,8 @@ public class tb_task_base_dal {
                 /**检测终止脚本*/
                 model.check_stop_script
         };
-        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,filter_table,clear_data_first,nodes,run_threads_count,http_begin_script,http_end_script,check_stop_script)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,clear_data_first,nodes,run_threads_count,http_begin_script,http_end_script,check_stop_script)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -83,8 +81,6 @@ public class tb_task_base_dal {
                 model.exec_result,
                 /**过滤筛选脚本*/
                 model.filter_script,
-                /**过滤筛选表*/
-                model.filter_table,
                 /**是否清理数据*/
                 model.clear_data_first,
                 /**执行节点*/
@@ -99,7 +95,7 @@ public class tb_task_base_dal {
                 model.check_stop_script,
                 model.id
         };
-        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,filter_table=?,clear_data_first=?,nodes=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=? where id=?", par);
+        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,clear_data_first=?,nodes=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=? where id=?", par);
         return rev == 1;
 
     }
@@ -176,10 +172,6 @@ public class tb_task_base_dal {
         /**过滤筛选脚本*/
         if (dr.containsKey("filter_script")) {
             o.filter_script = ConvertUtils.convert(dr.get("filter_script"), String.class);
-        }
-        /**过滤筛选表*/
-        if (dr.containsKey("filter_table")) {
-            o.filter_table = ConvertUtils.convert(dr.get("filter_table"), String.class);
         }
         /**是否清理数据*/
         if (dr.containsKey("clear_data_first")) {

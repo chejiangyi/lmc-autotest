@@ -16,7 +16,7 @@ ${Html.s("pagetitle","采样查询")}
                 </#list>
             </select>
             <label>Where SQl</label>
-            <input type="text" class="text longtext" name="sql" value="${sql!}" />
+            <input type="text" class="text longtext" style="width: 450px" name="sql" value="${sql!}" />${Html.help("普通的sql查询模式,如: url like '%192.168%' and operator_type!='未知'")}
             <input type="submit" class="btn1" value="搜索" accesskey="S" />
         </div>
     </form>
@@ -37,7 +37,10 @@ ${Html.s("pagetitle","采样查询")}
         <th style="width:50px">method</th>
         <th style="width:30%">header</th>
         <th style="width:40%">body</th>
-        <th style="width:100px">创建时间</th>
+        <th style="width:100px">create_time<br/>创建时间</th>
+        <th style="width:100px">traceid</th>
+        <th style="width:100px">trace_top<br/>堆栈顶部</th>
+        <th style="width:100px">operator_type<br/>操作类型</th>
     </tr>
     <#list model as item>
         <tr data-id="${item.id}">
@@ -49,6 +52,9 @@ ${Html.s("pagetitle","采样查询")}
             <td title="${item.header?html}">${Html.cutstring(item.header,300)}</td>
             <td title="${item.body?html}">${Html.cutstring(item.body,300)}</td>
             <td>${Html.p(item.create_time)}</td>
+            <td>${Html.p(item.traceid)}</td>
+            <td>${Html.p(item.trace_top)}</td>
+            <td>${Html.p(item.operator_type)}</td>
         </tr>
     </#list>
 </table>

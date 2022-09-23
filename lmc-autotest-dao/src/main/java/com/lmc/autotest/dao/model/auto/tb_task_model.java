@@ -10,7 +10,7 @@ import lombok.*;
  * tb_task 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-22 14:29:28
+ * @since 2022-09-23 22:31:58
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -55,10 +55,6 @@ public class tb_task_model implements Serializable {
      * 过滤筛选脚本
      */
     public String filter_script;
-    /**
-     * 过滤筛选表
-     */
-    public String filter_table;
     /**
      * 是否清理数据
      */

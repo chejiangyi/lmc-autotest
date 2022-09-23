@@ -61,11 +61,14 @@ public class AutoTestProvider {
         ThreadUtils.system().submit("自动化压测运行任务",()->{
             isRun=true;
             try {
+                FileUtils.delete( FileUtils.getSampleFile(task_model.id,tranId)+ ".temp");
+                FileUtils.delete( FileUtils.getSampleFile(task_model.id,tranId));
+
                 hearBeat();
                 createSampleFile();
                 filterError();
                 autoTest();
-                LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务已启动");
+                LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务已启动");
             }catch (Exception e){
                 close("启动执行异常");
                 LogTool.error(AutoTestProvider.class,Config.appName(),task_model.task+"-自动化压测运行任务异常",e);
@@ -77,9 +80,6 @@ public class AutoTestProvider {
     public void close(String reason){
         isRun=false;
         AutoTestManager.Default.close(taskid,reason);
-        FileUtils.delete(getFileName(task_model.filter_table));
-        FileUtils.delete(getFileName(task_model.filter_table)+".temp");
-        FileUtils.clearExpireFile(new File("").getAbsolutePath());
         try{
             String reason2=Config.nodeName()+":"+StringUtils.nullToEmpty(reason);
             DbHelper.transactionCall(Config.mysqlDataSource(), (c) -> {
@@ -87,10 +87,17 @@ public class AutoTestProvider {
                 new tb_task_dal().closeHeartBeat(c,taskid);
                 new tb_task_dal().addResult(c, taskid,task.exec_result+"\r\n"+reason2);
             });
-            LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务已关闭");
+            LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务已关闭");
         }
         catch (Exception e){
-            LogUtils.error(this.getClass(),Config.appName(),"关闭原因更新数据库出错",e);
+            LogTool.error(this.getClass(),Config.appName(),"关闭原因更新数据库出错",e);
+        }
+        try {
+            FileUtils.delete( FileUtils.getSampleFile(task_model.id,tranId)+ ".temp");
+            FileUtils.delete( FileUtils.getSampleFile(task_model.id,tranId));
+            FileUtils.clearExpireFile(new File("").getAbsolutePath());
+        }catch (Exception e){
+            LogTool.error(this.getClass(),Config.appName(),"关闭删除文件出错",e);
         }
     }
 
@@ -100,7 +107,7 @@ public class AutoTestProvider {
             ThreadUtils.system().submit("压测线程"+index,()->{
                 while (!ThreadUtils.system().isShutdown()&&isRun){
                     try {
-                        SampleUtils.readline(getFileName(task_model.filter_table),(line)->{
+                        SampleUtils.readline(FileUtils.getSampleFile(task_model.id,tranId),(line)->{
                             try {
                                 if (!isRun||StringUtils.isEmpty(line))
                                     return;
@@ -110,6 +117,8 @@ public class AutoTestProvider {
                                 //前
                                 if (!StringUtils.isEmpty(task_model.http_begin_script)) {
                                     val sMap = new LinkedHashMap();
+                                    sMap.put("task",task_model);
+                                    sMap.put("tranId",tranId);
                                     sMap.put("request", j);
                                     val r1 = DynamicScript.run("执行前脚本", task_model.http_begin_script, sMap);
                                     if (r1 == null || !(r1 instanceof Boolean) || (boolean) r1 != true) {
@@ -120,6 +129,8 @@ public class AutoTestProvider {
                                 //后
                                 if (!StringUtils.isEmpty(task_model.http_end_script)) {
                                     val sMap2 = new LinkedHashMap();
+                                    sMap2.put("task",task_model);
+                                    sMap2.put("tranId",tranId);
                                     sMap2.put("request", j);
                                     sMap2.put("response", r);
                                     val r2 = DynamicScript.run("执行后脚本", task_model.http_end_script, sMap2);
@@ -150,10 +161,14 @@ public class AutoTestProvider {
                     });
                     val nodeReport = reportProvider.heartBeatReport();
                     if(!StringUtils.isEmpty(task_model.check_stop_script)) {
-                        val sMap = new LinkedHashMap();sMap.put("nodeReport",nodeReport);sMap.put("runtime",(new Date().getTime()-startTime.getTime())/1000);
+                        val sMap = new LinkedHashMap();
+                        sMap.put("task",task_model);
+                        sMap.put("tranId",tranId);
+                        sMap.put("nodeReport",nodeReport);
+                        sMap.put("runtime",(new Date().getTime()-startTime.getTime())/1000);
                         val r2 = DynamicScript.run("任务终止判断脚本", task_model.check_stop_script, sMap);
                         if(r2!=null&&(r2 instanceof Boolean)&&(boolean)r2==false){
-                            LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务命中任务终止判断脚本规则");
+                            LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务命中任务终止判断脚本规则");
                             close("命中任务终止判断脚本规则");
                         }
                     }
@@ -168,46 +183,48 @@ public class AutoTestProvider {
 
     //生成采样表文件
     private void createSampleFile(){
-        val map = new LinkedHashMap();map.put("task",task_model);
+        val map = new LinkedHashMap();
+        map.put("task",task_model);
+        map.put("tranId",tranId);
         DynamicScript.run("采样表文件生成",task_model.filter_script,map);
-        LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-采样表文件生成完成");
+        LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-采样表文件生成完成");
     }
     //过滤错误样本
     private void filterError(){
-        int fileLines = FileUtils.fileCount(getFileName(task_model.filter_table));
+        int fileLines = FileUtils.fileCount(FileUtils.getSampleFile(task_model.id,tranId));
         Ref<Integer> errorLines=new Ref<Integer>(0);
         if(task_model.clear_data_first) {
             //生成临时文件
-            String filename = getFileName(task_model.filter_table);
+            String filename = FileUtils.getSampleFile(task_model.id,tranId);
             String temp = filename + ".temp";
-            val file = new File(filename);
-            if (!file.exists()) {
-                throw new BsfException("文件不存在:" + filename);
-            }
-            file.renameTo(new File(temp));
-            //重新生成文件
-            SampleUtils.reCreate(filename);
-            SampleUtils.readline(temp, (line) -> {
-                if (isRun) {
-                    tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
-                    val r = HttpUtils.request(j);
-                    if (r.getCode() == 200) {
-                        SampleUtils.writeline(filename, line);
-                        return;
-                    }
-                    errorLines.setData(errorLines.getData() + 1);
+            try {
+                val file = new File(filename);
+                if (!file.exists()) {
+                    throw new BsfException("文件不存在:" + filename);
                 }
-            });
-            LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-过滤错误样本完成");
+                file.renameTo(new File(temp));
+                //重新生成文件
+                SampleUtils.reCreate(filename);
+                SampleUtils.readline(temp, (line) -> {
+                    if (isRun) {
+                        tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
+                        val r = HttpUtils.request(j);
+                        if (r.getCode() == 200) {
+                            SampleUtils.writeline(filename, line);
+                            return;
+                        }
+                        errorLines.setData(errorLines.getData() + 1);
+                    }
+                });
+                LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-过滤错误样本完成");
+            }finally {
+                FileUtils.delete(temp);
+            }
+
         }
         DbHelper.call(Config.mysqlDataSource(),(c)-> {
             new tb_report_dal().updateFilterTableInfo(c,reportProvider.report_model.id,fileLines,errorLines.getData());
         });
     }
-    private String getFileName(String filename){
-        if(filename.toLowerCase().endsWith(".sample")){
-            return filename;
-        }
-        return filename+".sample";
-    }
+
 }

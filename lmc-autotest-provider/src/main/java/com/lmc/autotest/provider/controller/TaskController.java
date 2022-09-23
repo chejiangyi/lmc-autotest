@@ -79,7 +79,7 @@ public class TaskController extends SpringMvcController {
                 model.clear_data_first = clear_data_first;
                 model.http_begin_script = http_begin_script;
                 model.check_stop_script = check_stop_script;
-                model.filter_table = filter_table;
+//                model.filter_table = filter_table;
                 model.create_user = this.getUser().getUsername();
                 model.filter_script = filter_script;
                 model.filter_store = filter_store;
@@ -98,20 +98,6 @@ public class TaskController extends SpringMvcController {
             return true;
         });
     }
-
-//    @RequestMapping("/setUseState/")
-//    public ModelAndView setUseState(Integer id) {
-//        return jsonVisit((m) -> {
-//            DbHelper.call(Config.mysqlDataSource(), c -> {
-//                tb_task_model model = new tb_task_dal().get(c, id);
-//                if (model != null) {
-//                    model.setUse_state(model.use_state == "禁用" ? "启用" : "禁用");
-//                }
-//                new tb_task_dal().edit(c, model);
-//            });
-//            return true;
-//        });
-//    }
 
     @RequestMapping("/setRunState/")
     public ModelAndView setRunState(Integer id,String todo) {

@@ -4,6 +4,7 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.http.HttpClient;
 import com.free.bsf.core.util.*;
+import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.service.LogTool;
 import com.xxl.job.core.util.DateUtil;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
@@ -77,13 +78,12 @@ public class ApiScript {
         return map;
     }
     //写样本文件
-    public void writeSample(String filename,Object sample){
-        SampleUtils.writeline(filename,JsonUtils.serialize(sample));
-    }
-
-    //delete样本文件
-    public void deleteSample(String filename){
-        FileUtils.delete(filename);
+    public void writeSample(Object sample){
+        val task = ps.get("task");
+        val tranId = ps.get("tranId");
+        if(task!=null&&(task instanceof tb_task_model)) {
+            SampleUtils.writeline(FileUtils.getSampleFile(((tb_task_model)task).id,tranId.toString()), JsonUtils.serialize(sample));
+        }
     }
 
 
@@ -102,7 +102,7 @@ public class ApiScript {
         return  r;
         }catch (Exception e){
             val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
-            LogUtils.error(ApiScript.class,"bsf",msg,e);
+            LogTool.error(ApiScript.class,"bsf",msg,e);
             throw new BsfException(msg);
         }
     }
@@ -116,7 +116,7 @@ public class ApiScript {
             });
         }catch (Exception e){
             val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
-            LogUtils.error(ApiScript.class,"bsf",msg,e);
+            LogTool.error(ApiScript.class,"bsf",msg,e);
             throw new BsfException(msg);
         }
     }

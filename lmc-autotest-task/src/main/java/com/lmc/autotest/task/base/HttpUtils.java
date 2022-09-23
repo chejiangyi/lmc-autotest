@@ -1,6 +1,7 @@
 package com.lmc.autotest.task.base;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.free.bsf.autotest.AutoTestProperties;
 import com.free.bsf.autotest.base.AutoTestIOUtils;
 import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.http.HttpClient;
@@ -87,6 +88,8 @@ public class HttpUtils {
             conn.setConnectTimeout(3000);
             conn.setReadTimeout(60000);
             conn.setUseCaches(false);
+            //压测标识头
+            conn.setRequestProperty(AutoTestProperties.AutoTestRunning,"true");
             conn.setRequestProperty("Accept-Charset","utf-8");
             //conn.setInstanceFollowRedirects(true);
             conn.setRequestProperty("Connection", "Keep-Alive");

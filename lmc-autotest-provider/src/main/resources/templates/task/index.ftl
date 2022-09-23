@@ -51,7 +51,7 @@ ${Html.s("pagetitle","任务列表")}
                 <#if Utils.showRunState(item.run_heart_time)=="停止" >
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>
-<#--                <a href="javascript:del(${item.id})" class="del">最新压测报告</a>-->
+                <a href="/report/index/?report_name=${item.task}" class="btn1">压测报告</a>
             </td>
         </tr>
     </#list>

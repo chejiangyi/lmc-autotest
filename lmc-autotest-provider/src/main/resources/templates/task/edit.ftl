@@ -26,10 +26,10 @@ ${Html.s("pagetitle","编辑任务")}
                 <label>采集样本筛选脚本</label>
                 <textarea id="filter_script" rows="20" cols="20" style="width: 80%;">${model.filter_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
             </li>
-            <li>
-                <label>采样表文件</label>
-                <input class="mtext" type="text" id="filter_table" name="filter_table" value="${model.filter_table!}" />
-            </li>
+<#--            <li>-->
+<#--                <label>采样表文件</label>-->
+<#--                <input class="mtext" type="text" id="filter_table" name="filter_table" value="${model.filter_table!}" />-->
+<#--            </li>-->
             <li>
                 <label>第一次执行过滤错误采样样本</label>
                <input type="checkbox" id="clear_data_first" name="clear_data_first" ${Html.w(model.clear_data_first,"checked='checked'","")}>${Html.help("先过滤错误样本后,再执行压测任务")}

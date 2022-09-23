@@ -12,6 +12,7 @@ import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_report_node_example_model;
 import com.lmc.autotest.dao.model.auto.tb_report_url_example_model;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
+import com.lmc.autotest.task.base.FileUtils;
 import com.lmc.autotest.task.base.HttpUtils;
 import com.lmc.autotest.task.base.IOUtils;
 import com.xxl.job.core.util.DateUtil;
@@ -58,7 +59,7 @@ public class ReportProvider {
                     model.setReport_node_table(new tb_report_node_dal().copyNewTable(c,time));
                     model.setReport_url_table(new tb_report_url_dal().copyNewTable(c,time));
                     model.setTask_id(task_model.id);
-                    model.setFilter_table(task_model.filter_table);
+                    model.setFilter_table(FileUtils.getSampleFile(task_model.id,tranId));
                     model.setTask_name(task_model.task);
                     model.setNodes(task_model.nodes);
                     model.setNodes_info(JsonUtils.serialize(nodeInfos));

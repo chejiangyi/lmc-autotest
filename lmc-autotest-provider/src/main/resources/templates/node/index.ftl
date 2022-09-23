@@ -33,7 +33,7 @@ ${Html.s("pagetitle","节点列表")}
                 线程:${Html.p(item.threads)!}<br/>IP(端口):${Html.p(item.ip)!}(${Html.p(item.port)!})<br/>
             </td>
             <td>
-                <a href="/log/index/" class="del">日志</a>
+                <a href="/log/index/?node=${item.node}" class="del">日志</a>
                 <#if Utils.showRunState(item.heart_time)=="停止" >
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>
