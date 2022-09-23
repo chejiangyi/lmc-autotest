@@ -31,8 +31,6 @@ ${Html.s("pagetitle","任务列表")}
         <th style="width:10%">任务名</th>
         <th style="width:3%">存储引擎</th>
         <th style="width:3%">运行状态</th>
-        <th style="width:15%">执行时间</th>
-        <th style="width:3%">任务状态</th>
         <th style="width:7%">创建人</th>
         <th style="width:7%">更新人</th>
         <th style="width:20%">执行结果</th>
@@ -43,14 +41,12 @@ ${Html.s("pagetitle","任务列表")}
             <td>${item.id}</td>
             <td>${item.task!}</td>
             <td>${item.filter_store!}</td>
-            <td>${Utils.showRunState(item.run_heart_time)}</td>
-            <td>下次执行时间:${Html.p(item.next_time)}<br/>执行周期:${item.corn!}</td>
-            <td>${item.use_state!}</td>
+            <td>${Utils.printRunState(item.run_heart_time)}</td>
             <td>${item.create_user}<br/>${Html.p(item.create_time)}</td>
             <td>${item.update_user}<br/>${Html.p(item.update_time)}</td>
-            <td>${item.task_result!}</td>
+            <td>${item.exec_result!}</td>
             <td>
-                <a href="javascript:setRunState(${item.id})" class="del"> ${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}</a>
+                <a href="javascript:setRunState(${item.id},'${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}')" class="btn1"> ${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}</a>
                 <a href="/task/edit/?id=${item.id}" class="btn1" target="_blank">编辑</a>
                 <#if Utils.showRunState(item.run_heart_time)=="停止" >
                     <a href="javascript:del(${item.id})" class="del">删除</a>
@@ -64,36 +60,22 @@ ${Html.s("pagetitle","任务列表")}
     <@layout._pager/>
 </div>
     <script type="text/javascript">
-        function setUseState(id){
-            $.ajax({
-                url: '/task/setUseState/',
-                type: "post",
-                data: {
-                    id: id
-                },
-                success: function (data) {
-                    if (data.code > 0) {
-                        window.location.reload();
-                    }
-                    else {
-                        alert(data.message);
-                    }
-                }
-            });
-        }
-        function setRunState(id){
+        function setRunState(id,todo){
             $.ajax({
                 url: '/task/setRunState/',
                 type: "post",
                 data: {
-                    id: id
+                    id: id,
+                    todo:todo
                 },
                 success: function (data) {
                     if (data.code > 0) {
+                        console.log(todo);
                         window.location.reload();
                     }
                     else {
                         alert(data.message);
+                        window.location.reload();
                     }
                 }
             });

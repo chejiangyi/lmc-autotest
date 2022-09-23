@@ -60,7 +60,7 @@ public class NodeProvider {
         node.cpu= IOUtils.cpu();
         node.node = Config.nodeName();
         node.ip= NetworkUtils.getIpAddress();
-        node.prot= PropertyUtils.getPropertyCache("server.port","0");
+        node.port= PropertyUtils.getPropertyCache("server.port","0");
         node.memory= IOUtils.memory();
         node.threads= IOUtils.threadCount();
         node.local_cpu = IOUtils.localCpuCores();

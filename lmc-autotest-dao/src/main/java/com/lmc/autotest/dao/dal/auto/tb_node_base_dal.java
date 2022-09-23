@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_node 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:14
+ * @since 2022-09-22 14:29:27
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_node_base_dal {
@@ -30,21 +30,21 @@ public class tb_node_base_dal {
                 /***/
                 model.cpu,
                 /***/
+                model.memory,
+                /***/
                 model.threads,
                 /***/
                 model.ip,
                 /***/
                 model.heatbeat_time,
                 /***/
-                model.prot,
-                /***/
-                model.memory,
+                model.port,
                 /***/
                 model.local_cpu,
                 /***/
                 model.local_memory
         };
-        int rev = conn.executeSql("insert into tb_node(node,cpu,threads,ip,heatbeat_time,prot,memory,local_cpu,local_memory)" +
+        int rev = conn.executeSql("insert into tb_node(node,cpu,memory,threads,ip,heatbeat_time,port,local_cpu,local_memory)" +
                 "values(?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
@@ -56,22 +56,22 @@ public class tb_node_base_dal {
                 /***/
                 model.cpu,
                 /***/
+                model.memory,
+                /***/
                 model.threads,
                 /***/
                 model.ip,
                 /***/
                 model.heatbeat_time,
                 /***/
-                model.prot,
-                /***/
-                model.memory,
+                model.port,
                 /***/
                 model.local_cpu,
                 /***/
                 model.local_memory,
                 model.id
         };
-        int rev = conn.executeSql("update tb_node set node=?,cpu=?,threads=?,ip=?,heatbeat_time=?,prot=?,memory=?,local_cpu=?,local_memory=? where id=?", par);
+        int rev = conn.executeSql("update tb_node set node=?,cpu=?,memory=?,threads=?,ip=?,heatbeat_time=?,port=?,local_cpu=?,local_memory=? where id=?", par);
         return rev == 1;
 
     }
@@ -122,6 +122,10 @@ public class tb_node_base_dal {
             o.cpu = ConvertUtils.convert(dr.get("cpu"), Double.class);
         }
         /***/
+        if (dr.containsKey("memory")) {
+            o.memory = ConvertUtils.convert(dr.get("memory"), Double.class);
+        }
+        /***/
         if (dr.containsKey("threads")) {
             o.threads = ConvertUtils.convert(dr.get("threads"), Integer.class);
         }
@@ -134,12 +138,8 @@ public class tb_node_base_dal {
             o.heatbeat_time = ConvertUtils.convert(dr.get("heatbeat_time"), Date.class);
         }
         /***/
-        if (dr.containsKey("prot")) {
-            o.prot = ConvertUtils.convert(dr.get("prot"), String.class);
-        }
-        /***/
-        if (dr.containsKey("memory")) {
-            o.memory = ConvertUtils.convert(dr.get("memory"), Double.class);
+        if (dr.containsKey("port")) {
+            o.port = ConvertUtils.convert(dr.get("port"), String.class);
         }
         /***/
         if (dr.containsKey("local_cpu")) {

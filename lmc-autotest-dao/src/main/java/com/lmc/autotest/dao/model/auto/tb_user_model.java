@@ -10,7 +10,7 @@ import lombok.*;
  * tb_user 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:16
+ * @since 2022-09-22 14:29:28
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data

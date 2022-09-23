@@ -42,6 +42,13 @@ public class tb_task_dal extends tb_task_base_dal {
         int rev = conn.executeSql("update tb_task set run_heart_time=now() where id=?", par);
     }
 
+    public void closeHeartBeat(DbConn conn, int id) {
+        val par = new Object[]{
+                id
+        };
+        int rev = conn.executeSql("update tb_task set run_heart_time='1900-01-01' where id=?", par);
+    }
+
     public void addResult(DbConn conn, int id,String reason) {
         val par = new Object[]{
                 reason,id

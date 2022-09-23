@@ -38,7 +38,7 @@ public class tb_sample_dal extends tb_sample_example_base_dal {
     public List<String> tables(DbConn db){
         val par = new ArrayList<>();
         val rs = new ArrayList<String>();
-        String sql = "SHOW TABLES like 'tb_sample_20%'";
+        String sql = "SHOW TABLES like 'auto_tb_sample_%'";
         val ds = db.executeList(sql, par.toArray());
         if (ds != null && ds.size() > 0)
         {

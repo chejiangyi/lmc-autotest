@@ -12,12 +12,15 @@ import com.lmc.autotest.provider.pager.Pager1;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
+import org.apache.logging.log4j.util.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -42,7 +45,7 @@ public class SampleController extends SpringMvcController {
                         new Pager1(pageIndex2, totalSize.getData()).setPageSize(pageSize2).out();
                     }
                     tables = DbHelper.get(Config.mysqlDataSource(), c -> {
-                        return new tb_sample_dal().tables(c);
+                        return new tb_sample_dal().tables(c).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
                     });
 
                     request.setAttribute("model", list);

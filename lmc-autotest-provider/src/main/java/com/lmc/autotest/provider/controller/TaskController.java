@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.StringJoiner;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -66,8 +63,8 @@ public class TaskController extends SpringMvcController {
 
     @RequestMapping("/save")
     public ModelAndView save(Integer id, String task,
-                             String corn, String filter_store, String filter_script, String filter_table,
-                             boolean clear_data_first, String[] nodes, Integer run_threads_count,
+                             String filter_store, String filter_script, String filter_table,
+                             boolean clear_data_first, String nodes, Integer run_threads_count,
                              String http_begin_script, String http_end_script, String check_stop_script
     ) {
         return jsonVisit((m) -> {
@@ -75,22 +72,19 @@ public class TaskController extends SpringMvcController {
                 tb_task_model model = new tb_task_dal().get(c, id);
                 if (model == null) {
                     model = new tb_task_model();
-                    model.corn = "";
-                    model.use_state = "停止";
+                    model.run_heart_time = new Date(1900,01,01);
+                    model.create_time = new Date();
+                }else {
                 }
                 model.clear_data_first = clear_data_first;
                 model.http_begin_script = http_begin_script;
-                model.run_heart_time = new Date();
                 model.check_stop_script = check_stop_script;
                 model.filter_table = filter_table;
-                model.corn = corn;
-                model.create_time = new Date();
                 model.create_user = this.getUser().getUsername();
                 model.filter_script = filter_script;
                 model.filter_store = filter_store;
                 model.http_end_script = http_end_script;
-                model.next_time = AutoTestTool.cornNextTime(new Date(), corn);
-                model.nodes = String.join(",", nodes==null?new String[]{}:nodes);
+                model.nodes = nodes;
                 model.run_threads_count = run_threads_count;
                 model.update_time = new Date();
                 model.task = task;
@@ -105,39 +99,47 @@ public class TaskController extends SpringMvcController {
         });
     }
 
-    @RequestMapping("/setUseState/")
-    public ModelAndView setUseState(Integer id) {
-        return jsonVisit((m) -> {
-            DbHelper.call(Config.mysqlDataSource(), c -> {
-                tb_task_model model = new tb_task_dal().get(c, id);
-                if (model != null) {
-                    model.setUse_state(model.use_state == "禁用" ? "启用" : "禁用");
-                }
-                new tb_task_dal().edit(c, model);
-            });
-            return true;
-        });
-    }
+//    @RequestMapping("/setUseState/")
+//    public ModelAndView setUseState(Integer id) {
+//        return jsonVisit((m) -> {
+//            DbHelper.call(Config.mysqlDataSource(), c -> {
+//                tb_task_model model = new tb_task_dal().get(c, id);
+//                if (model != null) {
+//                    model.setUse_state(model.use_state == "禁用" ? "启用" : "禁用");
+//                }
+//                new tb_task_dal().edit(c, model);
+//            });
+//            return true;
+//        });
+//    }
 
     @RequestMapping("/setRunState/")
-    public ModelAndView setRunState(Integer id) {
+    public ModelAndView setRunState(Integer id,String todo) {
         return jsonVisit((m) -> {
             DbHelper.call(Config.mysqlDataSource(), c -> {
                 tb_task_model model = new tb_task_dal().get(c, id);
-                String api = "openTask";
-                if (AutoTestTool.isOnLine(model.run_heart_time)) {
-                    api = "closeTask";
+                String api = "";
+                if (AutoTestTool.isOnLine(model.run_heart_time)&&"停止".equals(todo)) {
+                    api = "closetask";
+                }
+                if(!AutoTestTool.isOnLine(model.run_heart_time)&&"运行".equals(todo)){
+                    api = "opentask";
+                }
+                if("".equals(api)){
+                    throw new BsfException("重复操作");
                 }
                 val nodeNames = Lists.newArrayList(StringUtils.trim(model.nodes, ',').split(","));
                 val nodes = new tb_node_dal().getOnlineNodes(c);
                 val lock = new Object();
                 StringBuilder errors = new StringBuilder();
                 val api2 = api;
+                new tb_task_dal().addResult(c, model.id,"");
                 ThreadUtils.parallelFor("并行操作节点开关", nodes.size(), nodes, (n) -> {
-                    if (!nodeNames.contains(n))
+                    if (!nodeNames.contains(n.node))
                         return;
-                    val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.prot + "/" + api2 + "/",
-                            HttpClient.Params.custom().add("taskId", id).build());
+                    val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.port + "/" + api2 + "/",
+                            HttpClient.Params.custom().add("taskId", id)
+                                    .add("tranId", UUID.randomUUID().toString().replace("-","")).build());
                     ApiResponseEntity es = JsonUtils.deserialize(rs, ApiResponseEntity.class);
                     synchronized (lock) {
                         if (es.getCode() < 0 ) {
@@ -147,7 +149,7 @@ public class TaskController extends SpringMvcController {
                         }
                     }
                 });
-                if (errors.toString()!="") {
+                if (!"".equals(errors.toString())) {
                     throw new BsfException("执行失败："+errors.toString());
                 }
             });

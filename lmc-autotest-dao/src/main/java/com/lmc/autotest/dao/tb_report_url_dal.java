@@ -39,8 +39,8 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
     }
 
     public String copyNewTable(DbConn conn, String name){
-        conn.executeSql("CREATE TABLE tb_report_url_"+name+" LIKE tb_report_url_example",new Object[]{});
-        return "tb_report_url_"+name;
+        conn.executeSql("CREATE TABLE auto_tb_report_url_"+name+" LIKE tb_report_url_example",new Object[]{});
+        return "auto_tb_report_url_"+name;
     }
 
     public int countUrls(DbConn conn,String table){
@@ -52,13 +52,13 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
         val stringSql = new StringBuilder();
         stringSql.append(
                 "select url,sum(visit_num) as all_visit_num,max(throughput) as max_throughput,max(error) as max_error,min(visit_time) as min_visit_time,max(visit_time) as max_visit_time,\n" +
-                "avg(visit_time) as avg_visit_time,max(network_read) as max_network_read,min(network_write) as min_network_write\n" +
+                "avg(visit_time) as avg_visit_time,max(network_read) as max_network_read,max(network_write) as max_network_write\n" +
                 "from {table}");
         if(!StringUtils.isEmpty(node)){
             stringSql.append(" where node='{node}'");
         }
         stringSql.append(" group by url order by url");
-        val ds = conn.executeList(stringSql.toString().replace("{table}",tableName).replace("{node}",node), new Object[]{});
+        val ds = conn.executeList(stringSql.toString().replace("{table}",tableName).replace("{node}",StringUtils.nullToEmpty(node)), new Object[]{});
         return ds;
     }
 
@@ -75,7 +75,7 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
             par.add(url);
             stringSql.append(" and url=?");
         }
-        stringSql.append(" group by url order by url");
+        //stringSql.append(" group by url order by url");
         val ds = conn.executeList(stringSql.toString().replace("{table}",tableName), par.toArray());
         return ds;
     }

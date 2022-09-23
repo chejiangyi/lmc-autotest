@@ -10,7 +10,7 @@ import lombok.*;
  * tb_sample_example 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:15
+ * @since 2022-09-22 14:29:27
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -32,7 +32,11 @@ public class tb_sample_example_model implements Serializable {
 
     public String fromip;
 
-    public String traceId;
+    public String traceid;
+    /**
+     * 是否是顶部trace
+     */
+    public String trace_top;
 
     public String method;
     /**

@@ -37,8 +37,8 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
         return rev == 1;
     }
     public String copyNewTable(DbConn conn, String name){
-        conn.executeSql("CREATE TABLE tb_report_node_"+name+" LIKE tb_report_node_example",new Object[]{});
-        return "tb_report_node_"+name;
+        conn.executeSql("CREATE TABLE auto_tb_report_node_"+name+" LIKE tb_report_node_example",new Object[]{});
+        return "auto_tb_report_node_"+name;
     }
 
     public List<Map<String,Object>> nodesReport(DbConn conn, String tableName,String weidu){
@@ -57,32 +57,32 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
 
     public List<Map<String,Object>> nodeSumReport(DbConn conn, String tableName){
         val stringSql = new StringBuilder();
-        stringSql.append("select DATE_FORMAT(create_time, '%Y-%m-%d %H:%i') as create_time,sum(cpu) as cpu,sum(network_read) as network_read,\n" +
+        stringSql.append(("select DATE_FORMAT(create_time, '%Y-%m-%d %H:%i') as create_time,sum(cpu) as cpu,sum(network_read) as network_read,\n" +
                 "           sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
-                "\t\t\t\t\t sum(error) as error,sum(create_time) as create_time,sum(memory) as memory \n" +
-                "\t\t\t\t\t from tb_report_node_example where id in(\n" +
+                "\t\t\t\t\t sum(error) as error,sum(memory) as memory \n" +
+                "\t\t\t\t\t from {table} where id in(\n" +
                 "\t\tSELECT max(id)  from {table} group by node,DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')\n" +
-                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')".replace("{table}",tableName));
+                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')").replace("{table}",tableName));
         val ds = conn.executeList(stringSql.toString(), new Object[]{});
         return ds;
     }
 
     public List<Map<String,Object>> getMaxThroughputWithNoError(DbConn conn,String tableName){
-        String sql = "\n" +
+        String sql = ("\n" +
                 "select * from (\n" +
                 "select DATE_FORMAT(create_time, '%Y-%m-%d %H:%i') as create_time,sum(active_threads) as active_threads,sum(throughput) as throughput,sum(error) as error from {table} where id in (\n" +
                 "SELECT max(id)  from {table} group by node,DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')\n" +
-                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')) as t WHERE error=0 order by throughput desc LIMIT 0,1".replace("{table}",tableName);
+                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')) as t WHERE error=0 order by throughput desc LIMIT 0,1").replace("{table}",tableName);
         val ds = conn.executeList(sql.toString(), new Object[]{});
         return ds;
     }
 
     public List<Map<String,Object>> getMaxThroughput(DbConn conn,String tableName){
-        String sql = "\n" +
+        String sql = ("\n" +
                 "select * from (\n" +
                 "select DATE_FORMAT(create_time, '%Y-%m-%d %H:%i') as create_time,sum(active_threads) as active_threads,sum(throughput) as throughput,sum(error) as error from {table} where id in (\n" +
                 "SELECT max(id)  from {table} group by node,DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')\n" +
-                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')) as t order by throughput desc LIMIT 0,1".replace("{table}",tableName);
+                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')) as t order by throughput desc LIMIT 0,1").replace("{table}",tableName);
         val ds = conn.executeList(sql.toString(), new Object[]{});
         return ds;
     }

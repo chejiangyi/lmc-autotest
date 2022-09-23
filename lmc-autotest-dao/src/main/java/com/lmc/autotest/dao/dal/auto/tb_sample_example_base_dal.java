@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_sample_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:15
+ * @since 2022-09-22 14:29:27
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_sample_example_base_dal {
@@ -38,14 +38,16 @@ public class tb_sample_example_base_dal {
                 /***/
                 model.fromip,
                 /***/
-                model.traceId,
+                model.traceid,
+                /**是否是顶部trace*/
+                model.trace_top,
                 /***/
                 model.method,
                 /**枚举:未知,操作,仅查询*/
                 model.operator_type
         };
-        int rev = conn.executeSql("insert into tb_sample_example(url,app_name,header,body,create_time,fromip,traceId,method,operator_type)" +
-                "values(?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_sample_example(url,app_name,header,body,create_time,fromip,traceid,trace_top,method,operator_type)" +
+                "values(?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -64,14 +66,16 @@ public class tb_sample_example_base_dal {
                 /***/
                 model.fromip,
                 /***/
-                model.traceId,
+                model.traceid,
+                /**是否是顶部trace*/
+                model.trace_top,
                 /***/
                 model.method,
                 /**枚举:未知,操作,仅查询*/
                 model.operator_type,
                 model.id
         };
-        int rev = conn.executeSql("update tb_sample_example set url=?,app_name=?,header=?,body=?,create_time=?,fromip=?,traceId=?,method=?,operator_type=? where id=?", par);
+        int rev = conn.executeSql("update tb_sample_example set url=?,app_name=?,header=?,body=?,create_time=?,fromip=?,traceid=?,trace_top=?,method=?,operator_type=? where id=?", par);
         return rev == 1;
 
     }
@@ -138,8 +142,12 @@ public class tb_sample_example_base_dal {
             o.fromip = ConvertUtils.convert(dr.get("fromip"), String.class);
         }
         /***/
-        if (dr.containsKey("traceId")) {
-            o.traceId = ConvertUtils.convert(dr.get("traceId"), String.class);
+        if (dr.containsKey("traceid")) {
+            o.traceid = ConvertUtils.convert(dr.get("traceid"), String.class);
+        }
+        /**是否是顶部trace*/
+        if (dr.containsKey("trace_top")) {
+            o.trace_top = ConvertUtils.convert(dr.get("trace_top"), String.class);
         }
         /***/
         if (dr.containsKey("method")) {

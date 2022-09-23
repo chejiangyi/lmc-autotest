@@ -10,7 +10,7 @@ import lombok.*;
  * tb_report_url_example 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:15
+ * @since 2022-09-22 14:29:27
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -40,13 +40,13 @@ public class tb_report_url_example_model implements Serializable {
      */
     public Double visit_time;
     /**
+     * 网络写/s
+     */
+    public Double network_write;
+    /**
      * 网络读/s
      */
     public Double network_read;
 
     public Date create_time;
-    /**
-     * 网络写/s
-     */
-    public Double network_write;
 }

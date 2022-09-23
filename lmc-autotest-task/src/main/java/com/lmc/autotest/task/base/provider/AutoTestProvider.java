@@ -51,6 +51,7 @@ public class AutoTestProvider {
         });
         if (task_model == null)
             throw new BsfException(taskid + "任务不存在");
+
         this.reportProvider = new ReportProvider();
         this.reportProvider.init(task_model,this.tranId);
         return this;
@@ -64,6 +65,7 @@ public class AutoTestProvider {
                 createSampleFile();
                 filterError();
                 autoTest();
+                LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务已启动");
             }catch (Exception e){
                 close("启动执行异常");
                 LogTool.error(AutoTestProvider.class,Config.appName(),task_model.task+"-自动化压测运行任务异常",e);
@@ -82,8 +84,10 @@ public class AutoTestProvider {
             String reason2=Config.nodeName()+":"+StringUtils.nullToEmpty(reason);
             DbHelper.transactionCall(Config.mysqlDataSource(), (c) -> {
                 val task = new tb_task_dal().getWithLock(c,taskid);
+                new tb_task_dal().closeHeartBeat(c,taskid);
                 new tb_task_dal().addResult(c, taskid,task.exec_result+"\r\n"+reason2);
             });
+            LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务已关闭");
         }
         catch (Exception e){
             LogUtils.error(this.getClass(),Config.appName(),"关闭原因更新数据库出错",e);
@@ -146,10 +150,11 @@ public class AutoTestProvider {
                     });
                     val nodeReport = reportProvider.heartBeatReport();
                     if(!StringUtils.isEmpty(task_model.check_stop_script)) {
-                        val sMap = new LinkedHashMap();sMap.put("nodeReport",nodeReport);sMap.put("runtime",(startTime.getTime()-new Date().getTime())/1000);
-                        val r2 = DynamicScript.run("执行后脚本", task_model.http_end_script, sMap);
-                        if(r2!=null&&(r2 instanceof Boolean)&&(boolean)r2==true){
-                            close("匹配执行后脚本规则");
+                        val sMap = new LinkedHashMap();sMap.put("nodeReport",nodeReport);sMap.put("runtime",(new Date().getTime()-startTime.getTime())/1000);
+                        val r2 = DynamicScript.run("任务终止判断脚本", task_model.check_stop_script, sMap);
+                        if(r2!=null&&(r2 instanceof Boolean)&&(boolean)r2==false){
+                            LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务命中任务终止判断脚本规则");
+                            close("命中任务终止判断脚本规则");
                         }
                     }
                 }catch (Exception e){
@@ -165,6 +170,7 @@ public class AutoTestProvider {
     private void createSampleFile(){
         val map = new LinkedHashMap();map.put("task",task_model);
         DynamicScript.run("采样表文件生成",task_model.filter_script,map);
+        LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-采样表文件生成完成");
     }
     //过滤错误样本
     private void filterError(){
@@ -192,6 +198,7 @@ public class AutoTestProvider {
                     errorLines.setData(errorLines.getData() + 1);
                 }
             });
+            LogUtils.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-过滤错误样本完成");
         }
         DbHelper.call(Config.mysqlDataSource(),(c)-> {
             new tb_report_dal().updateFilterTableInfo(c,reportProvider.report_model.id,fileLines,errorLines.getData());

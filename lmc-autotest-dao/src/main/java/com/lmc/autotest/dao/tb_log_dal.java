@@ -50,4 +50,11 @@ public class tb_log_dal extends tb_log_base_dal {
         totalSize.setData(ConvertUtils.convert(db.executeScalar(countSql,par.toArray()),int.class));
         return rs;
     }
+
+    public boolean clear(DbConn conn) {
+        val par = new Object[]{};
+        String Sql = "truncate table tb_log";
+        int rev = conn.executeSql(Sql, par);
+        return rev == 1;
+    }
 }

@@ -8,6 +8,37 @@
     div {margin: 10px}
     i{background-color: #9E9E9E}
 </style>
+<script type="text/javascript">
+
+    function showJson(json){
+        return "<pre>"+syntaxHighlight(json)+"</pre>"
+    }
+
+    // 方法实现
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2); //返回要JSON化的对象，2是spacing
+        }
+        json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span style="color: green;">' + match + '</span>';
+            }
+        );
+    }
+</script>
 <body>
 <h1>支持js es5语法,参考函数如下</h1>
 <div>
@@ -45,10 +76,121 @@
     <p>
         api.ps.?
     </p>
-    <p>采样脚本参数: task</p>
-    <p>执行前脚本参数: request</p>
-    <p>执行后脚本参数: request,response</p>
-    <p>结束规则脚本参数: nodeReport,runtime</p>
+    <b>采样脚本参数: task</b>
+    <p>task对象:
+        <script type="text/javascript">
+            document.write(showJson({
+                "id": 1,
+                "task": "111",
+                "filter_store": "mysql",
+                "run_heart_time": "2022-09-22 13:56:42",
+                "create_user": "admin",
+                "create_time": "2022-09-22 13:56:42",
+                "update_time": "2022-09-22 13:56:42",
+                "update_user": "admin",
+                "filter_script": "",
+                "filter_table": "aaa.sample",
+                "clear_data_first": true,
+                "nodes": "test",
+                "run_threads_count": 1,
+                "http_begin_script": "",
+                "http_end_script": "",
+                "check_stop_script": ""
+            }));
+        </script>
+    </p>
+    <b>执行前脚本参数: request,返回是否继续执行(true/false)</b>
+    <p>request对象:
+        <script type="text/javascript">
+            document.write(showJson({
+                "id": 2,
+                "url": "http://192.168.8.73:8700/bsf/health/",
+                "app_name": "lmc-test-provider",
+                "header": "{\"aaa\": \"1\", \"host\": \"localhost:8081\", \"accept\": \"*/*\", \"connection\": \"keep-alive\", \"user-agent\": \"ApiPOST Runtime +https://www.apipost.cn\"}",
+                "body": "{\"str\":\"bbbb\"}",
+                "create_time": "2022-09-15 03:27:19",
+                "fromip": "10.8.0.6",
+                "traceid": "lmc-test-provider-9a5980af177148e29b63070b0701cc16",
+                "trace_top": "是",
+                "method": "POST",
+                "operator_type": "操作"
+            }));
+        </script>
+    </p>
+    <b>执行后脚本参数: request,response,返回是否继续执行(true/false)</b>
+    <p>request对象:
+        <script type="text/javascript">
+            document.write(showJson({
+                "id": 2,
+                "url": "http://192.168.8.73:8700/bsf/health/",
+                "app_name": "lmc-test-provider",
+                "header": "{\"aaa\": \"1\", \"host\": \"localhost:8081\", \"accept\": \"*/*\", \"connection\": \"keep-alive\", \"user-agent\": \"ApiPOST Runtime +https://www.apipost.cn\"}",
+                "body": "{\"str\":\"bbbb\"}",
+                "create_time": "2022-09-15 03:27:19",
+                "fromip": "10.8.0.6",
+                "traceid": "lmc-test-provider-9a5980af177148e29b63070b0701cc16",
+                "trace_top": "是",
+                "method": "POST",
+                "operator_type": "操作"
+            }));
+        </script>
+    </p>
+    <p>response对象:
+        <script type="text/javascript">
+            document.write(showJson({
+                "request": {
+                    "appName": "lmc-test-provider",
+                    "httpUrl": "http://192.168.8.73:8700/bsf/health/",
+                    "method": "POST",
+                    "header": {
+                        "aaa": "1",
+                        "content-length": "14",
+                        "accept-language": "zh-CN",
+                        "host": "localhost:8081",
+                        "connection": "keep-alive",
+                        "content-type": "application/json",
+                        "accept-encoding": "gzip, deflate, br",
+                        "accept": "*/*",
+                        "user-agent": "ApiPOST Runtime +https://www.apipost.cn"
+                    },
+                    "body": "{\"str\":\"bbbb\"}"
+                },
+                "code": 200,
+                "method": "POST",
+                "header": {
+                    "Transfer-Encoding": "chunked",
+                    "": "HTTP/1.1 200",
+                    "Date": "Thu, 22 Sep 2022 10:31:56 GMT",
+                    "Content-Type": "application/json;charset=UTF-8"
+                },
+                "body": "文本输出....",
+                "requestSize": 14,
+                "responseSize": 13792,
+                "timeMs": 47401,
+                "success": true
+            }));
+        </script>
+    </p>
+    <b>结束规则脚本参数: nodeReport,runtime,返回是否继续执行(true/false)</b>
+    <p>runtime:运行时间(单位:ms)</p>
+    <p>nodeReport:初始化时为null<br/>
+    </p>
+    <p>nodeReport对象:
+        <script type="text/javascript">
+            document.write(showJson({
+                "node": "test",
+                "cpu": 0.008473612979373302,
+                "memory": 343.0,
+                "all_network_read": 3485918.0,
+                "all_network_write": 2128.0,
+                "active_threads": 114,
+                "all_throughput": 266,
+                "all_error": 0,
+                "create_time": "2022-09-22 18:51:15",
+                "timeSpan": 46.0
+            }));
+        </script>
+    </p>
     <i>api.ps.task</i>
 </div>
 </body>

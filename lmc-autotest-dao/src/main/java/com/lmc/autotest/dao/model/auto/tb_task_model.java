@@ -10,7 +10,7 @@ import lombok.*;
  * tb_task 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:15
+ * @since 2022-09-22 14:29:28
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -28,17 +28,9 @@ public class tb_task_model implements Serializable {
      */
     public String filter_store;
     /**
-     * 表达式
+     * 运行时间
      */
-    public String corn;
-    /**
-     * 下次执行时间
-     */
-    public Date next_time;
-    /**
-     * 使用状态:使用,禁用
-     */
-    public String use_state;
+    public Date run_heart_time;
     /**
      * 创建人
      */
@@ -91,8 +83,4 @@ public class tb_task_model implements Serializable {
      * 检测终止脚本
      */
     public String check_stop_script;
-    /**
-     * 运行时间
-     */
-    public Date run_heart_time;
 }

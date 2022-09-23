@@ -2,12 +2,17 @@ package com.lmc.autotest.provider.controller;
 
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
+import com.free.bsf.core.util.DateUtils;
+import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.core.Config;
+import com.lmc.autotest.core.NodeInfo;
 import com.lmc.autotest.dao.*;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.provider.SpringMvcController;
+import com.lmc.autotest.provider.base.Utils;
 import com.lmc.autotest.provider.pager.Pager1;
+import com.xxl.job.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
@@ -49,11 +54,13 @@ public class ReportController extends SpringMvcController {
                 val maxthroughput = new tb_report_node_dal().getMaxThroughput(c,report.getReport_node_table());
                 val maxthroughputWithNoError = new tb_report_node_dal().getMaxThroughput(c,report.getReport_node_table());
 
+
                 request.setAttribute("task", task);
                 request.setAttribute("model", report);
                 request.setAttribute("urlcount", urlcount);
-                request.setAttribute("maxthroughput",maxthroughput);
-                request.setAttribute("maxthroughputWithNoError",maxthroughputWithNoError);
+                request.setAttribute("maxthroughput", new Utils().listToMap(maxthroughput));
+                request.setAttribute("maxthroughputWithNoError",new Utils().listToMap(maxthroughputWithNoError));
+                request.setAttribute("nodeinfos", JsonUtils.deserialize(report.nodes_info, new ArrayList<NodeInfo>().getClass()));
             });
 
         });
@@ -66,15 +73,15 @@ public class ReportController extends SpringMvcController {
                 val report = new tb_report_dal().get(c, id);
                 val nodes = report.nodes.split(",");
                 val nodesreports  = new tb_report_node_dal().nodesReport(c,report.report_node_table,weidu);
-                Map<String, Map<Object,Object>> nodesValues = new HashMap<>();
+                Map<String, Object[]> nodesValues = new HashMap<>();
                 for(val node2:nodes) {
-                    val values = new HashMap<Object,Object>();
-                    nodesValues.put(node2, values);
+                    val values = new ArrayList<>();
                     for (val o : nodesreports) {
                         if(node2.equals(o.get("node"))){
-                            values.put(o.get("create_time"),o.get(weidu));
+                            values.add(new Object[]{o.get("create_time"),o.get(weidu)});
                         }
                     }
+                    nodesValues.put(node2, values.toArray());
                 }
                 Map<String,Object> nodeReport= new HashMap<>();
                 nodeReport.put("nodes",nodesValues);
@@ -96,13 +103,13 @@ public class ReportController extends SpringMvcController {
                     nodesreports = new tb_report_node_dal().nodeSumReport(c, report.report_node_table);
                 }
                 val weidus = new String[]{"cpu","memory","active_threads","throughput","error","network_read","network_write"};
-                Map<String, Map<Object,Object>> nodesValues = new HashMap<>();
+                Map<String, Object[]> nodesValues = new HashMap<>();
                 for(val weidu:weidus) {
-                    val values = new HashMap<>();
-                    nodesValues.put(weidu, values);
+                    val values = new ArrayList<>();
                     for (val o : nodesreports) {
-                        values.put(o.get("create_time"),o.get(weidu));
+                        values.add(new Object[]{o.get("create_time"),o.get(weidu)});
                     }
+                    nodesValues.put(weidu, values.toArray());
                 }
                 Map<String,Object> nodeReport= new HashMap<>();
                 nodeReport.put("node",nodesValues);
@@ -117,7 +124,7 @@ public class ReportController extends SpringMvcController {
         return jsonVisit((m) -> {
             return DbHelper.get(Config.mysqlDataSource(), c -> {
                 val report = new tb_report_dal().get(c, id);
-                List<Map<String,Object>> r = new tb_report_url_dal().nodeReport(c, node, report.report_node_table);
+                List<Map<String,Object>> r = new tb_report_url_dal().nodeReport(c, node, report.report_url_table);
                 Map<String,Object> urlreport= new HashMap<>();
                 urlreport.put("report",r);
                 return urlreport;
@@ -131,9 +138,19 @@ public class ReportController extends SpringMvcController {
         return jsonVisit((m) -> {
             return DbHelper.get(Config.mysqlDataSource(), c -> {
                 val report = new tb_report_dal().get(c, id);
-                List<Map<String,Object>> r = new tb_report_url_dal().urlChart(c, node,url, report.report_node_table);
+                List<Map<String,Object>> urlReport = new tb_report_url_dal().urlChart(c, node,url, report.report_url_table);
+                //"throughput":"吞吐量/s","error":"错误量/s","network_read":"网络读/s","network_write":"网络写/s","visit_time":"耗时/s"
+                val weidus = new String[]{"visit_time","throughput","error","network_read","network_write"};
+                Map<String, Object[]> urlValues = new HashMap<>();
+                for(val weidu:weidus) {
+                    val values = new ArrayList<>();
+                    for (val o : urlReport) {
+                        values.add(new Object[]{o.get("create_time"),o.get(weidu)});
+                    }
+                    urlValues.put(weidu, values.toArray());
+                }
                 Map<String,Object> urlreport= new HashMap<>();
-                urlreport.put("chart",r);
+                urlreport.put("chart",urlValues);
                 return urlreport;
             });
 

@@ -4,6 +4,23 @@ ${Html.s("pagetitle","压测报告")}
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
     <style>
+        .mydetail p{
+            display: inline;
+        }
+        .mydetail table{
+            margin-left: 200px;
+            width: 80%;
+        }
+        .mydetail table td{
+            text-align: left;
+        }
+        .mydetail .cnt{
+            margin-left: 200px;
+        }
+        .mydetail .chartlist{
+            display:flex;
+            flex-wrap:wrap;
+        }
     </style>
     <div class="head">
         <div class="title">
@@ -14,20 +31,20 @@ ${Html.s("pagetitle","压测报告")}
         <ul class="mydetail">
             <li>
                 <label>报告名</label>
-                <p>${model?report_name}</p>
+                <p>${model.report_name}</p>
             </li>
             <li>
                 <label>任务</label>
-                <p><a href="/task/edit?id=${model?task_id}">${model?task_name}</a></p>
+                <p><a href="/task/edit?id=${model.task_id}">${model.task_name}</a></p>
             </li>
             <li>
                 <label>参与节点</label>
-                <p>${model?nodes}</p>
-                <table class="mytable" width="500">
+                <p>${model.nodes}</p>
+                <table>
                     <tr>
                         <th style="width:3%">节点</th>
                         <th style="width:15%">cpu核心数</th>
-                        <th style="width:20%">内存</th>
+                        <th style="width:20%">内存(M)</th>
                         <th style="width:15%">压测线程数</th>
                     </tr>
                     <#list nodeinfos as item>
@@ -42,59 +59,92 @@ ${Html.s("pagetitle","压测报告")}
             </li>
             <li>
                 <label>采样数据</label>
-                <p>
-                    <label>采样表</label>${model?filter_table}
-                    <label>涉及接口数</label>${urlcount}
-                    <label>涉及样本数</label>${model?filter_table_lines}-${model?filter_table_error_lines}=${model?filter_table_lines-model?filter_table_error_lines}
-                    <label>样本存储</label>${model?filter_store}
-                </p>
+                <table>
+                    <tr>
+                        <td style="width: 15%">采样表</td>
+                        <td>${model.filter_table}</td>
+                    </tr>
+                    <tr>
+                        <td>涉及接口数</td>
+                        <td>${urlcount}</td>
+                    </tr>
+                    <tr>
+                        <td>涉及样本数</td>
+                        <td>总样本: ${model.filter_table_lines},
+                            错误样本: ${model.filter_table_error_lines},
+                            可用样本: ${model.filter_table_lines-model.filter_table_error_lines}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>样本存储</td>
+                        <td>${model.filter_store}</td>
+                    </tr>
+                </table>
             </li>
             <li>
                 <label>报告时间</label>
-                <p>
-                    <label>开始时间</label>${Html.p(model?begin_time)}
-                    <label>结束时间</label>${Html.p(model?end_time)}
-                </p>
+                <table>
+                    <tr>
+                        <td style="width: 15%">开始时间</td><td>${Html.p(model.begin_time)}</td>
+                    </tr>
+                    <tr>
+                        <td>结束时间</td><td>${Html.p(model.end_time)}</td>
+                    </tr>
+                </table>
+
             </li>
-            <#assign nodeWeiduMap={"cpu":"cpu/s","memory":"内存/s","network_read":"网络读/s","network_write":"网络写/s","active_threads":"活跃线程数/s","throughput":"吞吐量/s","error":"错误量/s"}/>
+            <li>
+                <label>压测结论</label>
+                <table>
+                    <tr>
+                        <td style="width: 15%">性能压测耗时</td>
+                        <td>${Utils.subTime(model.begin_time,model.end_time)}分钟</td></tr>
+                    <tr>
+                        <td>最大承载能力</td>
+                        <td>在 ${Html.p(maxthroughput.create_time)} , 节点并发线程总和${maxthroughput.active_threads} , 节点吞吐量总和共${maxthroughput.throughput}/s , 错误总和共${maxthroughput.error}/s。</td>
+                    </tr>
+                    <tr>
+                        <td>最佳承载能力</td>
+                        <td>在 ${Html.p(maxthroughputWithNoError.create_time)} , 节点并发线程总和${maxthroughputWithNoError.active_threads} , 节点吞吐量总和共${maxthroughputWithNoError.throughput}/s , 错误总和共${maxthroughputWithNoError.error}/s。</td>
+                    </tr>
+                </table>
+            </li>
+            <#assign nodeWeiduMap={"cpu":"cpu(%)/s","memory":"内存(M)/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","active_threads":"活跃线程数/s","throughput":"吞吐量/s","error":"错误量/s"}/>
             <li>
                 <label>单一维度多节点对比</label>
-                <p>
-                    <select id="weidu" name="weidu" onselect="loadNodesReportChart()">
+                <select id="weidu" name="weidu" onchange="loadNodesReportChart()">
                         <#list nodeWeiduMap?keys as key>
                             <option value="${key}">${nodeWeiduMap[key]}</option>
                         </#list>
-                    </select>
-                    <div id='nodesReport' style='width:50%;height:450px;float: left;'></div>
-                </p>
+                </select>
+                <div id='nodesReport' class="cnt" style='width:80%;height:450px;'></div>
             </li>
             <li>
                 <label>多维度单节点对比</label>
-                <p>
-                    <select id="nodes" name="nodes" onselect="loadNodeReportChart()">
+                    <select id="nodes" name="nodes" onchange="loadNodeReportChart()">
                         <option value="">所有节点</option>
-                        <#list model?nodes?split(",") as key>
+                        <#list model.nodes?split(",") as key>
                             <option value="${key}">${key}</option>
                         </#list>
                     </select>
+                <div class="chartlist">
                  <#list nodeWeiduMap?keys as key>
-                    <div id='nodeReport_${key}' style='width:20%;height:250px;float: left;'></div>
+                    <div id='nodeReport_${key}' class="cnt" style='width:35%;height:250px;'></div>
                  </#list>
-                </p>
+                </div>
             </li>
             <li>
                 <label>接口性能指标统计</label>
-                <p>
-                    <select id="nodes2" name="nodes2">
+                    <select id="nodes2" name="nodes2" onchange="loadUrlReportChart()">
                         <option value="">所有节点</option>
-                        <#list model?nodes?split(",") as key>
+                        <#list model.nodes?split(",") as key>
                             <option value="${key}">${key}</option>
                         </#list>
                     </select>
-                    <table id="urlReport" class="mytable" width="500">
+                    <table id="urlReport">
                         <tr>
                             <th style="width:15%">接口api</th>
-                            <th style="width:5%">压测次数</th>
+                            <th style="width:5%">累计压测次数</th>
                             <th style="width:5%">最大吞吐量/s</th>
                             <th style="width:5%">最大错误数/s</th>
                             <th style="width:5%">最小耗时/s</th>
@@ -102,8 +152,8 @@ ${Html.s("pagetitle","压测报告")}
                             <th style="width:5%">平均耗时/s</th>
     <#--                        <th style="width:5%">99line耗时/s</th>-->
     <#--                        <th style="width:5%">98line耗时/s</th>-->
-                            <th style="width:5%">最大网络读/s</th>
-                            <th style="width:5%">最大网络写/s</th>
+                            <th style="width:5%">最大网络读(Bytes)/s</th>
+                            <th style="width:5%">最大网络写(Bytes)/s</th>
                             <th style="width:5%">操作</th>
                         </tr>
                     </table>
@@ -123,28 +173,29 @@ ${Html.s("pagetitle","压测报告")}
                             <td><a href="javascript:loadUrlChart('{url}')">查看曲线趋势</a></td>
                         </tr>
                     </table>
-                    <#assign urlWeiduMap={"throughput":"吞吐量/s","error":"错误量/s","network_read":"网络读/s","network_write":"网络写/s","visit_time":"耗时/s"}/>
-                    <label id="urlChart">无</label>
-                    <#list urlWeiduMap?keys as key>
-                        <div id='urlChart_${key}' style='width:20%;height:250px;float: left;'></div>
-                    </#list>
-                </p>
+                    <#assign urlWeiduMap={"throughput":"吞吐量/s","error":"错误量/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","visit_time":"耗时(ms)/s"}/>
+
+                     <div id="urlCharts" style="display: none;padding-top: 20px" >
+                         <div class="cnt" style="text-align: center; ">
+                             <b style="font-size: 16px">接口:<span id="urlChart">无</span></b>
+                             <div class="chartlist">
+                                 <#list urlWeiduMap?keys as key>
+                                     <div id='urlChart_${key}' style='width:35%;height:250px;'></div>
+                                 </#list>
+                             </div>
+                         </div>
+                    </div>
             </li>
-            <li>
-                <label>压测结论</label>
-                <p>
-                    <label>性能压测耗时:${(model.begin_time.getTime()-model.end_time.getTime())/1000/60}分钟</label>
-                    <label>最大承载能力:${Html.p(maxthroughput.create_time)},节点并发线程总和${maxthroughput.active_threads},节点吞吐量总和共${maxthroughput.throughput},错误总和共${maxthroughput.error}。</label>
-                    <label>最佳承载能力:${Html.p(maxthroughputWithNoError.create_time)},节点并发线程总和${maxthroughputWithNoError.active_threads},节点吞吐量总和共${maxthroughputWithNoError.throughput},错误总和共${maxthroughputWithNoError.error}。</label>
-                </p>
-            </li>
+
         </ul>
     </div>
 
     <script type="text/javascript">
         function loadNodesReportChart(){
+            var nodes = "${model.nodes}".split(',');
             $.post("/report/nodesReport",
                 {
+                    "id":${model.id},
                     "weidu": $("#weidu").val(),
                 },
                 function (data) {
@@ -159,7 +210,7 @@ ${Html.s("pagetitle","压测报告")}
                                 trigger: 'axis'
                             },
                             legend: {
-                                data: ${model?nodes?split(",")}
+                                data: nodes
                             },
                             grid: {
                                 left: '3%',
@@ -192,6 +243,7 @@ ${Html.s("pagetitle","压测报告")}
                         }
                         var myChart  = echarts.init(document.getElementById('nodesReport'));
                         myChart.setOption(option);
+                        console.log("loadNodesReportChart",option);
                     }
                 }, "json");
         }
@@ -202,108 +254,15 @@ ${Html.s("pagetitle","压测报告")}
             </#list>
             $.post("/report/nodeReport",
                 {
-                    "node": $("#node").val(),
+                    "id":${model.id},
+                    "node": $("#nodes").val(),
                     "weidu": $("#weidu").val(),
                 },
                 function (data) {
                     if (data.code < 0) {
                         alert(data.message);
                     } else {
-                        for(var weidu in nodeWeidus) {
-                            var  option = {
-                                tooltip: {
-                                    trigger: 'axis',
-                                    position: function (pt) {
-                                        return [pt[0], '10%'];
-                                    }
-                                },
-                                title: {
-                                    left: 'center',
-                                    text: '多维度单节点'
-                                },
-                                toolbox: {
-                                    feature: {
-                                        dataZoom: {
-                                            yAxisIndex: 'none'
-                                        },
-                                        restore: {},
-                                        saveAsImage: {}
-                                    }
-                                },
-                                xAxis: {
-                                    type: 'time',
-                                    boundaryGap: false
-                                },
-                                yAxis: {
-                                    type: 'value',
-                                    boundaryGap: [0, '100%']
-                                },
-                                dataZoom: [
-                                    {
-                                        type: 'inside',
-                                        start: 0,
-                                        end: 20
-                                    },
-                                    {
-                                        start: 0,
-                                        end: 20
-                                    }
-                                ],
-                                series: [
-                                    {
-                                        name: weidu,
-                                        type: 'line',
-                                        smooth: true,
-                                        symbol: 'none',
-                                        areaStyle: {},
-                                        data: data.data.node[weidu]
-                                    }
-                                ]
-                            };
-                            var myChart = echarts.init(document.getElementById('nodeReport_'+weidu));
-                            myChart.setOption(option);
-                        }
-                    }
-                }, "json");
-        }
-        function loadUrlReportChart(){
-            $.post("/report/urlReport",
-                {
-                    "node": $("#node").val(),
-                },
-                function (data) {
-                    $('#urlReport tr[data]').remove()
-                    if (data.code < 0) {
-                        alert(data.message);
-                    } else {
-                        for(var r in data.data.report){
-                            var html = $("#urltemplate").html().replaceAll("{url}","r.url")
-                                .replaceAll("{all_visit_num}","r.all_visit_num").replaceAll("{max_throughput}","r.max_throughput")
-                                .replaceAll("{max_error}","r.max_error").replaceAll("{min_visit_time}","r.min_visit_time")
-                                .replaceAll("{max_visit_time}","r.max_visit_time").replaceAll("{avg_visit_time}","r.avg_visit_time")
-                                .replaceAll("{max_network_read}","r.max_network_read").replaceAll("{max_network_write}","r.max_network_write");
-                            $("#urlReport").append(html);
-                        }
-                        $('#urlReport tr[data]').show();
-                    }
-                }, "json");
-        }
-        function loadUrlChart(url){
-            var urlWeidus = [];
-            <#list urlWeiduMap?keys as key>
-            urlWeidus.push("${key}");
-            </#list>
-            $.post("/report/urlChart",
-                {
-                    "node": $("#node").val(),
-                    "url":url,
-                },
-                function (data) {
-                    if (data.code < 0) {
-                        alert(data.message);
-                    } else {
-                        $("#urlChart").html(url);
-                        for(var weidu in urlWeidus){
+                        for(var weidu of nodeWeidus) {
                             var  option = {
                                 tooltip: {
                                     trigger: 'axis',
@@ -332,17 +291,94 @@ ${Html.s("pagetitle","压测报告")}
                                     type: 'value',
                                     boundaryGap: [0, '100%']
                                 },
-                                dataZoom: [
+                                series: [
                                     {
-                                        type: 'inside',
-                                        start: 0,
-                                        end: 20
-                                    },
-                                    {
-                                        start: 0,
-                                        end: 20
+                                        name: weidu,
+                                        type: 'line',
+                                        smooth: true,
+                                        symbol: 'none',
+                                        areaStyle: {},
+                                        data: data.data.node[weidu]
                                     }
-                                ],
+                                ]
+                            };
+                            var myChart = echarts.init(document.getElementById('nodeReport_'+weidu));
+                            myChart.setOption(option);
+                            console.log("loadNodeReportChart-"+weidu,option);
+                        }
+                    }
+                }, "json");
+        }
+        function loadUrlReportChart(){
+            $.post("/report/urlReport",
+                {
+                    "id":${model.id},
+                    "node": $("#nodes2").val(),
+                },
+                function (data) {
+                    $('#urlReport tr[data]').remove()
+                    if (data.code < 0) {
+                        alert(data.message);
+                    } else {
+                        for(var r of data.data.report){
+                            console.log("aaa",r);
+                            var html = $("#urltemplate").html().replaceAll("{url}",r.url)
+                                .replaceAll("{all_visit_num}",r.all_visit_num).replaceAll("{max_throughput}",r.max_throughput)
+                                .replaceAll("{max_error}",r.max_error).replaceAll("{min_visit_time}",r.min_visit_time)
+                                .replaceAll("{max_visit_time}",r.max_visit_time).replaceAll("{avg_visit_time}",r.avg_visit_time)
+                                .replaceAll("{max_network_read}",r.max_network_read).replaceAll("{max_network_write}",r.max_network_write);
+                            $("#urlReport").append(html);
+                        }
+                        $('#urlReport tr[data]').show();
+                    }
+                }, "json");
+        }
+        function loadUrlChart(url){
+            var urlWeidus = [];
+            <#list urlWeiduMap?keys as key>
+            urlWeidus.push("${key}");
+            </#list>
+            $.post("/report/urlChart",
+                {
+                    "id":${model.id},
+                    "node": $("#nodes").val(),
+                    "url":url,
+                },
+                function (data) {
+                    if (data.code < 0) {
+                        alert(data.message);
+                    } else {
+                        $("#urlChart").html(url);
+                        $("#urlCharts").show();
+                        for(var weidu of urlWeidus){
+                            var  option = {
+                                tooltip: {
+                                    trigger: 'axis',
+                                    position: function (pt) {
+                                        return [pt[0], '10%'];
+                                    }
+                                },
+                                title: {
+                                    left: 'center',
+                                    text: weidu
+                                },
+                                toolbox: {
+                                    feature: {
+                                        dataZoom: {
+                                            yAxisIndex: 'none'
+                                        },
+                                        restore: {},
+                                        saveAsImage: {}
+                                    }
+                                },
+                                xAxis: {
+                                    type: 'time',
+                                    boundaryGap: false
+                                },
+                                yAxis: {
+                                    type: 'value',
+                                    boundaryGap: [0, '100%']
+                                },
                                 series: [
                                     {
                                         name: weidu,

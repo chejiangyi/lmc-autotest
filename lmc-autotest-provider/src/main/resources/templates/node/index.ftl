@@ -28,7 +28,7 @@ ${Html.s("pagetitle","节点列表")}
         <tr data-id="${item.id}">
             <td>${item.id}</td>
             <td>${item.node!}</td>
-            <td>${Utils.showRunState(item.heart_time)}</td>
+            <td>${Utils.printRunState(item.heatbeat_time)}</td>
             <td>cpu:${Html.p(item.cpu)}/${Html.p(item.local_cpu)}<br/>内存:${Html.p(item.memory)!}/${Html.p(item.local_memory)}<br/>
                 线程:${Html.p(item.threads)!}<br/>IP(端口):${Html.p(item.ip)!}(${Html.p(item.port)!})<br/>
             </td>

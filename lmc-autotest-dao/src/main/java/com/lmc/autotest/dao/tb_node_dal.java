@@ -26,7 +26,7 @@ public class tb_node_dal extends tb_node_base_dal {
     public List<tb_node_model> getOnlineNodes(DbConn conn){
         List<tb_node_model> nodes = new ArrayList<>();
         for(val o:this.list(conn)){
-            if(AutoTestTool.isOnline(o.heatbeat_time)){
+            if(AutoTestTool.isOnLine(o.heatbeat_time)){
                 nodes.add(o);
             }
         }

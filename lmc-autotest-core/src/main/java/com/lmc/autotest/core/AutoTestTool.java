@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class AutoTestTool {
     public static boolean isOnLine(Date date){
-        val newDate = DateUtils.addSeconds(date,Config.heartbeat());
+        val newDate = DateUtils.addSeconds(date,2*Config.heartbeat());
         if(newDate.getTime()>new Date().getTime()){
             return true;
         }else
@@ -26,7 +26,7 @@ public class AutoTestTool {
         }
     }
 
-    public static boolean isOnline(Date heartbeatDate){
-        return new Date().getTime()-heartbeatDate.getTime()<=2* Config.heartbeat()*1000;
-    }
+//    public static boolean isOnline(Date heartbeatDate){
+//        return new Date().getTime()-heartbeatDate.getTime()<=2* Config.heartbeat()*1000;
+//    }
 }

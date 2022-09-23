@@ -36,7 +36,7 @@ public class ReportProvider {
                 val taskTemp = new tb_task_dal().getWithLock(c,task_model.id);
                 var nodes = new tb_node_dal().getOnlineNodes(c);
                 var nodeNames = Arrays.asList(task_model.nodes.split(","));
-                nodes=nodes.stream().filter(n->nodeNames.contains(n)).collect(Collectors.toList());
+                nodes=nodes.stream().filter(n->nodeNames.contains(n.node)).collect(Collectors.toList());
                 val nodeInfos = new ArrayList<NodeInfo>();
                 for(val n:nodes){
                     val ni = new NodeInfo();
@@ -44,6 +44,7 @@ public class ReportProvider {
                     ni.cpu=n.local_cpu;
                     ni.memory=n.local_memory;
                     ni.threads=task_model.run_threads_count;
+                    nodeInfos.add(ni);
                 }
                 var report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);
                 if(report==null) {
@@ -78,8 +79,8 @@ public class ReportProvider {
             } else {
                 reportNode.all_error.addAndGet(1);
             }
-            reportNode.all_network_read.addAndGet(response.getRequestSize());
-            reportNode.all_network_write.addAndGet(response.getResponseSize());
+            reportNode.all_network_write.addAndGet(response.getRequestSize());
+            reportNode.all_network_read.addAndGet(response.getResponseSize());
         }
         //reportNode.active_threads.
 
@@ -182,8 +183,8 @@ public class ReportProvider {
                 info.all_throughput.addAndGet(1);
             }
             info.all_visit_time.addAndGet(time);
-            info.all_network_read.addAndGet(reqSize);
-            info.all_network_write.addAndGet(rpsSize);
+            info.all_network_read.addAndGet(rpsSize);
+            info.all_network_write.addAndGet(reqSize);
         }
     }
 

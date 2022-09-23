@@ -122,7 +122,7 @@ public class HttpUtils {
             response.code=conn.getResponseCode();
             response.header = new HashMap<>();
             for(val filed:conn.getHeaderFields().entrySet()){
-                response.header.put(filed.getKey(),conn.getHeaderField(filed.getKey()));
+                response.header.put(filed.getKey()==null? "":filed.getKey()  ,conn.getHeaderField(filed.getKey()));
             }
             long responseSize =0;
             try(InputStream in = conn.getInputStream()) {

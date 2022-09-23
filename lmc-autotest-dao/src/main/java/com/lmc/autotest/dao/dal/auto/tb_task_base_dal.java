@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_task 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:15
+ * @since 2022-09-22 14:29:28
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_task_base_dal {
@@ -29,12 +29,8 @@ public class tb_task_base_dal {
                 model.task,
                 /**存储引擎*/
                 model.filter_store,
-                /**表达式*/
-                model.corn,
-                /**下次执行时间*/
-                model.next_time,
-                /**使用状态:使用,禁用*/
-                model.use_state,
+                /**运行时间*/
+                model.run_heart_time,
                 /**创建人*/
                 model.create_user,
                 /**创建时间*/
@@ -60,12 +56,10 @@ public class tb_task_base_dal {
                 /**运行后脚本*/
                 model.http_end_script,
                 /**检测终止脚本*/
-                model.check_stop_script,
-                /**运行时间*/
-                model.run_heart_time
+                model.check_stop_script
         };
-        int rev = conn.executeSql("insert into tb_task(task,filter_store,corn,next_time,use_state,create_user,create_time,update_time,update_user,exec_result,filter_script,filter_table,clear_data_first,nodes,run_threads_count,http_begin_script,http_end_script,check_stop_script,run_heart_time)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,filter_table,clear_data_first,nodes,run_threads_count,http_begin_script,http_end_script,check_stop_script)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -75,12 +69,8 @@ public class tb_task_base_dal {
                 model.task,
                 /**存储引擎*/
                 model.filter_store,
-                /**表达式*/
-                model.corn,
-                /**下次执行时间*/
-                model.next_time,
-                /**使用状态:使用,禁用*/
-                model.use_state,
+                /**运行时间*/
+                model.run_heart_time,
                 /**创建人*/
                 model.create_user,
                 /**创建时间*/
@@ -107,11 +97,9 @@ public class tb_task_base_dal {
                 model.http_end_script,
                 /**检测终止脚本*/
                 model.check_stop_script,
-                /**运行时间*/
-                model.run_heart_time,
                 model.id
         };
-        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,corn=?,next_time=?,use_state=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,filter_table=?,clear_data_first=?,nodes=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=?,run_heart_time=? where id=?", par);
+        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,filter_table=?,clear_data_first=?,nodes=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=? where id=?", par);
         return rev == 1;
 
     }
@@ -161,17 +149,9 @@ public class tb_task_base_dal {
         if (dr.containsKey("filter_store")) {
             o.filter_store = ConvertUtils.convert(dr.get("filter_store"), String.class);
         }
-        /**表达式*/
-        if (dr.containsKey("corn")) {
-            o.corn = ConvertUtils.convert(dr.get("corn"), String.class);
-        }
-        /**下次执行时间*/
-        if (dr.containsKey("next_time")) {
-            o.next_time = ConvertUtils.convert(dr.get("next_time"), Date.class);
-        }
-        /**使用状态:使用,禁用*/
-        if (dr.containsKey("use_state")) {
-            o.use_state = ConvertUtils.convert(dr.get("use_state"), String.class);
+        /**运行时间*/
+        if (dr.containsKey("run_heart_time")) {
+            o.run_heart_time = ConvertUtils.convert(dr.get("run_heart_time"), Date.class);
         }
         /**创建人*/
         if (dr.containsKey("create_user")) {
@@ -224,10 +204,6 @@ public class tb_task_base_dal {
         /**检测终止脚本*/
         if (dr.containsKey("check_stop_script")) {
             o.check_stop_script = ConvertUtils.convert(dr.get("check_stop_script"), String.class);
-        }
-        /**运行时间*/
-        if (dr.containsKey("run_heart_time")) {
-            o.run_heart_time = ConvertUtils.convert(dr.get("run_heart_time"), Date.class);
         }
         return o;
     }

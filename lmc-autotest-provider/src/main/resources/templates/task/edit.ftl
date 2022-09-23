@@ -36,16 +36,16 @@ ${Html.s("pagetitle","编辑任务")}
             </li>
             <li>
                 <label>执行节点</label>
-                <select id="filter_store" name="filter_store" multiple>
+                <select id="nodes" name="nodes" multiple>
                     <#list Utils.getOnlineNodes() as item>
                         <option value="${item}" ${Html.w(Utils.isContainNode(model.nodes,item),"selected='selected'","")}>${item}</option>
                     </#list>
                 </select>
             </li>
-            <li>
-                <label>执行时间</label>
-                <input class="mtext" type="text" id="corn" name="corn" value="${model.corn!}" placeholder="corn表达式" /><a target="_blank" href="https://www.pppet.net/changyong.html">常用corn表达式</a>
-            </li>
+<#--            <li>-->
+<#--                <label>执行时间</label>-->
+<#--                <input class="mtext" type="text" id="corn" name="corn" value="${model.corn!}" placeholder="corn表达式" /><a target="_blank" href="https://www.pppet.net/changyong.html">常用corn表达式</a>-->
+<#--            </li>-->
             <li>
                 <label>节点并行线程数量</label>
                 <input class="stext" type="text" id="run_threads_count" name="run_threads_count" value="${model.run_threads_count!}" />
@@ -72,6 +72,7 @@ ${Html.s("pagetitle","编辑任务")}
     <script type="text/javascript">
         function save()
         {
+            console.log($("#nodes").val());
             $.post("/task/save",
                 {
                     "id": ${id!"0"},
@@ -80,7 +81,7 @@ ${Html.s("pagetitle","编辑任务")}
                     "filter_script": $("#filter_script").val(),
                     "filter_table":$("#filter_table").val(),
                     "clear_data_first":$("#clear_data_first").val(),
-                    "nodes":$("#nodes").val(),
+                    "nodes":$("#nodes").val().join(','),
                     "corn":$("#corn").val(),
                     "run_threads_count":$("#run_threads_count").val(),
                     "http_begin_script":$("#http_begin_script").val(),

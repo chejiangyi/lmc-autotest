@@ -47,6 +47,14 @@ public class LogController extends SpringMvcController {
                 }
         );
     }
-
+    @RequestMapping("/clear/")
+    public ModelAndView clear() {
+        return jsonVisit((m) -> {
+            DbHelper.call(Config.mysqlDataSource(), c -> {
+                new tb_log_dal().clear(c);
+            });
+            return true;
+        });
+    }
 
 }

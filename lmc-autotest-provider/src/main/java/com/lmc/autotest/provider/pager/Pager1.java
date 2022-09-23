@@ -74,7 +74,7 @@ public class Pager1 {
     public String html() {
         int pageNo = pageindex;
         int showPages = showpagecount;
-        int totalPage = ((int) (datacount / pagesize)) + 1;
+        int totalPage = datacount%pagesize==0? (datacount / pagesize):(((int) (datacount / pagesize)) + 1);
 
         String callFunName = (StringUtils.isEmpty(jscallbackfunctionname)?"pagerfunction":jscallbackfunctionname);
 

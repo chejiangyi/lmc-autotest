@@ -20,7 +20,7 @@ public class tb_report_dal extends tb_report_base_dal {
         val par = new ArrayList<>();
         val rs = new ArrayList<tb_report_model>();
 
-        StringBuilder sb = new StringBuilder(" from tb_log where 1=1 ");
+        StringBuilder sb = new StringBuilder(" from tb_report where 1=1 ");
         if(!StringUtils.isEmpty(report_name)){
             par.add(report_name);
             sb.append(" and report_name like concat('%', ?, '%')");

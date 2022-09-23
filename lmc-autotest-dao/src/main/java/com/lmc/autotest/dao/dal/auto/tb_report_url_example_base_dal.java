@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report_url_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:15
+ * @since 2022-09-22 14:29:27
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_url_example_base_dal {
@@ -37,14 +37,14 @@ public class tb_report_url_example_base_dal {
                 model.error,
                 /**avg 访问耗时/s */
                 model.visit_time,
+                /**网络写/s*/
+                model.network_write,
                 /**网络读/s*/
                 model.network_read,
                 /***/
-                model.create_time,
-                /**网络写/s*/
-                model.network_write
+                model.create_time
         };
-        int rev = conn.executeSql("insert into tb_report_url_example(url,node,visit_num,throughput,error,visit_time,network_read,create_time,network_write)" +
+        int rev = conn.executeSql("insert into tb_report_url_example(url,node,visit_num,throughput,error,visit_time,network_write,network_read,create_time)" +
                 "values(?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
@@ -63,15 +63,15 @@ public class tb_report_url_example_base_dal {
                 model.error,
                 /**avg 访问耗时/s */
                 model.visit_time,
+                /**网络写/s*/
+                model.network_write,
                 /**网络读/s*/
                 model.network_read,
                 /***/
                 model.create_time,
-                /**网络写/s*/
-                model.network_write,
                 model.id
         };
-        int rev = conn.executeSql("update tb_report_url_example set url=?,node=?,visit_num=?,throughput=?,error=?,visit_time=?,network_read=?,create_time=?,network_write=? where id=?", par);
+        int rev = conn.executeSql("update tb_report_url_example set url=?,node=?,visit_num=?,throughput=?,error=?,visit_time=?,network_write=?,network_read=?,create_time=? where id=?", par);
         return rev == 1;
 
     }
@@ -137,6 +137,10 @@ public class tb_report_url_example_base_dal {
         if (dr.containsKey("visit_time")) {
             o.visit_time = ConvertUtils.convert(dr.get("visit_time"), Double.class);
         }
+        /**网络写/s*/
+        if (dr.containsKey("network_write")) {
+            o.network_write = ConvertUtils.convert(dr.get("network_write"), Double.class);
+        }
         /**网络读/s*/
         if (dr.containsKey("network_read")) {
             o.network_read = ConvertUtils.convert(dr.get("network_read"), Double.class);
@@ -144,10 +148,6 @@ public class tb_report_url_example_base_dal {
         /***/
         if (dr.containsKey("create_time")) {
             o.create_time = ConvertUtils.convert(dr.get("create_time"), Date.class);
-        }
-        /**网络写/s*/
-        if (dr.containsKey("network_write")) {
-            o.network_write = ConvertUtils.convert(dr.get("network_write"), Double.class);
         }
         return o;
     }

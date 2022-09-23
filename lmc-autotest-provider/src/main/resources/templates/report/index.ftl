@@ -7,7 +7,7 @@ ${Html.s("pagetitle","报表查询")}
     </div>
 </div>
 <div class="orderlist m10 myorder">
-    <form action="/sample/index/" method="post" id="searchForm">
+    <form action="/report/index/" method="post" id="searchForm">
         <div class="search">
             <label>报告名</label>
             <input type="text" class="text mtext" name="report_name" value="${report_name!}" />
@@ -26,10 +26,10 @@ ${Html.s("pagetitle","报表查询")}
 </div>
 </@layout._layout>
 <#macro _list >
-<table class="mytable" width="100%">
+<table class="mytable" width="50%">
     <tr>
         <th style="width:3%">Id</th>
-        <th style="width:15%">报表名</th>
+        <th style="width:20%">报表名</th>
         <th style="width:20%">关联任务</th>
         <th style="width:15%">创建时间</th>
         <th style="width:10%">操作</th>
@@ -41,8 +41,7 @@ ${Html.s("pagetitle","报表查询")}
             <td>${item.task_name}</td>
             <td>${Html.p(item.create_time)}</td>
             <td>
-                <a href="/report/view/?id=${item.id}" class="del">查看</a><br/>
-                <a href="javascript:del(${item.id})" class="del">删除</a>
+                <a href="/report/view/?id=${item.id}" class="del">查看</a>  <a href="javascript:del(${item.id})" class="del">删除</a>
             </td>
         </tr>
     </#list>

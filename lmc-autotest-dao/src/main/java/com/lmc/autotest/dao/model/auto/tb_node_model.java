@@ -10,7 +10,7 @@ import lombok.*;
  * tb_node 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-13 19:01:14
+ * @since 2022-09-22 14:29:27
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -24,15 +24,15 @@ public class tb_node_model implements Serializable {
 
     public Double cpu;
 
+    public Double memory;
+
     public Integer threads;
 
     public String ip;
 
     public Date heatbeat_time;
 
-    public String prot;
-
-    public Double memory;
+    public String port;
 
     public Integer local_cpu;
 
