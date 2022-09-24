@@ -24,13 +24,15 @@ public class AutoTestManager {
             }
         }
     }
-    public void close(Integer taskId,String reason){
+    public void close(Integer taskId,String reason,Boolean isDisposed){
         if (running.containsKey(taskId)) {
             synchronized (lock) {
                 if (running.containsKey(taskId)) {
                     val task = running.get(taskId);
                     running.remove(taskId);//先移除，否则死循环
-                    task.close(reason);
+                    if(isDisposed==false) {
+                        task.close(reason);
+                    }
                 }
             }
         }

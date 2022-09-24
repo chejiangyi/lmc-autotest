@@ -31,7 +31,8 @@ ${Html.s("pagetitle","压测报告")}
         <ul class="mydetail">
             <li>
                 <label>报告名</label>
-                <p>${model.report_name}</p>
+                <p><b>${model.report_name}</b></p>
+                <p style="margin-left: 10px"><input type="checkbox" id="openRefresh" >自动刷新报告数据</p>
             </li>
             <li>
                 <label>任务</label>
@@ -70,8 +71,8 @@ ${Html.s("pagetitle","压测报告")}
                     </tr>
                     <tr>
                         <td>涉及样本数</td>
-                        <td>总样本: ${model.filter_table_lines},
-                            错误样本: ${model.filter_table_error_lines},
+                        <td>总样本: ${model.filter_table_lines!},
+                            错误样本: ${model.filter_table_error_lines!},
                             可用样本: ${model.filter_table_lines-model.filter_table_error_lines}
                         </td>
                     </tr>
@@ -90,6 +91,10 @@ ${Html.s("pagetitle","压测报告")}
                     <tr>
                         <td>结束时间</td><td>${Html.p(model.end_time)}</td>
                     </tr>
+                    <tr>
+                        <td >性能压测耗时</td>
+                        <td>${Utils.subTime(model.begin_time,model.end_time)}分钟</td>
+                    </tr>
                 </table>
 
             </li>
@@ -97,10 +102,7 @@ ${Html.s("pagetitle","压测报告")}
                 <label>压测结论</label>
                 <table>
                     <tr>
-                        <td style="width: 15%">性能压测耗时</td>
-                        <td>${Utils.subTime(model.begin_time,model.end_time)}分钟</td></tr>
-                    <tr>
-                        <td>最大承载能力</td>
+                        <td style="width: 15%">最大承载能力</td>
                         <td>在 ${Html.p(maxthroughput.create_time)} , 节点并发线程总和${maxthroughput.active_threads} , 节点吞吐量总和共${maxthroughput.throughput}/s , 错误总和共${maxthroughput.error}/s。</td>
                     </tr>
                     <tr>
@@ -117,6 +119,7 @@ ${Html.s("pagetitle","压测报告")}
                             <option value="${key}">${nodeWeiduMap[key]}</option>
                         </#list>
                 </select>
+                <button type="button" onclick="loadNodesReportChart()">刷新</button>
                 <div id='nodesReport' class="cnt" style='width:80%;height:450px;'></div>
             </li>
             <li>
@@ -127,6 +130,7 @@ ${Html.s("pagetitle","压测报告")}
                             <option value="${key}">${key}</option>
                         </#list>
                     </select>
+                <button type="button" onclick="loadNodeReportChart()">刷新</button>
                 <div class="chartlist">
                  <#list nodeWeiduMap?keys as key>
                     <div id='nodeReport_${key}' class="cnt" style='width:35%;height:250px;'></div>
@@ -141,6 +145,7 @@ ${Html.s("pagetitle","压测报告")}
                             <option value="${key}">${key}</option>
                         </#list>
                     </select>
+                <button type="button" onclick="loadUrlReportChart()">刷新</button>
                     <table id="urlReport">
                         <tr>
                             <th style="width:15%">接口api</th>
@@ -397,10 +402,22 @@ ${Html.s("pagetitle","压测报告")}
                 }, "json");
         }
         $(function (){
+            refresh();
+            setInterval("autoRefresh()",5000);
+        });
+
+        function autoRefresh(){
+            if($("#openRefresh").is(":checked")) {
+                refresh();
+            }
+        }
+
+        function refresh(){
             loadNodesReportChart();
             loadNodeReportChart();
             loadUrlReportChart();
             //loadUrlChart();
-        });
+        }
+
     </script>
 </@layout._layout>

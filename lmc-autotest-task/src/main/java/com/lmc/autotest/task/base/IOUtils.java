@@ -11,12 +11,12 @@ public class IOUtils {
     }
 
     public static double memory(){
-        val systemBean = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
+       // val systemBean = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
         return (Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/1024/1024;
     }
 
     public static int localCpuCores(){
-        val systemBean = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
+       // val systemBean = ((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
         return Runtime.getRuntime().availableProcessors();
     }
 
@@ -26,6 +26,7 @@ public class IOUtils {
     }
 
     public static int threadCount(){
-        return ManagementFactory.getThreadMXBean().getThreadCount();
+//        return ManagementFactory.getThreadMXBean().getThreadCount();
+        return ThreadPoolUtils.System.getThreadPool().getActiveCount();
     }
 }

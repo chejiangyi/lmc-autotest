@@ -22,6 +22,7 @@ public class Config {
         return 5;
     }
 
+    //压测节点的标识名称
     public static String nodeName(){
         val nodeName = PropertyUtils.getPropertyCache("autotest.node","");
         if(StringUtils.isEmpty(nodeName)){
@@ -33,5 +34,17 @@ public class Config {
             }
         }
         return nodeName;
+    }
+
+    //流每次获取数据的大小,用于采样文件生成场景
+    public static Integer streamSize(){
+        val streamSize = PropertyUtils.getPropertyCache("autotest.node.streamSize",10000);
+        return streamSize;
+    }
+
+    //每次开启线程的最大间隔周期,用于压测时给被压测程序反应时间,单位毫秒
+    public static Integer maxSleepPerTheadOpen(){
+        val streamSize = PropertyUtils.getPropertyCache("autotest.node.maxSleepPerThreadOpen",500);
+        return streamSize;
     }
 }

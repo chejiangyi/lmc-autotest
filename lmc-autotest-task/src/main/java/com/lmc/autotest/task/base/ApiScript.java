@@ -1,14 +1,18 @@
 package com.lmc.autotest.task.base;
 
 import com.free.bsf.core.base.BsfException;
+import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.http.HttpClient;
 import com.free.bsf.core.util.*;
+import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.service.LogTool;
+import com.lmc.autotest.task.base.provider.AutoTestProvider;
 import com.xxl.job.core.util.DateUtil;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.val;
+import lombok.var;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.entity.ContentType;
 
@@ -109,10 +113,21 @@ public class ApiScript {
     //执行sql
     public void streamSql(String sql,Object[] ps,ScriptObjectMirror objectMirror){
         try{
+            val autoTest = (AutoTestProvider)this.ps.get("autotest");
              DbHelper.call(ContextUtils.getBean(DataSource.class,false),(c)->{
-                 c.executeStream(sql,ps,1000,(map)->{
-                     objectMirror.call(objectMirror,map);
+                 Ref<Long> size=new Ref(0L);
+                 c.executeStream(sql,ps, Config.streamSize(),(map)->{
+                     if(autoTest.isRun()) {
+                         if (objectMirror != null) {
+                             objectMirror.call(objectMirror, map);
+                         }
+                         size.setData(size.getData() + 1L);
+                         if (size.getData() % Config.streamSize() == 0) {
+                             LogTool.info(this.getClass(), Config.appName(), "streamSql处理数据中:" + size.getData());
+                         }
+                     }
                  });
+                 LogTool.info(this.getClass(),Config.appName(),"streamSql共处理数据:"+size.getData());
             });
         }catch (Exception e){
             val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
@@ -120,5 +135,35 @@ public class ApiScript {
             throw new BsfException(msg);
         }
     }
-
+    //执行sql2
+    public void streamSql2(String sql,Object[] ps,ScriptObjectMirror objectMirror){
+        try{
+            val autoTest = (AutoTestProvider)this.ps.get("autotest");
+            DbHelper.call(ContextUtils.getBean(DataSource.class,false),(c)->{
+                Long id=0L;Long size=0L;
+                while (autoTest.isRun()) {
+                    String sql2 = "select * from ({table})a where id>{id} order by id asc limit {size} "
+                            .replace("{table}", sql).replace("{id}", id+"").replace("{size}", Config.streamSize()+"");
+                    val list = c.executeList(sql2, ps);
+                    if(list.size()==0)
+                        break;
+                    if(!autoTest.checkRunning()){return;}
+                    for(val map : list) {
+                        id = Math.max(ConvertUtils.convert(map.get("id"),long.class),id);
+                        if(objectMirror!=null) {
+                            objectMirror.call(objectMirror, map);
+                        }
+                    }
+                    if(!autoTest.checkRunning()){return;}
+                    size+=list.size();
+                    LogTool.info(this.getClass(),Config.appName(),"streamSql2处理数据中:"+size);
+                }
+                LogTool.info(this.getClass(),Config.appName(),"streamSql2共处理数据:"+size);
+            });
+        }catch (Exception e){
+            val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
+            LogTool.error(ApiScript.class,"bsf",msg,e);
+            throw new BsfException(msg);
+        }
+    }
 }

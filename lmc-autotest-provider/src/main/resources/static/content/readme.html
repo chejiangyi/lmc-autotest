@@ -42,7 +42,7 @@
 <body>
 <h1>支持js es5语法,参考函数如下</h1>
 <div>
-<b>流式sql读取处理</b>
+<b>游标方式流式sql读取处理【废弃,建议用streamSql2】</b>
     <p>
         api.streamSql(String sql,Object[] ps,ScriptObjectMirror objectMirror)
     </p>
@@ -51,11 +51,20 @@
     })</i>
 </div>
 <div>
-<b>流式函数处理</b>
+    <b>根据id批量流式sql读取处理</b>
     <p>
-        api.writeSample(String filename,Object sample)
+        api.streamSql2(String sql,Object[] ps,ScriptObjectMirror objectMirror)
     </p>
-    <i>api.writeSample("aa.txt",{a=1,b=""})</i>
+    <i>api.streamSql2("select * from tb_sample_2022_09_15 where url=?",["http://localhost:8081/test4"],function (dataMap){<br/>
+        //todo <br/>
+        })</i>
+</div>
+<div>
+<b>样本文件写入</b>
+    <p>
+        api.writeSample(Object sample)
+    </p>
+    <i>api.writeSample({a=1,b=""})</i>
 </div>
 <div>
 <b>日志打印</b>
@@ -181,11 +190,11 @@
                 "node": "test",
                 "cpu": 0.008473612979373302,
                 "memory": 343.0,
-                "all_network_read": 3485918.0,
-                "all_network_write": 2128.0,
+                "network_read": 3485918.0,
+                "network_write": 2128.0,
                 "active_threads": 114,
-                "all_throughput": 266,
-                "all_error": 0,
+                "throughput": 266,
+                "error": 0,
                 "create_time": "2022-09-22 18:51:15",
                 "timeSpan": 46.0
             }));

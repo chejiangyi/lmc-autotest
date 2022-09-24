@@ -64,6 +64,8 @@ public class ReportProvider {
                     model.setNodes(task_model.nodes);
                     model.setNodes_info(JsonUtils.serialize(nodeInfos));
                     model.setTran_id(tranId);
+                    model.setFilter_table_error_lines(0);
+                    model.setFilter_table_lines(0);
                     new tb_report_dal().add(c,model);
                 }
                 report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);
@@ -95,34 +97,14 @@ public class ReportProvider {
 
     public ReportNodeInfo heartBeatReport(){
         if(this.reportNodeInfo!=null){
-            this.reportNodeInfo.refresh();
-            tb_report_node_example_model model = new tb_report_node_example_model();
-            model.active_threads=this.reportNodeInfo.active_threads;
-            model.cpu=this.reportNodeInfo.cpu;
-            model.error=this.reportNodeInfo.all_error.get()/this.reportNodeInfo.getTimeSpan();
-            model.memory=this.reportNodeInfo.memory;
-            model.create_time=new Date();
-            model.network_read=this.reportNodeInfo.all_network_read.get()/this.reportNodeInfo.getTimeSpan();
-            model.network_write=this.reportNodeInfo.all_network_write.get()/this.reportNodeInfo.getTimeSpan();
-            model.node=this.reportNodeInfo.node;
-            model.throughput=this.reportNodeInfo.all_throughput.get()/this.reportNodeInfo.getTimeSpan();
+            val model = this.reportNodeInfo.toModel();
             DbHelper.call(Config.mysqlDataSource(),(c)->{
                 new tb_report_node_dal().addHeartBeat(c,report_model.report_node_table,model);
             });
         }if(this.reportUrlMap!=null){
             val urls = new ArrayList<tb_report_url_example_model>();
             for(val o:this.reportUrlMap.map.values()){
-                tb_report_url_example_model model = new tb_report_url_example_model();
-                model.url = o.url;
-                model.create_time=new Date();
-                model.network_write=o.all_network_write.get()/o.getTimeSpan();
-                model.error=o.all_error.get()/o.getTimeSpan();
-                model.network_read=o.all_network_read.get()/o.getTimeSpan();
-                model.node=o.node;
-                model.throughput=o.all_throughput.get()/o.getTimeSpan();
-                model.visit_num=(double)o.all_visit_num.get();
-                model.visit_time=o.all_visit_time.get()/o.getTimeSpan();
-                urls.add(model);
+                urls.add(o.toModel());
             }
             DbHelper.call(Config.mysqlDataSource(),(c)->{
                 for(val url:urls) {
@@ -158,6 +140,21 @@ public class ReportProvider {
 
         public double getTimeSpan(){
             return (new Date().getTime()-create_time.getTime())/1000;
+        }
+
+        public tb_report_node_example_model toModel(){
+            this.refresh();
+            tb_report_node_example_model model = new tb_report_node_example_model();
+            model.active_threads=this.active_threads;
+            model.cpu=this.cpu;
+            model.error=this.all_error.get()/this.getTimeSpan();
+            model.memory=this.memory;
+            model.create_time=new Date();
+            model.network_read=this.all_network_read.get()/this.getTimeSpan();
+            model.network_write=this.all_network_write.get()/this.getTimeSpan();
+            model.node=this.node;
+            model.throughput=this.all_throughput.get()/this.getTimeSpan();
+            return model;
         }
     }
 
@@ -204,5 +201,21 @@ public class ReportProvider {
         public double getTimeSpan(){
             return (new Date().getTime()-create_time.getTime())/1000;
         }
+
+        public tb_report_url_example_model toModel(){
+            val o = this;
+            tb_report_url_example_model model = new tb_report_url_example_model();
+            model.url = o.url;
+            model.create_time=new Date();
+            model.network_write=o.all_network_write.get()/o.getTimeSpan();
+            model.error=o.all_error.get()/o.getTimeSpan();
+            model.network_read=o.all_network_read.get()/o.getTimeSpan();
+            model.node=o.node;
+            model.throughput=o.all_throughput.get()/o.getTimeSpan();
+            model.visit_num=(double)o.all_visit_num.get();
+            model.visit_time=o.all_visit_time.get()/o.getTimeSpan();
+            return model;
+        }
+
     }
 }

@@ -2,7 +2,7 @@
 ${Html.s("pagetitle","日志列表")}
 <@layout._layout>
     <script type="text/javascript">
-        function clear() {
+        function clearLog() {
             if(!confirm("请确认清理日志,删除后不可恢复？"))
             {
                 return;
@@ -41,7 +41,7 @@ ${Html.s("pagetitle","日志列表")}
             </select>
             <label>创建时间</label><input type="text" class="text midtext" style="width:150px;" name="create_time_from" value="${create_time_from!}" /> 至 <input type="text" class="text midtext" style="width:150px;" name="create_time_to" value="${create_time_to!}" />
             <input type="submit" class="btn1" value="搜索" accesskey="S" />
-            <input type="button" class="btn1" value="清空" onclick="clear()" />
+            <input type="button" class="btn1" value="清空" onclick="clearLog()" />
         </div>
     </form>
     <div class="tab_cont">
