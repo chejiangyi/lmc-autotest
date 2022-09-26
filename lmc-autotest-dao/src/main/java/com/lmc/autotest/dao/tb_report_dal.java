@@ -81,4 +81,26 @@ public class tb_report_dal extends tb_report_base_dal {
         return rev == 1;
 
     }
+
+    public List<tb_report_model> clearReport(DbConn conn,int taskId,int saveCount){
+        val rs = new ArrayList<tb_report_model>();
+        val par = new Object[]{
+                taskId,saveCount
+        };
+        String sql = "select * from tb_report where id not in (SELECT id from (select id from tb_report where task_id=? order by id desc LIMIT ?) as a)";
+        val ds = conn.executeList(sql, par);
+        if (ds != null && ds.size() > 0)
+        {
+            for (Map<String,Object> dr : ds)
+            {
+                rs.add(createModel(dr));
+            }
+        }
+        return rs;
+    }
+
+    public void dropTable(DbConn conn,String table){
+        String sql="drop table if exists "+table+"";
+        conn.executeSql(sql, new Object[]{});
+    }
 }

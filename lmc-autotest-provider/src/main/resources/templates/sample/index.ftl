@@ -38,9 +38,9 @@ ${Html.s("pagetitle","采样查询")}
         <th style="width:30%">header</th>
         <th style="width:40%">body</th>
         <th style="width:100px">create_time<br/>创建时间</th>
-        <th style="width:100px">traceid</th>
-        <th style="width:100px">trace_top<br/>堆栈顶部</th>
-        <th style="width:100px">operator_type<br/>操作类型</th>
+        <th style="width:100px">traceid${Html.help("调用链id,涉及到AutoTest的调用链传递")}</th>
+        <th style="width:100px">trace_top${Html.help("堆栈顶部,是否是AutoTest的调用链第一个")}</th>
+        <th style="width:100px">operator_type${Html.help("操作类型,自动检测程序是否涉及到update,insert,delete之类的操作")}</th>
     </tr>
     <#list model as item>
         <tr data-id="${item.id}">

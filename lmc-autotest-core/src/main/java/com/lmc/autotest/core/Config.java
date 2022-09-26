@@ -44,7 +44,22 @@ public class Config {
 
     //每次开启线程的最大间隔周期,用于压测时给被压测程序反应时间,单位毫秒
     public static Integer maxSleepPerTheadOpen(){
-        val streamSize = PropertyUtils.getPropertyCache("autotest.node.maxSleepPerThreadOpen",500);
-        return streamSize;
+        return PropertyUtils.getPropertyCache("autotest.node.maxSleepPerThreadOpen",500);
+    }
+    //http 连接池是否开启
+    public static boolean httpPoolEnabled(){
+        return PropertyUtils.getPropertyCache("autotest.node.httpPool.enabled",true);
+    }
+    //http 连接池最大大小(每个host)
+    public static int httpPoolMaxSize(){
+        return PropertyUtils.getPropertyCache("autotest.node.httpPool.maxSize",1000);
+    }
+    //http 连接池链接超时时间 单位毫秒
+    public static int httpPoolConnectTimeout(){
+        return PropertyUtils.getPropertyCache("autotest.node.httpPool.connectTimeout",3000);
+    }
+    //http 连接池访问超时时间 单位毫秒
+    public static int httpPoolReadTimeout(){
+        return PropertyUtils.getPropertyCache("autotest.node.httpPool.readTimeout",60000);
     }
 }

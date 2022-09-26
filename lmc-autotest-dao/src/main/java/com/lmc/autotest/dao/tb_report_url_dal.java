@@ -38,6 +38,40 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
         return rev == 1;
     }
 
+    public boolean addHeartBeatList(DbConn conn,String table, List<tb_report_url_example_model> models) {
+        val pars = new ArrayList<Object>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("insert into "+table+"(url,node,visit_num,throughput,error,visit_time,network_read,create_time,network_write) values");
+        for(val model: models){
+            val par = new Object[]{
+                /***/
+                model.url,
+                /***/
+                model.node,
+                /**访问次数*/
+                model.visit_num,
+                /**吞吐量/s*/
+                model.throughput,
+                /**错误量/s*/
+                model.error,
+                /**avg 访问耗时/s */
+                model.visit_time,
+                /**网络读/s*/
+                model.network_read,
+                /***/
+                model.create_time,
+                /**网络写/s*/
+                model.network_write
+            };
+            for(val o:par) {
+                pars.add(o);
+            }
+            sql.append("(?,?,?,?,?,?,?,?,?),");
+        }
+        int rev = conn.executeSql(StringUtils.trimRight(sql.toString(),',')+";", pars.toArray());
+        return rev == 1;
+    }
+
     public String copyNewTable(DbConn conn, String name){
         conn.executeSql("CREATE TABLE auto_tb_report_url_"+name+" LIKE tb_report_url_example",new Object[]{});
         return "auto_tb_report_url_"+name;

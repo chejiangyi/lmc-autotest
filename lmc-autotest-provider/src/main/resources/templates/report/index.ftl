@@ -1,6 +1,28 @@
 ﻿<#import "../_layout.ftl" as layout>
 ${Html.s("pagetitle","报表查询")}
 <@layout._layout>
+    <script type="text/javascript">
+        function clearReport() {
+            if(!confirm("请确认清理近期报告,每个任务仅保留最近5份报告,删除后不可恢复？"))
+            {
+                return;
+            }
+            $.ajax({
+                url: '/report/clear/',
+                type: "post",
+                data: {
+                },
+                success: function (data) {
+                    if (data.code > 0) {
+                        window.location.reload();
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                }
+            });
+        }
+    </script>
 <div class="head">
     <div class="title">
     ${pagetitle}
@@ -16,6 +38,7 @@ ${Html.s("pagetitle","报表查询")}
             <label>创建时间</label>
             <input type="text" class="text midtext" style="width:150px;" name="create_time_from" value="${create_time_from!}" /> 至 <input type="text" class="text midtext" style="width:150px;" name="create_time_to" value="${create_time_to!}" />
             <input type="submit" class="btn1" value="搜索" accesskey="S" />
+            <input type="button" class="btn1" value="仅保留5份报告" onclick="clearReport()" />
         </div>
     </form>
     <div class="tab_cont">

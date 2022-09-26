@@ -103,11 +103,11 @@ ${Html.s("pagetitle","压测报告")}
                 <table>
                     <tr>
                         <td style="width: 15%">最大承载能力</td>
-                        <td>在 ${Html.p(maxthroughput.create_time)} , 节点并发线程总和${maxthroughput.active_threads} , 节点吞吐量总和共${maxthroughput.throughput}/s , 错误总和共${maxthroughput.error}/s。</td>
+                        <td>在 ${Html.p(maxthroughput.create_time)!} , 节点并发线程总和${maxthroughput.active_threads!} , 节点吞吐量总和共${maxthroughput.throughput!}/s , 错误总和共${maxthroughput.error!}/s。</td>
                     </tr>
                     <tr>
                         <td>最佳承载能力</td>
-                        <td>在 ${Html.p(maxthroughputWithNoError.create_time)} , 节点并发线程总和${maxthroughputWithNoError.active_threads} , 节点吞吐量总和共${maxthroughputWithNoError.throughput}/s , 错误总和共${maxthroughputWithNoError.error}/s。</td>
+                        <td>在 ${Html.p(maxthroughputWithNoError.create_time)!} , 节点并发线程总和${maxthroughputWithNoError.active_threads!} , 节点吞吐量总和共${maxthroughputWithNoError.throughput!}/s , 错误总和共${maxthroughputWithNoError.error!}/s。</td>
                     </tr>
                 </table>
             </li>
@@ -338,7 +338,14 @@ ${Html.s("pagetitle","压测报告")}
                     }
                 }, "json");
         }
+        var urlSelect="";
         function loadUrlChart(url){
+            if(url!=null&&url != undefined){
+                urlSelect=url;
+            }
+            if(urlSelect==""){
+                return;
+            }
             var urlWeidus = [];
             <#list urlWeiduMap?keys as key>
             urlWeidus.push("${key}");
@@ -347,13 +354,13 @@ ${Html.s("pagetitle","压测报告")}
                 {
                     "id":${model.id},
                     "node": $("#nodes").val(),
-                    "url":url,
+                    "url":urlSelect,
                 },
                 function (data) {
                     if (data.code < 0) {
                         alert(data.message);
                     } else {
-                        $("#urlChart").html(url);
+                        $("#urlChart").html(urlSelect);
                         $("#urlCharts").show();
                         for(var weidu of urlWeidus){
                             var  option = {
@@ -416,7 +423,7 @@ ${Html.s("pagetitle","压测报告")}
             loadNodesReportChart();
             loadNodeReportChart();
             loadUrlReportChart();
-            //loadUrlChart();
+            loadUrlChart();
         }
 
     </script>

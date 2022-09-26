@@ -83,4 +83,5 @@ public class tb_task_dal extends tb_task_base_dal {
         totalSize.setData(ConvertUtils.convert(db.executeScalar(countSql,par.toArray()),int.class));
         return rs;
     }
+
 }

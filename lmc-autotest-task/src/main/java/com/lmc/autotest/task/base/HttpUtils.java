@@ -26,7 +26,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
 
+/**
+ *
+ * https://www.cnblogs.com/caoweixiong/p/14716187.html
+ */
 public class HttpUtils {
+    static {
+        //调优http配置
+        if(Config.httpPoolEnabled()) {
+            System.setProperty("http.keepAlive", "true");
+            System.setProperty("http.maxConnections", Config.httpPoolMaxSize() + "");
+        }
+    }
     public static HttpResponse request(tb_sample_example_model request){
         HttpRequest r = new HttpRequest();
         r.httpUrl=StringUtils.nullToEmpty(request.getUrl());r.method=StringUtils.nullToEmpty(request.getMethod());
@@ -85,13 +96,14 @@ public class HttpUtils {
             }
             // 设置连接输入流为true
             conn.setDoInput(true);
-            conn.setConnectTimeout(3000);
-            conn.setReadTimeout(60000);
+            conn.setConnectTimeout(Config.httpPoolConnectTimeout());
+            conn.setReadTimeout(Config.httpPoolReadTimeout());
             conn.setUseCaches(false);
             //压测标识头
             conn.setRequestProperty(AutoTestProperties.AutoTestRunning,"true");
             conn.setRequestProperty("Accept-Charset","utf-8");
             //conn.setInstanceFollowRedirects(true);
+            //理论上默认本身应该开启keep-alive,此处手工再加一次确保！
             conn.setRequestProperty("Connection", "Keep-Alive");
             // 获取请求头部信息
             for (val kv:httpRequest.header.entrySet()) {
@@ -144,8 +156,11 @@ public class HttpUtils {
             response.timeMs = new Date().getTime()-beginTime;
             //释放连接以为不能复用连接池,但是可以避免连接溢出风险
             //底层太复杂,做好关闭连接池的配置预案,但是会降低性能
-            if(conn!=null)
-            {conn.disconnect();}
+            if(Config.httpPoolEnabled()==false) {
+                if (conn != null) {
+                    conn.disconnect();
+                }
+            }
         }
     }
 }

@@ -93,7 +93,7 @@ public class AutoTestProvider {
     }
 
     private void autoTest(){
-        LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务准备启动,线程逐步开启中...");
+        LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务准备启动,线程逐步开启中(缓慢开启,若线程多,等待时间较长)...");
         for(int i=0;i<task_model.run_threads_count;i++){
             val index = i;
             int waitTime= new Random(UUID.randomUUID().toString().hashCode()).nextInt(Config.maxSleepPerTheadOpen());

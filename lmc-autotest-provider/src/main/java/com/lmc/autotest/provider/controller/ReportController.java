@@ -156,4 +156,23 @@ public class ReportController extends SpringMvcController {
 
         });
     }
+
+    @RequestMapping("/clear/")
+    public ModelAndView clear(Integer saveCount) {
+        return jsonVisit((m) -> {
+            DbHelper.call(Config.mysqlDataSource(), c -> {
+                val tasks = new tb_task_dal().list(c);
+                val dal = new tb_report_dal();
+                for(val task:tasks) {
+                   val reports = dal.clearReport(c, task.id, saveCount==null?5:saveCount);
+                   for(val report:reports) {
+                       dal.dropTable(c,report.report_node_table);
+                       dal.dropTable(c,report.report_url_table);
+                       dal.delete(c,report.id);
+                   }
+                }
+            });
+            return true;
+        });
+    }
 }

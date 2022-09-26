@@ -106,11 +106,14 @@ public class ReportProvider {
             for(val o:this.reportUrlMap.map.values()){
                 urls.add(o.toModel());
             }
-            DbHelper.call(Config.mysqlDataSource(),(c)->{
-                for(val url:urls) {
-                    new tb_report_url_dal().addHeartBeat(c,report_model.report_url_table,url);
-                }
-            });
+            if(urls.size()>0) {
+                DbHelper.call(Config.mysqlDataSource(), (c) -> {
+//                for(val url:urls) {
+//                    new tb_report_url_dal().addHeartBeat(c,report_model.report_url_table,url);
+//                }
+                    new tb_report_url_dal().addHeartBeatList(c, report_model.report_url_table, urls);
+                });
+            }
         }
         val returnInfo = this.reportNodeInfo;
         this.reportNodeInfo=new ReportNodeInfo();
@@ -147,13 +150,13 @@ public class ReportProvider {
             tb_report_node_example_model model = new tb_report_node_example_model();
             model.active_threads=this.active_threads;
             model.cpu=this.cpu;
-            model.error=this.all_error.get()/this.getTimeSpan();
-            model.memory=this.memory;
+            model.error=IOUtils.dataCheck("error",this.all_error.get()/this.getTimeSpan());
+            model.memory=IOUtils.dataCheck("memory",this.memory);
             model.create_time=new Date();
-            model.network_read=this.all_network_read.get()/this.getTimeSpan();
-            model.network_write=this.all_network_write.get()/this.getTimeSpan();
+            model.network_read=IOUtils.dataCheck("network_read",this.all_network_read.get()/this.getTimeSpan());
+            model.network_write=IOUtils.dataCheck("network_write",this.all_network_write.get()/this.getTimeSpan());
             model.node=this.node;
-            model.throughput=this.all_throughput.get()/this.getTimeSpan();
+            model.throughput=IOUtils.dataCheck("throughput",this.all_throughput.get()/this.getTimeSpan());
             return model;
         }
     }
@@ -207,13 +210,14 @@ public class ReportProvider {
             tb_report_url_example_model model = new tb_report_url_example_model();
             model.url = o.url;
             model.create_time=new Date();
-            model.network_write=o.all_network_write.get()/o.getTimeSpan();
-            model.error=o.all_error.get()/o.getTimeSpan();
-            model.network_read=o.all_network_read.get()/o.getTimeSpan();
+            model.network_write=IOUtils.dataCheck("network_write",o.all_network_write.get()/o.getTimeSpan());
+            model.error=IOUtils.dataCheck("error",o.all_error.get()/o.getTimeSpan());
+            model.network_read=IOUtils.dataCheck("network_read",o.all_network_read.get()/o.getTimeSpan());
             model.node=o.node;
-            model.throughput=o.all_throughput.get()/o.getTimeSpan();
-            model.visit_num=(double)o.all_visit_num.get();
-            model.visit_time=o.all_visit_time.get()/o.getTimeSpan();
+            model.throughput=IOUtils.dataCheck("throughput",o.all_throughput.get()/o.getTimeSpan());
+            model.visit_num=IOUtils.dataCheck("visit_num",(double)o.all_visit_num.get());
+            model.visit_time=IOUtils.dataCheck("visit_time",o.all_visit_time.get()/o.all_visit_num.get()/o.getTimeSpan());
+
             return model;
         }
 
