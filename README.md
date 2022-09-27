@@ -62,6 +62,8 @@ lmc-autotest-provider /bin/bash
 ## 设计文档
 * [全链路压测原型](/doc/全链路压测.rp)
 * [全链路压测sql](/doc/install.sql)
+* 全链路压测设计图
+![Image text](/doc/全链路压测设计图.png)
 
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。
