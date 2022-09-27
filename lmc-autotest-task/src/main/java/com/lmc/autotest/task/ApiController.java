@@ -42,7 +42,6 @@ public class ApiController  {
 	@PostMapping("/test/")
 	public ApiResponseEntity<Integer> test() {
 		try {
-			new ApiScript("",null).streamSql2("select * from auto_tb_sample_2022_09_23",new Object[]{},null);
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
