@@ -1,71 +1,55 @@
-# lmc-autotest
- 基于<a href='https://gitee.com/chejiangyi/free-bsf-all/tree/1.0-SNAPSHOT/'>BSF基础框架</a>，<a href='http://gitlab.codefr.com/linkhub-public/lmc-business-all'>Business业务基础框架</a>开发的<a href='http://gitlab.codefr.com/linkhub-public/lmc-autotest.git'>后端标准项目模板（脚手架）</a>,后端java项目都按照这个项目模板快速搭建项目。
-## 愿景
-* 业务开发只关注业务需求,专注编写业务代码; 对于技术只关注使用,不需要关注基础服务的集成和相关配置(因为所有都已经集成完毕)。
-
-* 标准化项目结构：定义标准的项目分层结构,便于技术资源共享和交叉业务协作开发。
-
-* 标准化技术选型：定义标准的分布式技术选型,便于运维人员统一维护,同时简化使用和统一性能监控和优化。
+# lmc-autotest 全链路压测工具
+ 基于<a href='https://gitee.com/chejiangyi/free-bsf-all/tree/1.0-SNAPSHOT/'>BSF基础框架</a>构建全链路压测框架,从框架层面进行[流量录制](https://gitee.com/chejiangyi/free-bsf-all/tree/1.2-SNAPSHOT/free-bsf-autotest ),从工具层面进行流量回放，进行性能压测，自动输出压测报告，自动进行全链路功能验收，从而提升测试效能，指导网站性能优化。
 
 ## 项目结构
 
 ```
 lmc-autotest
-    -- lmc-autotest-api  	 #api端第三方调用提供request，response类库 （api协议层）
     -- lmc-autotest-core 	 #公共代码 （核心层）
     -- lmc-autotest-dao 	 #数据库操作 （数据层）
-    -- lmc-autotest-service  #业务逻辑 （服务层）
-    -- lmc-autotest-task 	 #批处理任务 （任务层）
-    -- lmc-autotest-provider #api端接口实现（api实现层，提供者模式）
+    -- lmc-autotest-service  #公共业务服务 （服务层）
+    -- lmc-autotest-task 	 #压测任务节点 （任务层）
+    -- lmc-autotest-provider #压测管理站点 （网站及api层）
  -- doc 					 #项目资料 （文档资料）
- 	--client.sh 			 #脚手架脚本
- 	--mybatis-generator.zip  #mybatis 代码生成工具
  -- README.md 				 #项目文档 （说明文档）
 
 ```
-## 项目结构图
-![Image text](doc/项目结构.jpg)
-## 通过脚手架初始化项目
-脚手架目录: /doc/client.sh
+
+## 项目编译
 ```
-# 使用说明: [windows 下面使用git bash运行,支持linux; 注:mac下使用不一定兼容] 
-# curl -O  http://gitlab.codefr.com/linkhub-public/lmc-autotest/raw/{分支名:默认master}/doc/client.sh
-#sh client.sh {项目名：projectName} {groupId} {分支名：version ,默认master}
-#项目名请使用驼峰式,不支持-,举例:userCenter
-# 
-curl -O http://gitlab.codefr.com/linkhub-public/lmc-autotest/raw/master/doc/client.sh
-sh client.sh userCenter
+cd lmc-autotest
+mvn install
 ```
 
-## 通过mybatis-plus-generator生成代码
-mybatis-plus-generator目录: /doc/mybatis-plus-generator/
+## docker 打包
+压测任务节点打包
 ```
-# 使用说明
+vim Dockerfile
+FROM {jdk8 centos镜像}/jdk8:latest
+ADD lmc-autotest-task-1.0-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 
-1.修改配置文件/doc/mybatis-plus-generator/conf/config.properties
-# 配置文件说明
-# output_dir= 生成的代码所在目录 示例：/sources/lmc-autotest/lmc-autotest-core/src/main/java
-# author= 作者，会加在类的注释上
-# jdbc_url= 数据库链接
-# jdbc_username= 数据库用户名
-# jdbc_password= 数据库密码
-# parent_package= 项目的顶层包 示例:com.lmc
-# entity_package= 数据库模型类所在包 示例:repository.entity
-# mapper_package= mybatis-plus的mapper接口所在包 示例:repository.mapper
-# xml_package= mybatis-plus的mapper.xml文件所在包repository.mapper
-# tables= 需要生成代码的数据库表，多张表用英文逗号分割，为空则生成数据库中所有表的代码
+docker build -t lmc-autotest-task .
+docker tag lmc-autotest-task:latest {镜像仓库}/lmc-autotest-task:latest
+docker push {镜像仓库}/lmc-autotest-task:latest
+```
+压测任务管理站点
+```
+vim Dockerfile
+FROM {jdk8 centos镜像}/jdk8:latest
+ADD lmc-autotest-provider-1.0-SNAPSHOT.jar app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 
-2.直接点击运行mybatis-plus-generator.sh,会在指定目录生成代码
+docker build -t lmc-autotest-provider .
+docker tag lmc-autotest-provider:latest {镜像仓库}/lmc-autotest-provider:latest
+docker push {镜像仓库}/lmc-autotest-provider:latest
 ```
 
-## 配置maven settings.xml
-缺少包导致编译不通过,可以检查nexus配置是否正确。
-* [settings.xml](/doc/settings.xml)
+## 设计文档
+* [全链路压测原型](/doc/全链路压测.rp)
+* [全链路压测sql](/doc/install.sql)
 
-## business框架升级记录
-business 1.1.0版本
-1. business 修改ApiResponseEntity code:2000->200状态码,issucess方法做兼容判断.
-2. business 增加ApiResponseEntity debug,支持traceid和Tid输出。
-3. bsf 支持sentinel限流。
-4. bsf 支持transaction分布式事务seata。
-5. bsf 支持阿里云oss sts认证模式上传文件。
+## 进阶篇
+1. 暂不支持文件上传类的流量录制。
+2. 微服务的流量录制目前支持feign进行traceid传递,支持mybatis进行操作或仅查询两种访问类型识别。
+3. 期望通过sharding-jdbc支持影子表和影子库,未来还会在jdbc层面做影子表和影子库扩展能力。
