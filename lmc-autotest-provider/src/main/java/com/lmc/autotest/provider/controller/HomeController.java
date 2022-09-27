@@ -45,4 +45,12 @@ public class HomeController extends SpringMvcController {
             return true;
         });
     }
+    @RequestMapping("/loginout")
+    public ModelAndView loginout()
+    {
+        User.setCurrent(null);
+        return pageVisit((m) -> {
+            m.setViewName("/home/login");
+        });
+    }
 }

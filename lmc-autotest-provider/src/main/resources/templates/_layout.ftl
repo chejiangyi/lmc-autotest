@@ -75,7 +75,7 @@ ${Html.s("_html",html)}
         <div class="fr mr10">
             <#if user.getCurrent()??>
                 <span id="toptips" class="remind fl"><span id="toptips1">${user.username!}</span></span>
-                <a href="/logout" class="fl">退出</a>
+                <a href="/loginout" class="fl">退出</a>
             <#else>
                 <a href="/" class="fl">登录</a>
             </#if>

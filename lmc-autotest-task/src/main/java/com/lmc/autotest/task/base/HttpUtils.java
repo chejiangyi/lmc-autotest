@@ -44,7 +44,7 @@ public class HttpUtils {
         r.header = JsonUtils.deserialize(request.header, new TypeReference<HashMap<String,String>>() {});
         r.body = request.getBody();
         r.appName = StringUtils.nullToEmpty(request.app_name);
-        LogUtils.info(HttpUtils.class, Config.nodeName(),"访问:"+r.httpUrl);
+        //LogUtils.info(HttpUtils.class, Config.nodeName(),"访问:"+r.httpUrl);
         return httpRequest(r);
     }
     @Data
