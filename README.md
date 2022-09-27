@@ -32,6 +32,13 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 docker build -t lmc-autotest-task .
 docker tag lmc-autotest-task:latest {镜像仓库}/lmc-autotest-task:latest
 docker push {镜像仓库}/lmc-autotest-task:latest
+
+docker run -it \
+-p 8081:8081 \
+-e spring.shardingsphere.datasource.main0.url="jdbc:mysql://{数据库地址+ip}/autotest?useSSL=false" \
+-e spring.shardingsphere.datasource.main0.username="{数据库账号}" \
+-e spring.shardingsphere.datasource.main0.password="{数据库密码}" \
+lmc-autotest-task /bin/bash
 ```
 压测任务管理站点
 ```
@@ -43,6 +50,13 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 docker build -t lmc-autotest-provider .
 docker tag lmc-autotest-provider:latest {镜像仓库}/lmc-autotest-provider:latest
 docker push {镜像仓库}/lmc-autotest-provider:latest
+
+docker run -it \
+-p 8080:8080 \
+-e spring.shardingsphere.datasource.main0.url="jdbc:mysql://{数据库地址+ip}/autotest?useSSL=false" \
+-e spring.shardingsphere.datasource.main0.username="{数据库账号}" \
+-e spring.shardingsphere.datasource.main0.password="{数据库密码}" \
+lmc-autotest-provider /bin/bash
 ```
 
 ## 设计文档
