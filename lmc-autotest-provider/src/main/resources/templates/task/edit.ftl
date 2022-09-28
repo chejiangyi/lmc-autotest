@@ -23,45 +23,44 @@ ${Html.s("pagetitle","编辑任务")}
                 </select>
             </li>
             <li>
-                <label>采集样本筛选脚本</label>
-                <textarea id="filter_script" rows="20" cols="20" style="width: 80%;">${model.filter_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
-            </li>
-<#--            <li>-->
-<#--                <label>采样表文件</label>-->
-<#--                <input class="mtext" type="text" id="filter_table" name="filter_table" value="${model.filter_table!}" />-->
-<#--            </li>-->
-            <li>
-                <label>第一次执行过滤错误采样样本</label>
-               <input type="checkbox" id="clear_data_first" name="clear_data_first" ${Html.w(model.clear_data_first,"checked='checked'","")}>${Html.help("先过滤错误样本后,再执行压测任务")}
-            </li>
-            <li>
                 <label>执行节点</label>
-                <select id="nodes" name="nodes" multiple>
+                <select id="nodes" name="nodes" multiple style="height: 100px">
                     <#list Utils.getOnlineNodes() as item>
                         <option value="${item}" ${Html.w(Utils.isContainNode(model.nodes,item),"selected='selected'","")}>${item}</option>
                     </#list>
                 </select>
             </li>
-<#--            <li>-->
-<#--                <label>执行时间</label>-->
-<#--                <input class="mtext" type="text" id="corn" name="corn" value="${model.corn!}" placeholder="corn表达式" /><a target="_blank" href="https://www.pppet.net/changyong.html">常用corn表达式</a>-->
-<#--            </li>-->
             <li>
                 <label>节点并行线程数量</label>
                 <input class="stext" type="text" id="run_threads_count" name="run_threads_count" value="${model.run_threads_count!}" />
             </li>
             <li>
-                <label>样本执行前脚本</label>
-                <textarea id="http_begin_script" rows="20" cols="20" style="width: 80%;">${model.http_begin_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                <div id="tabs">
+                    <ul>
+                        <li><a href="#tabs-1">采集样本筛选脚本${Html.help("从样本库中筛选出需要压测的样本")}</a></li>
+                        <li><a href="#tabs-2">首次执行过滤错误采样样本${Html.help("首次执行(压测前)进行过滤部分错误的样本数据,减少不必要的错误")}</a></li>
+                        <li><a href="#tabs-3">样本执行前脚本${Html.help("单个样本进行回访前执行的脚本")}</a></li>
+                        <li><a href="#tabs-4">样本执行后脚本${Html.help("单个样本进行回放后执行的脚本,一般用于错误判断")}</a></li>
+                        <li><a href="#tabs-5">任务终止判断脚本${Html.help("任务终止的定时(一般单个心跳时间,默认5s)判断脚本,达到条件则终止压测任务")}</a></li>
+                    </ul>
+                    <div id="tabs-1">
+                        <textarea id="filter_script" rows="20" cols="20" style="width: 90%;">${model.filter_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                    </div>
+                    <div id="tabs-2">
+                        <textarea id="first_filter_error_script" rows="20" cols="20" style="width: 90%;">${model.first_filter_error_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                    </div>
+                    <div id="tabs-3">
+                        <textarea id="http_begin_script" rows="20" cols="20" style="width: 90%;">${model.http_begin_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                    </div>
+                    <div id="tabs-4">
+                        <textarea id="http_end_script" rows="20" cols="20" style="width: 90%;">${model.http_end_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                    </div>
+                    <div id="tabs-5">
+                        <textarea id="check_stop_script" rows="20" cols="20" style="width: 90%;">${model.check_stop_script!}</textarea> <a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                    </div>
+                </div>
             </li>
-            <li>
-                <label>样本执行后脚本</label>
-                <textarea id="http_end_script" rows="20" cols="20" style="width: 80%;">${model.http_end_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
-            </li>
-            <li>
-                <label>任务终止判断脚本</label>
-                <textarea id="check_stop_script" rows="20" cols="20" style="width: 80%;">${model.check_stop_script!}</textarea> <a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
-            </li>
+
             <li>
                <#if Utils.showRunState(model.run_heart_time)=="停止" >
                     <input type="button" class="btn1" style="" value="保存" onclick="return save()" />
@@ -70,6 +69,10 @@ ${Html.s("pagetitle","编辑任务")}
         </ul>
     </div>
     <script type="text/javascript">
+        $( function() {
+            $( "#tabs").tabs();
+        } );
+
         function save()
         {
             console.log($("#nodes").val());
@@ -80,7 +83,7 @@ ${Html.s("pagetitle","编辑任务")}
                     "filter_store": $("#filter_store").val(),
                     "filter_script": $("#filter_script").val(),
                     "filter_table":$("#filter_table").val(),
-                    "clear_data_first":$("#clear_data_first").val(),
+                    "first_filter_error_script":$("#first_filter_error_script").val(),
                     "nodes":$("#nodes").val().join(','),
                     "corn":$("#corn").val(),
                     "run_threads_count":$("#run_threads_count").val(),

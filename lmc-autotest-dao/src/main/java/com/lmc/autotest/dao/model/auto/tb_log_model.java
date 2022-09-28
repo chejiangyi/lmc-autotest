@@ -10,7 +10,7 @@ import lombok.*;
  * tb_log 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-22 14:29:27
+ * @since 2022-09-28 11:59:33
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -27,4 +27,6 @@ public class tb_log_model implements Serializable {
     public Date create_time;
 
     public String message;
+
+    public Integer task_id;
 }

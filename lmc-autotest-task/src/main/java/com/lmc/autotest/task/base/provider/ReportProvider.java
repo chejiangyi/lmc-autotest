@@ -32,9 +32,10 @@ public class ReportProvider {
     volatile ReportNodeInfo reportNodeInfo = null;
     volatile ReportUrlMap reportUrlMap = null;
     public void init(tb_task_model task_model,String tranId){
-        DbHelper.transaction(Config.mysqlDataSource(),8,()->{
-            report_model = DbHelper.transactionGet(Config.mysqlDataSource(), (c) -> {
+            report_model = DbHelper.get(Config.mysqlDataSource(), (c) -> {
                 val taskTemp = new tb_task_dal().getWithLock(c,task_model.id);
+                //lock tb_task data
+                new tb_task_dal().runHeartBeat(c,task_model.id);
                 var nodes = new tb_node_dal().getOnlineNodes(c);
                 var nodeNames = Arrays.asList(task_model.nodes.split(","));
                 nodes=nodes.stream().filter(n->nodeNames.contains(n.node)).collect(Collectors.toList());
@@ -49,15 +50,14 @@ public class ReportProvider {
                 }
                 var report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);
                 if(report==null) {
-                    String time= DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");
                     tb_report_model model = new tb_report_model();
                     model.setCreate_time(new Date());
                     model.setBegin_time(new Date());
                     model.setEnd_time(DateUtils.strToDate("1900-01-01","yyyy-MM-dd"));
                     model.setFilter_store(task_model.filter_store);
-                    model.setReport_name(task_model.task+"_"+time);
-                    model.setReport_node_table(new tb_report_node_dal().copyNewTable(c,time));
-                    model.setReport_url_table(new tb_report_url_dal().copyNewTable(c,time));
+                    model.setReport_name(task_model.task+"_"+tranId);
+                    model.setReport_node_table(new tb_report_node_dal().copyNewTable(c,tranId));
+                    model.setReport_url_table(new tb_report_url_dal().copyNewTable(c,tranId));
                     model.setTask_id(task_model.id);
                     model.setFilter_table(FileUtils.getSampleFile(task_model.id,tranId));
                     model.setTask_name(task_model.task);
@@ -66,12 +66,13 @@ public class ReportProvider {
                     model.setTran_id(tranId);
                     model.setFilter_table_error_lines(0);
                     model.setFilter_table_lines(0);
-                    new tb_report_dal().add(c,model);
+                    new tb_report_dal().tryAdd(c,model);
                 }
                 report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);
                 return report;
             });
-        });
+            if(report_model==null)
+                throw new BsfException("报表初始化失败,报表为空!");
     }
 
     public ReportNodeInfo updateReport(HttpUtils.HttpResponse response){
@@ -142,7 +143,7 @@ public class ReportProvider {
         }
 
         public double getTimeSpan(){
-            return (new Date().getTime()-create_time.getTime())/1000;
+            return ((double) new Date().getTime()-(double) create_time.getTime())/1000;
         }
 
         public tb_report_node_example_model toModel(){
@@ -202,7 +203,7 @@ public class ReportProvider {
 
 
         public double getTimeSpan(){
-            return (new Date().getTime()-create_time.getTime())/1000;
+            return ((double) new Date().getTime()-(double) create_time.getTime())/1000;
         }
 
         public tb_report_url_example_model toModel(){

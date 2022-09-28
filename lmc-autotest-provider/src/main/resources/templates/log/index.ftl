@@ -31,6 +31,7 @@ ${Html.s("pagetitle","日志列表")}
 <div class="orderlist m10 myorder">
     <form action="/log/index/" method="post" id="searchForm">
         <div class="search">
+            <label>任务Id</label><input type="text" class="text midtext" style="width:150px;" name="taskid" value="${taskid!}" />
             <label>节点</label><input type="text" class="text midtext" style="width:150px;" name="node" value="${node!}" />
             <label>级别</label>
             <select id="type" name="type">
@@ -39,6 +40,7 @@ ${Html.s("pagetitle","日志列表")}
                     <option value="${item}" ${Html.w(item==type,"selected='selected'","")}>${item}</option>
                 </#list>
             </select>
+            <label>内容</label><input type="text" class="text midtext" style="width:300px;" name="message" value="${message!}" />
             <label>创建时间</label><input type="text" class="text midtext" style="width:150px;" name="create_time_from" value="${create_time_from!}" /> 至 <input type="text" class="text midtext" style="width:150px;" name="create_time_to" value="${create_time_to!}" />
             <input type="submit" class="btn1" value="搜索" accesskey="S" />
             <input type="button" class="btn1" value="清空" onclick="clearLog()" />
@@ -58,6 +60,7 @@ ${Html.s("pagetitle","日志列表")}
 <table class="mytable" width="100%">
     <tr>
         <th style="width:3%">Id</th>
+        <th style="width:10%">任务Id</th>
         <th style="width:10%">节点</th>
         <th style="width:40%">日志</th>
         <th style="width:7%">级别</th>
@@ -66,8 +69,9 @@ ${Html.s("pagetitle","日志列表")}
     <#list model as item>
         <tr data-id="${item.id}">
             <td>${item.id}</td>
+            <td>${item.task_id}</td>
             <td>${item.node}</td>
-            <td title="${item.message}">${Html.cutstring(item.message,300)}</td>
+            <td style="word-break: break-all" title="${item.message?html}">${Html.cutstring(item.message,300)}</td>
             <td>${item.type}</td>
             <td>${Html.p(item.create_time)}</td>
         </tr>

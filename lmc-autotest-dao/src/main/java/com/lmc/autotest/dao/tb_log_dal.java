@@ -15,14 +15,22 @@ import java.util.List;
 import java.util.Map;
 
 public class tb_log_dal extends tb_log_base_dal {
-    public List<tb_log_model> searchPage(DbConn db,String node, String type, String create_time_from,String create_time_to, Integer pageindex, Integer pagesize, Ref<Integer> totalSize){
+    public List<tb_log_model> searchPage(DbConn db,String taskid,String node, String type,String message, String create_time_from,String create_time_to, Integer pageindex, Integer pagesize, Ref<Integer> totalSize){
         val par = new ArrayList<>();
         val rs = new ArrayList<tb_log_model>();
 
         StringBuilder sb = new StringBuilder(" from tb_log where 1=1 ");
+        if(!StringUtils.isEmpty(taskid)){
+            par.add(taskid);
+            sb.append(" and task_id = ?");
+        }
         if(!StringUtils.isEmpty(node)){
             par.add(node);
             sb.append(" and node like concat('%', ?, '%')");
+        }
+        if(!StringUtils.isEmpty(message)){
+            par.add(message);
+            sb.append(" and message like concat('%', ?, '%')");
         }
         if(!StringUtils.isEmpty(type)){
             par.add(type);

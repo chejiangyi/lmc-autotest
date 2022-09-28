@@ -33,6 +33,14 @@ public class IOUtils {
         return ThreadPoolUtils.System.getThreadPool().getActiveCount();
     }
 
+//    public static double dataCheck(String info,double value,Object[] infos){
+//        if(Double.isNaN(value)||Double.isInfinite(value)){
+//             LogUtils.error(IOUtils.class, CoreProperties.Project, StringUtils.nullToEmpty(info)+"数据异常:"+value+",默认重置为0处理");
+//            return 0;
+//        }
+//        return value;
+//    }
+
     public static double dataCheck(String info,double value){
         if(Double.isNaN(value)||Double.isInfinite(value)){
             LogUtils.error(IOUtils.class, CoreProperties.Project, StringUtils.nullToEmpty(info)+"数据异常:"+value+",默认重置为0处理");

@@ -42,16 +42,21 @@ public class AutoTestProvider {
     }
 
     public AutoTestProvider init(){
-        DbHelper.get(Config.mysqlDataSource(), (c) -> {
-            task_model = new tb_task_dal().get(c, this.taskid);
-            return true;
-        });
-        if (task_model == null)
-            throw new BsfException(taskid + "任务不存在");
+        try {
+            DbHelper.get(Config.mysqlDataSource(), (c) -> {
+                task_model = new tb_task_dal().get(c, this.taskid);
+                return true;
+            });
+            if (task_model == null)
+                throw new BsfException(taskid + "任务不存在");
 
-        this.reportProvider = new ReportProvider();
-        this.reportProvider.init(task_model,this.tranId);
-        return this;
+            this.reportProvider = new ReportProvider();
+            this.reportProvider.init(task_model,this.tranId);
+            return this;
+        } catch (Exception e) {
+            LogTool.error(this.getClass(), taskid,Config.appName(), "初始化自动化测试失败", e);
+            throw e;
+        }
     }
 
     public void run(){
@@ -69,7 +74,7 @@ public class AutoTestProvider {
                 autoTest();
             }catch (Exception e){
                 close("启动执行异常");
-                LogTool.error(AutoTestProvider.class,Config.appName(),task_model.task+"-自动化压测运行任务异常",e);
+                LogTool.error(AutoTestProvider.class,taskid,Config.appName(),task_model.task+"-自动化压测运行任务异常",e);
                 //throw e;
             }
         });
@@ -79,21 +84,21 @@ public class AutoTestProvider {
         isRun = false;
         try {
             String reason2 = Config.nodeName() + ":" + StringUtils.nullToEmpty(reason);
-            DbHelper.transactionCall(Config.mysqlDataSource(), (c) -> {
+            DbHelper.call(Config.mysqlDataSource(), (c) -> {
                 val task = new tb_task_dal().getWithLock(c, taskid);
                 new tb_task_dal().closeHeartBeat(c, taskid);
-                new tb_task_dal().addResult(c, taskid, task.exec_result + "\r\n" + reason2);
+                new tb_task_dal().appendResult(c, taskid,  "\r\n"+ reason2);
             });
-            LogTool.info(this.getClass(), Config.appName(), StringUtils.nullToEmpty(task_model.task) + "-压测任务已关闭");
+            LogTool.info(this.getClass(),taskid, Config.appName(), StringUtils.nullToEmpty(task_model.task) + "-压测任务已关闭");
         } catch (Exception e) {
-            LogTool.error(this.getClass(), Config.appName(), "关闭原因更新数据库出错", e);
+            LogTool.error(this.getClass(), taskid,Config.appName(), "关闭原因更新数据库出错", e);
         }
         disposeFile();
         AutoTestManager.Default.close(taskid, reason,true);
     }
 
     private void autoTest(){
-        LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务准备启动,线程逐步开启中(缓慢开启,若线程多,等待时间较长)...");
+        LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务准备启动,线程逐步开启中(缓慢开启,若线程多,等待时间较长)...");
         for(int i=0;i<task_model.run_threads_count;i++){
             val index = i;
             int waitTime= new Random(UUID.randomUUID().toString().hashCode()).nextInt(Config.maxSleepPerTheadOpen());
@@ -113,34 +118,34 @@ public class AutoTestProvider {
                                     val sMap= this.initMap();
                                     sMap.put("request", j);
                                     val r1 = DynamicScript.run("执行前脚本", task_model.http_begin_script, sMap);
-                                    if (r1 == null || !(r1 instanceof Boolean) || (boolean) r1 != true) {
+                                    if (r1 != null && (!((r1 instanceof Boolean) && (boolean) r1 != true))) {
                                         return;
                                     }
                                 }
-                                val r = HttpUtils.request(j);
+                                val r = HttpUtils.request(j,false);
                                 //后
                                 if (!StringUtils.isEmpty(task_model.http_end_script)) {
                                     val sMap2= this.initMap();
                                     sMap2.put("request", j);
                                     sMap2.put("response", r);
                                     val r2 = DynamicScript.run("执行后脚本", task_model.http_end_script, sMap2);
-                                    if (r2 == null || !(r2 instanceof Boolean) || (boolean) r2 != true) {
+                                    if (r2 != null && (!((r2 instanceof Boolean) && (boolean) r2 != true))) {
                                         return;
                                     }
                                 }
                                 //结束
                                 this.reportProvider.updateReport(r);
                             }catch (Exception e){
-                                LogTool.error(AutoTestProvider.class,Config.appName(),"处理样本文件单行出错:"+e.getMessage(),e);
+                                LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"处理样本文件单行出错:"+e.getMessage(),e);
                             }
                         });
                     }catch (Exception e){
-                        LogTool.error(AutoTestProvider.class,Config.appName(),"压测线程"+index+"异常",e);
+                        LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"压测线程"+index+"异常",e);
                     }
                 }
             });
         }
-        LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务线程已全部启动,压测中...");
+        LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务线程已全部启动,压测中...");
     }
 
     private void hearBeat(){
@@ -157,18 +162,18 @@ public class AutoTestProvider {
                         sMap.put("runtime",(new Date().getTime()-startTime.getTime())/1000);
                         val r2 = DynamicScript.run("任务终止判断脚本", task_model.check_stop_script, sMap);
                         if(r2!=null&&(r2 instanceof Boolean)&&(boolean)r2==false){
-                            LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务命中任务终止判断脚本规则");
+                            LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务命中任务终止判断脚本规则");
                             close("命中任务终止判断脚本规则");
                         }
                     }
                 }catch (Exception e){
-                    LogTool.error(AutoTestProvider.class,Config.appName(),"心跳更新任务",e);
+                    LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"心跳更新任务",e);
                 }
                 ThreadUtils.sleep(Config.heartbeat()*1000);
             }
 
         });
-        LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-任务心跳检测已开启");
+        LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-任务心跳检测已开启");
     }
 
     //生成采样表文件
@@ -176,13 +181,13 @@ public class AutoTestProvider {
        val map = this.initMap();
         DynamicScript.run("采样表文件生成",task_model.filter_script,map);
         if(!this.checkRunning()){ return;}
-        LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-采样文件生成完成");
+        LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-采样文件生成完成");
     }
     //过滤错误样本
     private void filterError(){
         int fileLines = FileUtils.fileCount(FileUtils.getSampleFile(task_model.id,tranId));
         Ref<Integer> errorLines=new Ref<Integer>(0);
-        if(task_model.clear_data_first) {
+        if(!StringUtils.isEmpty(task_model.first_filter_error_script)) {
             //生成临时文件
             String filename = FileUtils.getSampleFile(task_model.id,tranId);
             String temp = filename + ".temp";
@@ -197,16 +202,20 @@ public class AutoTestProvider {
                 SampleUtils.readline(temp, (line) -> {
                     if (isRun) {
                         tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
-                        val r = HttpUtils.request(j);
-                        if (r.getCode() == 200) {
+                        val r = HttpUtils.request(j,false);
+                        val sMap2= this.initMap();
+                        sMap2.put("request", j);
+                        sMap2.put("response", r);
+                        val r2 = DynamicScript.run("第一次过滤错误样本",task_model.first_filter_error_script,sMap2);
+                        if (r2!=null&&(r2 instanceof Boolean)&&(boolean)r2==false) {
+                            errorLines.setData(errorLines.getData() + 1);
+                        }else{
                             SampleUtils.writeline(filename, line);
-                            return;
                         }
-                        errorLines.setData(errorLines.getData() + 1);
                     }
                 });
                 if(!this.checkRunning()){ return;}
-                LogTool.info(this.getClass(),Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-过滤错误样本完成");
+                LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-过滤错误样本完成");
             }finally {
                 FileUtils.delete(temp);
             }
@@ -231,7 +240,7 @@ public class AutoTestProvider {
             FileUtils.delete(FileUtils.getSampleFile(task_model.id, tranId));
             FileUtils.clearExpireFile(new File("").getAbsolutePath());
         } catch (Exception e) {
-            LogTool.error(this.getClass(), Config.appName(), "关闭删除文件出错", e);
+            LogTool.error(this.getClass(), taskid,Config.appName(), "关闭删除文件出错", e);
         }
     }
 

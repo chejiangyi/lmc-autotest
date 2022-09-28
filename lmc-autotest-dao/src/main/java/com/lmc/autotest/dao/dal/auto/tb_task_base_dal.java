@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_task 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-23 22:31:58
+ * @since 2022-09-28 11:06:45
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_task_base_dal {
@@ -41,10 +41,8 @@ public class tb_task_base_dal {
                 model.update_user,
                 /**执行结果*/
                 model.exec_result,
-                /**过滤筛选脚本*/
+                /**过滤筛选样本脚本*/
                 model.filter_script,
-                /**是否清理数据*/
-                model.clear_data_first,
                 /**执行节点*/
                 model.nodes,
                 /**运行线程数*/
@@ -54,9 +52,11 @@ public class tb_task_base_dal {
                 /**运行后脚本*/
                 model.http_end_script,
                 /**检测终止脚本*/
-                model.check_stop_script
+                model.check_stop_script,
+                /**第一次执行过滤错误脚本*/
+                model.first_filter_error_script
         };
-        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,clear_data_first,nodes,run_threads_count,http_begin_script,http_end_script,check_stop_script)" +
+        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,nodes,run_threads_count,http_begin_script,http_end_script,check_stop_script,first_filter_error_script)" +
                 "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
@@ -79,10 +79,8 @@ public class tb_task_base_dal {
                 model.update_user,
                 /**执行结果*/
                 model.exec_result,
-                /**过滤筛选脚本*/
+                /**过滤筛选样本脚本*/
                 model.filter_script,
-                /**是否清理数据*/
-                model.clear_data_first,
                 /**执行节点*/
                 model.nodes,
                 /**运行线程数*/
@@ -93,9 +91,11 @@ public class tb_task_base_dal {
                 model.http_end_script,
                 /**检测终止脚本*/
                 model.check_stop_script,
+                /**第一次执行过滤错误脚本*/
+                model.first_filter_error_script,
                 model.id
         };
-        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,clear_data_first=?,nodes=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=? where id=?", par);
+        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,nodes=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=?,first_filter_error_script=? where id=?", par);
         return rev == 1;
 
     }
@@ -169,13 +169,9 @@ public class tb_task_base_dal {
         if (dr.containsKey("exec_result")) {
             o.exec_result = ConvertUtils.convert(dr.get("exec_result"), String.class);
         }
-        /**过滤筛选脚本*/
+        /**过滤筛选样本脚本*/
         if (dr.containsKey("filter_script")) {
             o.filter_script = ConvertUtils.convert(dr.get("filter_script"), String.class);
-        }
-        /**是否清理数据*/
-        if (dr.containsKey("clear_data_first")) {
-            o.clear_data_first = ConvertUtils.convert(dr.get("clear_data_first"), Boolean.class);
         }
         /**执行节点*/
         if (dr.containsKey("nodes")) {
@@ -196,6 +192,10 @@ public class tb_task_base_dal {
         /**检测终止脚本*/
         if (dr.containsKey("check_stop_script")) {
             o.check_stop_script = ConvertUtils.convert(dr.get("check_stop_script"), String.class);
+        }
+        /**第一次执行过滤错误脚本*/
+        if (dr.containsKey("first_filter_error_script")) {
+            o.first_filter_error_script = ConvertUtils.convert(dr.get("first_filter_error_script"), String.class);
         }
         return o;
     }

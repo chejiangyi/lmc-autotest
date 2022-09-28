@@ -2,11 +2,13 @@ package com.lmc.autotest.task;
 import com.free.bsf.core.util.ExceptionUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
 import com.lmc.autotest.task.base.ApiScript;
+import com.xxl.job.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
@@ -20,7 +22,7 @@ public class ApiController  {
 		try {
 			if(tranId==null)
 			{
-				tranId= UUID.randomUUID().toString().replace("-","").substring(0,10);
+				tranId= DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");;
 			}
 			AutoTestManager.Default.open(taskId,tranId);
 			return ApiResponseEntity.success(1);

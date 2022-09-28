@@ -16,6 +16,43 @@ import java.util.List;
 import java.util.Map;
 
 public class tb_report_dal extends tb_report_base_dal {
+    public boolean tryAdd(DbConn conn, tb_report_model model) {
+        val par = new Object[]{
+                /***/
+                model.report_name,
+                /**事务id*/
+                model.tran_id,
+                /***/
+                model.task_id,
+                /***/
+                model.nodes,
+                /**节点配置信息*/
+                model.nodes_info,
+                /***/
+                model.filter_table,
+                /***/
+                model.filter_store,
+                /**开始时间*/
+                model.begin_time,
+                /**结束时间*/
+                model.end_time,
+                /***/
+                model.create_time,
+                /**report_node 表*/
+                model.report_node_table,
+                /**report_url表*/
+                model.report_url_table,
+                /***/
+                model.task_name,
+                /***/
+                model.filter_table_lines,
+                /***/
+                model.filter_table_error_lines
+        };
+        int rev = conn.executeSql("insert IGNORE into tb_report(report_name,tran_id,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        return rev == 1;
+    }
     public List<tb_report_model> searchPage(DbConn db,String report_name, String task_name, String create_time_from,String create_time_to, Integer pageindex, Integer pagesize, Ref<Integer> totalSize){
         val par = new ArrayList<>();
         val rs = new ArrayList<tb_report_model>();
@@ -85,9 +122,9 @@ public class tb_report_dal extends tb_report_base_dal {
     public List<tb_report_model> clearReport(DbConn conn,int taskId,int saveCount){
         val rs = new ArrayList<tb_report_model>();
         val par = new Object[]{
-                taskId,saveCount
+               taskId,taskId,saveCount
         };
-        String sql = "select * from tb_report where id not in (SELECT id from (select id from tb_report where task_id=? order by id desc LIMIT ?) as a)";
+        String sql = "select * from tb_report where task_id=? and id not in (SELECT id from (select id from tb_report where task_id=? order by id desc LIMIT ?) as a)";
         val ds = conn.executeList(sql, par);
         if (ds != null && ds.size() > 0)
         {

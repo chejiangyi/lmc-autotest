@@ -56,6 +56,13 @@ public class tb_task_dal extends tb_task_base_dal {
         int rev = conn.executeSql("update tb_task set exec_result=? where id=?", par);
     }
 
+    public void appendResult(DbConn conn, int id,String reason) {
+        val par = new Object[]{
+                reason,id
+        };
+        int rev = conn.executeSql("update tb_task set exec_result=CONCAT(?,exec_result) where id=?", par);
+    }
+
     public List<tb_task_model> searchPage(DbConn db, String task, String create_user, Integer pageindex, Integer pagesize, Ref<Integer> totalSize){
         val par = new ArrayList<>();
         val rs = new ArrayList<tb_task_model>();

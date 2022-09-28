@@ -44,14 +44,16 @@ ${Html.s("pagetitle","任务列表")}
             <td>${Utils.printRunState(item.run_heart_time)}</td>
             <td>${item.create_user}<br/>${Html.p(item.create_time)}</td>
             <td>${item.update_user}<br/>${Html.p(item.update_time)}</td>
-            <td>${item.exec_result!}</td>
+            <td>${Utils.replaceChar(item.exec_result,"\n","<br/>")!}</td>
             <td>
                 <a href="javascript:setRunState(${item.id},'${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}')" class="btn1"> ${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}</a>
                 <a href="/task/edit/?id=${item.id}" class="btn1" target="_blank">编辑</a>
                 <#if Utils.showRunState(item.run_heart_time)=="停止" >
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>
+                <br/>
                 <a href="/report/index/?report_name=${item.task}" class="btn1">压测报告</a>
+                <a href="/log/index/?taskid=${item.id}" class="btn1">日志</a>
             </td>
         </tr>
     </#list>

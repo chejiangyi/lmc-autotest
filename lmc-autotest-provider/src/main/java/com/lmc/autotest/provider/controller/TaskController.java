@@ -5,10 +5,7 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.http.HttpClient;
-import com.free.bsf.core.util.HttpClientUtils;
-import com.free.bsf.core.util.JsonUtils;
-import com.free.bsf.core.util.StringUtils;
-import com.free.bsf.core.util.ThreadUtils;
+import com.free.bsf.core.util.*;
 import com.free.bsf.message.channel.QiYeWeiXinProvider;
 import com.google.common.collect.Lists;
 import com.lmc.autotest.core.ApiResponseEntity;
@@ -20,6 +17,7 @@ import com.lmc.autotest.dao.tb_task_dal;
 import com.lmc.autotest.provider.SpringMvcController;
 import com.lmc.autotest.provider.pager.Pager1;
 import com.netflix.discovery.util.StringUtil;
+import com.xxl.job.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Controller;
@@ -56,7 +54,7 @@ public class TaskController extends SpringMvcController {
             val model = DbHelper.get(Config.mysqlDataSource(), c -> {
                 return new tb_task_dal().get(c, id);
             });
-            val temp = new tb_task_model();temp.setClear_data_first(false);
+            val temp = new tb_task_model();
             request.setAttribute("model", model==null?temp:model);
         });
     }
@@ -64,7 +62,7 @@ public class TaskController extends SpringMvcController {
     @RequestMapping("/save")
     public ModelAndView save(Integer id, String task,
                              String filter_store, String filter_script, String filter_table,
-                             boolean clear_data_first, String nodes, Integer run_threads_count,
+                             String first_filter_error_script, String nodes, Integer run_threads_count,
                              String http_begin_script, String http_end_script, String check_stop_script
     ) {
         return jsonVisit((m) -> {
@@ -72,11 +70,11 @@ public class TaskController extends SpringMvcController {
                 tb_task_model model = new tb_task_dal().get(c, id);
                 if (model == null) {
                     model = new tb_task_model();
-                    model.run_heart_time = new Date(1900,01,01);
+                    model.run_heart_time = DateUtils.strToDate("1900-01-01","yyyy-MM-dd");
                     model.create_time = new Date();
                 }else {
                 }
-                model.clear_data_first = clear_data_first;
+                model.first_filter_error_script = first_filter_error_script;
                 model.http_begin_script = http_begin_script;
                 model.check_stop_script = check_stop_script;
 //                model.filter_table = filter_table;
@@ -120,12 +118,13 @@ public class TaskController extends SpringMvcController {
                 StringBuilder errors = new StringBuilder();
                 val api2 = api;
                 new tb_task_dal().addResult(c, model.id,"");
+                val tranId=  DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");;
                 ThreadUtils.parallelFor("并行操作节点开关", nodes.size(), nodes, (n) -> {
                     if (!nodeNames.contains(n.node))
                         return;
                     val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.port + "/" + api2 + "/",
                             HttpClient.Params.custom().add("taskId", id)
-                                    .add("tranId", UUID.randomUUID().toString().replace("-","")).build());
+                                    .add("tranId", tranId).build());
                     ApiResponseEntity es = JsonUtils.deserialize(rs, ApiResponseEntity.class);
                     synchronized (lock) {
                         if (es.getCode() < 0 ) {

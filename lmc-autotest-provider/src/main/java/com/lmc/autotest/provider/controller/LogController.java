@@ -31,16 +31,16 @@ import java.util.Date;
 @RequestMapping("/log")
 public class LogController extends SpringMvcController {
     @RequestMapping("/index")
-    public ModelAndView index(String node, String type, String create_time_from,String create_time_to, Integer pageindex, Integer pagesize) {
+    public ModelAndView index(String taskid,String node, String type,String message, String create_time_from,String create_time_to, Integer pageindex, Integer pagesize) {
         val pageIndex2 = (pageindex == null ? 1 : pageindex);
         val pageSize2 = (pagesize == null ? 10 : pagesize);
-        html.s2("node", StringUtils.nullToEmpty(node)).s2("type", StringUtils.nullToEmpty(type))
-                .s2("pageindex", pageindex).s2("pagesize", pagesize)
+        html.s2("node", StringUtils.nullToEmpty(node)).s2("taskid", StringUtils.nullToEmpty(taskid)).s2("type", StringUtils.nullToEmpty(type))
+                .s2("pageindex", pageindex).s2("pagesize", pagesize).s2("message", message)
                 .s2("create_time_from",create_time_from).s2("create_time_to",create_time_to);
         return pageVisit((m) -> {
                     Ref<Integer> totalSize = new Ref<>(0);
                     val list = DbHelper.get(Config.mysqlDataSource(), c -> {
-                        return new tb_log_dal().searchPage(c, node, type,create_time_from,create_time_to, pageIndex2, pageSize2, totalSize);
+                        return new tb_log_dal().searchPage(c,taskid, node, type,message,create_time_from,create_time_to, pageIndex2, pageSize2, totalSize);
                     });
                     new Pager1(pageIndex2, totalSize.getData()).setPageSize(pageSize2).out();
                     request.setAttribute("model", list);

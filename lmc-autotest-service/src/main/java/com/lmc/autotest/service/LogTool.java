@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 public class LogTool {
-    public static void info(Class cls,String project,String msg)
+    public static void info(Class cls,Integer taskId,String project,String msg)
     {
         LogUtils.info(cls,project,msg);
         DbHelper.call(Config.mysqlDataSource(), (c) -> {
@@ -23,11 +23,12 @@ public class LogTool {
             model.message= StringUtils.nullToEmpty(msg);
             model.node=StringUtils.nullToEmpty(Config.nodeName());
             model.type="日常";
+            model.task_id=taskId;
             new tb_log_dal().add(c,model);
         });
     }
 
-    public static void error(Class cls,String project,String msg,Throwable exp)
+    public static void error(Class cls,Integer taskId,String project,String msg,Throwable exp)
     {
         LogUtils.error(cls,project,msg,exp);
         DbHelper.call(Config.mysqlDataSource(), (c) -> {
@@ -35,6 +36,7 @@ public class LogTool {
             model.create_time=new Date();
             model.message= StringUtils.nullToEmpty(msg+":"+(exp==null?"": ExceptionUtils.getDetailMessage(exp)));
             model.node=StringUtils.nullToEmpty(Config.nodeName());
+            model.task_id=taskId;
             model.type="错误";
             new tb_log_dal().add(c,model);
         });

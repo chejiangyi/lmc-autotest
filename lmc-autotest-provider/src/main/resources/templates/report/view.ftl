@@ -329,9 +329,10 @@ ${Html.s("pagetitle","压测报告")}
                             console.log("aaa",r);
                             var html = $("#urltemplate").html().replaceAll("{url}",r.url)
                                 .replaceAll("{all_visit_num}",r.all_visit_num).replaceAll("{max_throughput}",r.max_throughput)
-                                .replaceAll("{max_error}",r.max_error).replaceAll("{min_visit_time}",r.min_visit_time)
+                                .replaceAll("{min_visit_time}",r.min_visit_time)
                                 .replaceAll("{max_visit_time}",r.max_visit_time).replaceAll("{avg_visit_time}",r.avg_visit_time)
-                                .replaceAll("{max_network_read}",r.max_network_read).replaceAll("{max_network_write}",r.max_network_write);
+                                .replaceAll("{max_network_read}",r.max_network_read).replaceAll("{max_network_write}",r.max_network_write)
+                                .replaceAll("{max_error}",((r.max_error==null||r.max_error>0)?"<b style='color:red'>"+r.max_error+"</b>":r.max_error));
                             $("#urlReport").append(html);
                         }
                         $('#urlReport tr[data]').show();

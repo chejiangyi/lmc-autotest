@@ -7,6 +7,8 @@
 <style>
     div {margin: 10px}
     i{background-color: #9E9E9E}
+    b{font-size: 14px;}
+    h3{border: blue 1px dashed; }
 </style>
 <script type="text/javascript">
 
@@ -41,8 +43,9 @@
 </script>
 <body>
 <h1>支持js es5语法,参考函数如下</h1>
+<p style="color: #9E9E9E">采用java nashorn script engine,进行解析!支持原生JSON.parse等之类的部分函数。</p>
 <div>
-<b>游标方式流式sql读取处理【废弃,建议用streamSql2】</b>
+    <h3>游标方式流式sql读取处理<span style="color: red">【废弃,建议用streamSql2】</span></h3>
     <p>
         api.streamSql(String sql,Object[] ps,ScriptObjectMirror objectMirror)
     </p>
@@ -51,7 +54,7 @@
     })</i>
 </div>
 <div>
-    <b>根据id批量流式sql读取处理</b>
+    <h3>根据id批量流式sql读取处理</h3>
     <p>
         api.streamSql2(String sql,Object[] ps,ScriptObjectMirror objectMirror)
     </p>
@@ -60,28 +63,39 @@
         })</i>
 </div>
 <div>
-<b>样本文件写入</b>
+<h3>样本文件写入</h3>
     <p>
         api.writeSample(Object sample)
     </p>
     <i>api.writeSample({a=1,b=""})</i>
 </div>
 <div>
-<b>日志打印</b>
+<h3>日志打印</h3>
     <p>
         api.log(Object info)
     </p>
     <i>api.log("输出一段文字到日志中...")</i>
 </div>
+<h3>错误打印</h3>
+<p>
+    api.error(Object info)
+</p>
+<i>api.error("输出一段文字到日志中...")</i>
+<h3>调试打印</h3>
+<p>
+    api.debug(Object info)
+</p>
+<i>api.debug("只显示到node的本地日志中,无法从web控制台上看到...")</i>
+</div>
 <div>
-    <b>当前时间格式化</b>
+    <h3>当前时间格式化</h3>
     <p>
         api.nowFormat(String format)
     </p>
     <i>api.nowFormat("yyyy-MM-dd")</i>
 </div>
 <div>
-    <b>动态参数</b>
+    <h3>动态参数</h3>
     <p>
         api.ps.?
     </p>
@@ -105,6 +119,60 @@
                 "http_begin_script": "",
                 "http_end_script": "",
                 "check_stop_script": ""
+            }));
+        </script>
+    </p>
+    <b>第一次过滤错误样本脚本: request,response,返回是否继续执行(true/false)</b>
+    <p>request对象:
+        <script type="text/javascript">
+            document.write(showJson({
+                "id": 2,
+                "url": "http://192.168.8.73:8700/bsf/health/",
+                "app_name": "lmc-test-provider",
+                "header": "{\"aaa\": \"1\", \"host\": \"localhost:8081\", \"accept\": \"*/*\", \"connection\": \"keep-alive\", \"user-agent\": \"ApiPOST Runtime +https://www.apipost.cn\"}",
+                "body": "{\"str\":\"bbbb\"}",
+                "create_time": "2022-09-15 03:27:19",
+                "fromip": "10.8.0.6",
+                "traceid": "lmc-test-provider-9a5980af177148e29b63070b0701cc16",
+                "trace_top": "是",
+                "method": "POST",
+                "operator_type": "操作"
+            }));
+        </script>
+    </p>
+    <p>response对象:
+        <script type="text/javascript">
+            document.write(showJson({
+                "request": {
+                    "appName": "lmc-test-provider",
+                    "httpUrl": "http://192.168.8.73:8700/bsf/health/",
+                    "method": "POST",
+                    "header": {
+                        "aaa": "1",
+                        "content-length": "14",
+                        "accept-language": "zh-CN",
+                        "host": "localhost:8081",
+                        "connection": "keep-alive",
+                        "content-type": "application/json",
+                        "accept-encoding": "gzip, deflate, br",
+                        "accept": "*/*",
+                        "user-agent": "ApiPOST Runtime +https://www.apipost.cn"
+                    },
+                    "body": "{\"str\":\"bbbb\"}"
+                },
+                "code": 200,
+                "method": "POST",
+                "header": {
+                    "Transfer-Encoding": "chunked",
+                    "": "HTTP/1.1 200",
+                    "Date": "Thu, 22 Sep 2022 10:31:56 GMT",
+                    "Content-Type": "application/json;charset=UTF-8"
+                },
+                "body": "文本输出....",
+                "requestSize": 14,
+                "responseSize": 13792,
+                "timeMs": 47401,
+                "success": true
             }));
         </script>
     </p>

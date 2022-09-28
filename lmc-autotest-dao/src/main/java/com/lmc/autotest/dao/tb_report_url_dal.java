@@ -73,7 +73,7 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
     }
 
     public String copyNewTable(DbConn conn, String name){
-        conn.executeSql("CREATE TABLE auto_tb_report_url_"+name+" LIKE tb_report_url_example",new Object[]{});
+        conn.executeSql("CREATE TABLE if not exists auto_tb_report_url_"+name+" LIKE tb_report_url_example",new Object[]{});
         return "auto_tb_report_url_"+name;
     }
 

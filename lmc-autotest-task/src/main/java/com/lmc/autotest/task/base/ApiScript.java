@@ -31,13 +31,17 @@ public class ApiScript {
 
     //普通日志
     public void log(Object info){
-        LogTool.info(ApiScript.class,"bsf","动态脚本普通日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
+        LogTool.info(ApiScript.class,getTaskId(),Config.nodeName(),"动态脚本普通日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
         //DebugUtil.webDebug(info);
     }
-    //调试日志
+    //错误日志
     public void error(Object info){
-        LogTool.error(ApiScript.class,"bsf","动态脚本错误日志:"+scriptInfo+"=>"+JsonUtils.serialize(info),null);
+        LogTool.error(ApiScript.class,getTaskId(),Config.nodeName(),"动态脚本错误日志:"+scriptInfo+"=>"+JsonUtils.serialize(info),null);
         //DebugUtil.webDebug(info);
+    }
+    //调试日志,仅在节点日志中查看到,不展示到web站点
+    public void debug(Object info){
+        LogUtils.info(ApiScript.class,Config.nodeName(),"动态脚本【调试】日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
     }
     //转json
     public String toJson(Object json){
@@ -83,11 +87,8 @@ public class ApiScript {
     }
     //写样本文件
     public void writeSample(Object sample){
-        val task = ps.get("task");
         val tranId = ps.get("tranId");
-        if(task!=null&&(task instanceof tb_task_model)) {
-            SampleUtils.writeline(FileUtils.getSampleFile(((tb_task_model)task).id,tranId.toString()), JsonUtils.serialize(sample));
-        }
+        SampleUtils.writeline(FileUtils.getSampleFile(getTaskId(),tranId.toString()), JsonUtils.serialize(sample));
     }
 
 
@@ -106,12 +107,13 @@ public class ApiScript {
         return  r;
         }catch (Exception e){
             val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
-            LogTool.error(ApiScript.class,"bsf",msg,e);
+            LogTool.error(ApiScript.class,getTaskId(),"bsf",msg,e);
             throw new BsfException(msg);
         }
     }
     //执行sql
     public void streamSql(String sql,Object[] ps,ScriptObjectMirror objectMirror){
+        val task = this.ps.get("task");
         try{
             val autoTest = (AutoTestProvider)this.ps.get("autotest");
              DbHelper.call(ContextUtils.getBean(DataSource.class,false),(c)->{
@@ -123,20 +125,28 @@ public class ApiScript {
                          }
                          size.setData(size.getData() + 1L);
                          if (size.getData() % Config.streamSize() == 0) {
-                             LogTool.info(this.getClass(), Config.appName(), "streamSql处理数据中:" + size.getData());
+                             LogTool.info(this.getClass(),getTaskId(), Config.appName(), "streamSql处理数据中:" + size.getData());
                          }
                      }
                  });
-                 LogTool.info(this.getClass(),Config.appName(),"streamSql共处理数据:"+size.getData());
+                 LogTool.info(this.getClass(),getTaskId(),Config.appName(),"streamSql共处理数据:"+size.getData());
             });
         }catch (Exception e){
             val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
-            LogTool.error(ApiScript.class,"bsf",msg,e);
+            LogTool.error(ApiScript.class,getTaskId(),"bsf",msg,e);
             throw new BsfException(msg);
         }
     }
+    private Integer getTaskId(){
+        val task = this.ps.get("task");
+        if(task!=null&& task instanceof tb_task_model){
+            return ((tb_task_model)task).id;
+        }
+        return 0;
+    }
     //执行sql2
     public void streamSql2(String sql,Object[] ps,ScriptObjectMirror objectMirror){
+
         try{
             val autoTest = (AutoTestProvider)this.ps.get("autotest");
             DbHelper.call(ContextUtils.getBean(DataSource.class,false),(c)->{
@@ -156,14 +166,16 @@ public class ApiScript {
                     }
                     if(!autoTest.checkRunning()){return;}
                     size+=list.size();
-                    LogTool.info(this.getClass(),Config.appName(),"streamSql2处理数据中:"+size);
+                    LogTool.info(this.getClass(),getTaskId(),Config.appName(),"streamSql2处理数据中:"+size);
                 }
-                LogTool.info(this.getClass(),Config.appName(),"streamSql2共处理数据:"+size);
+                LogTool.info(this.getClass(),getTaskId(),Config.appName(),"streamSql2共处理数据:"+size);
             });
         }catch (Exception e){
             val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
-            LogTool.error(ApiScript.class,"bsf",msg,e);
+            LogTool.error(ApiScript.class,getTaskId(),"bsf",msg,e);
             throw new BsfException(msg);
         }
     }
+
+
 }

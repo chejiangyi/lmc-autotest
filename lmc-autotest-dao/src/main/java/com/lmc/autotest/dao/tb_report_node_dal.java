@@ -37,7 +37,7 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
         return rev == 1;
     }
     public String copyNewTable(DbConn conn, String name){
-        conn.executeSql("CREATE TABLE auto_tb_report_node_"+name+" LIKE tb_report_node_example",new Object[]{});
+        conn.executeSql("CREATE TABLE if not exists  auto_tb_report_node_"+name+" LIKE tb_report_node_example",new Object[]{});
         return "auto_tb_report_node_"+name;
     }
 

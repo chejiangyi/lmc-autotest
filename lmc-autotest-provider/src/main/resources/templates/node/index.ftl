@@ -29,8 +29,8 @@ ${Html.s("pagetitle","节点列表")}
             <td>${item.id}</td>
             <td>${item.node!}</td>
             <td>${Utils.printRunState(item.heatbeat_time)}</td>
-            <td>cpu:${Html.p(item.cpu)}/${Html.p(item.local_cpu)}<br/>内存:${Html.p(item.memory)!}/${Html.p(item.local_memory)}<br/>
-                线程:${Html.p(item.threads)!}<br/>IP(端口):${Html.p(item.ip)!}(${Html.p(item.port)!})<br/>
+            <td style="text-align: left">cpu:${Html.p(item.cpu)}使用率/${Html.p(item.local_cpu)}核<br/>内存:${Html.p(item.memory)!}M/${Html.p(item.local_memory)}M<br/>
+                活动线程:${Html.p(item.threads)!}<br/>IP(端口):${Html.p(item.ip)!}(${Html.p(item.port)!})<br/>
             </td>
             <td>
                 <a href="/log/index/?node=${item.node}" class="del">日志</a>

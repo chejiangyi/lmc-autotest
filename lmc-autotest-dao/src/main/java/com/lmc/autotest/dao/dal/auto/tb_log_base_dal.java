@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_log 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-22 14:29:27
+ * @since 2022-09-28 11:59:33
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_log_base_dal {
@@ -32,10 +32,12 @@ public class tb_log_base_dal {
                 /***/
                 model.create_time,
                 /***/
-                model.message
+                model.message,
+                /***/
+                model.task_id
         };
-        int rev = conn.executeSql("insert into tb_log(node,type,create_time,message)" +
-                "values(?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_log(node,type,create_time,message,task_id)" +
+                "values(?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -49,9 +51,11 @@ public class tb_log_base_dal {
                 model.create_time,
                 /***/
                 model.message,
+                /***/
+                model.task_id,
                 model.id
         };
-        int rev = conn.executeSql("update tb_log set node=?,type=?,create_time=?,message=? where id=?", par);
+        int rev = conn.executeSql("update tb_log set node=?,type=?,create_time=?,message=?,task_id=? where id=?", par);
         return rev == 1;
 
     }
@@ -108,6 +112,10 @@ public class tb_log_base_dal {
         /***/
         if (dr.containsKey("message")) {
             o.message = ConvertUtils.convert(dr.get("message"), String.class);
+        }
+        /***/
+        if (dr.containsKey("task_id")) {
+            o.task_id = ConvertUtils.convert(dr.get("task_id"), Integer.class);
         }
         return o;
     }

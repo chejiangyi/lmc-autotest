@@ -1,6 +1,8 @@
 ﻿$(function () {
     $("td[title]").dblclick(function () {
-        var title = $(this).attr('title'); alert(title);
+        var title = $(this).attr('title');
+        //alert(title);
+        $("<div style='word-break: break-all'>"+title+"</div>").dialog({title:"信息",minWidth:450,minHeight:500});
     });
 
     $("td[title]").each(function () {
@@ -19,6 +21,7 @@
         window.history.go(-1);
     });
 });
+
 
 //添加AddAntiForgeryToken
 function addAntiForgeryToken(data) {

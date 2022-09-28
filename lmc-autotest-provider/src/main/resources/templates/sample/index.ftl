@@ -35,24 +35,24 @@ ${Html.s("pagetitle","采样查询")}
         <th style="width:100px">formip<br/>来源IP</th>
         <th style="width:10%">url</th>
         <th style="width:50px">method</th>
-        <th style="width:30%">header</th>
-        <th style="width:40%">body</th>
+        <th style="width:40%">header</th>
+        <th style="width:30%">body</th>
         <th style="width:100px">create_time<br/>创建时间</th>
         <th style="width:100px">traceid${Html.help("调用链id,涉及到AutoTest的调用链传递")}</th>
         <th style="width:100px">trace_top${Html.help("堆栈顶部,是否是AutoTest的调用链第一个")}</th>
-        <th style="width:100px">operator_type${Html.help("操作类型,自动检测程序是否涉及到update,insert,delete之类的操作")}</th>
+        <th style="width:50px">operator_type${Html.help("操作类型,自动检测程序是否涉及到update,insert,delete之类的操作")}</th>
     </tr>
     <#list model as item>
         <tr data-id="${item.id}">
             <td>${item.id}</td>
             <td>${item.app_name}</td>
             <td>${item.fromip}</td>
-            <td>${item.url}</td>
+            <td  style="word-break: break-all">${item.url}</td>
             <td>${item.method}</td>
-            <td title="${item.header?html}">${Html.cutstring(item.header,300)}</td>
-            <td title="${item.body?html}">${Html.cutstring(item.body,300)}</td>
+            <td style="word-break: break-all" title="${item.header?html}">${Html.cutstring(item.header,300)}</td>
+            <td style="word-break: break-all" title="${item.body?html}">${Html.cutstring(item.body,300)}</td>
             <td>${Html.p(item.create_time)}</td>
-            <td>${Html.p(item.traceid)}</td>
+            <td style="word-break: break-all">${Html.p(item.traceid)}</td>
             <td>${Html.p(item.trace_top)}</td>
             <td>${Html.p(item.operator_type)}</td>
         </tr>
@@ -62,3 +62,6 @@ ${Html.s("pagetitle","采样查询")}
     <@layout._pager/>
 </div>
 </#macro>
+<script type="text/javascript">
+
+</script>

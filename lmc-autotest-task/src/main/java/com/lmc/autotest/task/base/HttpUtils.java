@@ -38,14 +38,21 @@ public class HttpUtils {
             System.setProperty("http.maxConnections", Config.httpPoolMaxSize() + "");
         }
     }
-    public static HttpResponse request(tb_sample_example_model request){
+    public static HttpResponse request(tb_sample_example_model request,Boolean printLog){
         HttpRequest r = new HttpRequest();
         r.httpUrl=StringUtils.nullToEmpty(request.getUrl());r.method=StringUtils.nullToEmpty(request.getMethod());
         r.header = JsonUtils.deserialize(request.header, new TypeReference<HashMap<String,String>>() {});
         r.body = request.getBody();
         r.appName = StringUtils.nullToEmpty(request.app_name);
         //LogUtils.info(HttpUtils.class, Config.nodeName(),"访问:"+r.httpUrl);
-        return httpRequest(r);
+        val rs = httpRequest(r);
+        if(printLog){
+            Map info = new HashMap(2);
+            info.put("request",r);
+            info.put("response",rs);
+            LogUtils.info(HttpUtils.class,Config.nodeName(),JsonUtils.serialize(info));
+        }
+        return rs;
     }
     @Data
     @AllArgsConstructor

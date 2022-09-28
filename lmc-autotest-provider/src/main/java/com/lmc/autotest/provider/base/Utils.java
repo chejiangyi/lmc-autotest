@@ -69,4 +69,8 @@ public class Utils {
         }
         return map;
     }
+
+    public String replaceChar(String str,String replace,String to){
+        return str.replace(replace,to);
+    }
 }

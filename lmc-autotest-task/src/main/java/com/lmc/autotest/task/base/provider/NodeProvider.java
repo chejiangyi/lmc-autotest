@@ -30,7 +30,7 @@ public class NodeProvider {
                          new tb_node_dal().edit(c,update);
                     });
                 }catch (Exception e){
-                    LogTool.error(AutoTestProvider.class, Config.appName(),"心跳更新节点",e);
+                    LogTool.error(AutoTestProvider.class, 0,Config.appName(),"心跳更新节点",e);
                 }
                 ThreadUtils.sleep(Config.heartbeat()*1000);
             }
