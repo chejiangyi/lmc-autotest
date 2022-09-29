@@ -65,8 +65,10 @@ lmc-autotest-provider /bin/bash
 * 全链路压测设计图
 ![Image text](/doc/全链路压测设计图.jpg)
 
-## 定制场景录制
+## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)
+* [任务编写案例](/README-Demo.md)
+
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。
 2. 微服务的流量录制目前支持feign进行traceid传递,支持mybatis进行操作或仅查询两种访问类型识别。
