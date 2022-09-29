@@ -65,7 +65,12 @@ lmc-autotest-provider /bin/bash
 * 全链路压测设计图
 ![Image text](/doc/全链路压测设计图.jpg)
 
+## 定制场景录制
+* [定制场景录制文档](/README-ModHeader.md)
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。
 2. 微服务的流量录制目前支持feign进行traceid传递,支持mybatis进行操作或仅查询两种访问类型识别。
 3. 期望通过sharding-jdbc支持影子表和影子库,未来还会在jdbc层面做影子表和影子库扩展能力。
+
+
+by 车江毅
