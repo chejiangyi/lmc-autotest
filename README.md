@@ -21,44 +21,6 @@ cd lmc-autotest
 mvn install
 ```
 
-## docker 打包
-压测任务节点打包
-```
-vim Dockerfile
-FROM {jdk8 centos镜像}/jdk8:latest
-ADD lmc-autotest-task-1.0-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
-
-docker build -t lmc-autotest-task .
-docker tag lmc-autotest-task:latest {镜像仓库}/lmc-autotest-task:latest
-docker push {镜像仓库}/lmc-autotest-task:latest
-
-docker run -it \
--p 8081:8081 \
--e spring.shardingsphere.datasource.main0.url="jdbc:mysql://{数据库地址+ip}/autotest?useSSL=false" \
--e spring.shardingsphere.datasource.main0.username="{数据库账号}" \
--e spring.shardingsphere.datasource.main0.password="{数据库密码}" \
-lmc-autotest-task /bin/bash
-```
-压测任务管理站点
-```
-vim Dockerfile
-FROM {jdk8 centos镜像}/jdk8:latest
-ADD lmc-autotest-provider-1.0-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
-
-docker build -t lmc-autotest-provider .
-docker tag lmc-autotest-provider:latest {镜像仓库}/lmc-autotest-provider:latest
-docker push {镜像仓库}/lmc-autotest-provider:latest
-
-docker run -it \
--p 8080:8080 \
--e spring.shardingsphere.datasource.main0.url="jdbc:mysql://{数据库地址+ip}/autotest?useSSL=false" \
--e spring.shardingsphere.datasource.main0.username="{数据库账号}" \
--e spring.shardingsphere.datasource.main0.password="{数据库密码}" \
-lmc-autotest-provider /bin/bash
-```
-
 ## 设计文档
 * [全链路压测原型](/doc/全链路压测.rp)
 * [全链路压测sql](/doc/install.sql)
@@ -68,6 +30,7 @@ lmc-autotest-provider /bin/bash
 ## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)
 * [任务编写案例](/README-Demo.md)
+* [快速安装](/README-Install.md)
 
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。
