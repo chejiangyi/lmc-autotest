@@ -3,8 +3,8 @@
 
 #### release包下载
 * [sql初始化脚本](/doc/install.sql )
-* 管理端provider包 gitee 不支持大文件上传!
-* 节点端task包 gitee 不支持大文件上传!
+* 管理端provider包 (gitee 不支持大文件上传!)
+* 节点端task包 (gitee 不支持大文件上传!)
 
 
 #### 普通运行
