@@ -73,7 +73,8 @@ ${Html.s("pagetitle","压测报告")}
                         <td>涉及样本数</td>
                         <td>总样本: ${model.filter_table_lines!},
                             错误样本: ${model.filter_table_error_lines!},
-                            可用样本: ${model.filter_table_lines-model.filter_table_error_lines}
+                            <#assign useSamplesCount=model.filter_table_lines-model.filter_table_error_lines />
+                            可用样本: ${Html.w2("==",useSamplesCount,0,"<b style='color:red'>"+useSamplesCount+"</b>",useSamplesCount)}
                         </td>
                     </tr>
                     <tr>
@@ -152,9 +153,10 @@ ${Html.s("pagetitle","压测报告")}
                             <th style="width:5%">累计压测次数</th>
                             <th style="width:5%">最大吞吐量/s</th>
                             <th style="width:5%">最大错误数/s</th>
-                            <th style="width:5%">最小耗时/s</th>
-                            <th style="width:5%">最大耗时/s</th>
-                            <th style="width:5%">平均耗时/s</th>
+                            <th style="width:5%">错误率(%)/s</th>
+                            <th style="width:5%">最小耗时(ms)/s</th>
+                            <th style="width:5%">最大耗时(ms)/s</th>
+                            <th style="width:5%">平均耗时(ms)/s</th>
     <#--                        <th style="width:5%">99line耗时/s</th>-->
     <#--                        <th style="width:5%">98line耗时/s</th>-->
                             <th style="width:5%">最大网络读(Bytes)/s</th>
@@ -168,6 +170,7 @@ ${Html.s("pagetitle","压测报告")}
                             <td>{all_visit_num}</td>
                             <td>{max_throughput}</td>
                             <td>{max_error}</td>
+                            <td>{max_error_per}</td>
                             <td>{min_visit_time}</td>
                             <td>{max_visit_time}</td>
                             <td>{avg_visit_time}</td>
@@ -209,7 +212,7 @@ ${Html.s("pagetitle","压测报告")}
                     } else {
                         var  option = {
                             title: {
-                                text: '单一维度多节点对比'
+                                text: ''
                             },
                             tooltip: {
                                 trigger: 'axis'
@@ -328,11 +331,12 @@ ${Html.s("pagetitle","压测报告")}
                         for(var r of data.data.report){
                             console.log("aaa",r);
                             var html = $("#urltemplate").html().replaceAll("{url}",r.url)
-                                .replaceAll("{all_visit_num}",r.all_visit_num).replaceAll("{max_throughput}",r.max_throughput)
-                                .replaceAll("{min_visit_time}",r.min_visit_time)
-                                .replaceAll("{max_visit_time}",r.max_visit_time).replaceAll("{avg_visit_time}",r.avg_visit_time)
-                                .replaceAll("{max_network_read}",r.max_network_read).replaceAll("{max_network_write}",r.max_network_write)
-                                .replaceAll("{max_error}",((r.max_error==null||r.max_error>0)?"<b style='color:red'>"+r.max_error+"</b>":r.max_error));
+                                .replaceAll("{all_visit_num}",r.all_visit_num).replaceAll("{max_throughput}",r.max_throughput.toFixed(2))
+                                .replaceAll("{max_error_per}",errorPer(r.max_throughput,r.max_error)+"%")
+                                .replaceAll("{min_visit_time}",r.min_visit_time.toFixed(2))
+                                .replaceAll("{max_visit_time}",r.max_visit_time.toFixed(2)).replaceAll("{avg_visit_time}",r.avg_visit_time.toFixed(2))
+                                .replaceAll("{max_network_read}",r.max_network_read.toFixed(2)).replaceAll("{max_network_write}",r.max_network_write.toFixed(2))
+                                .replaceAll("{max_error}",((r.max_error==null||r.max_error>0)?"<b style='color:red'>"+r.max_error.toFixed(2)+"</b>":r.max_error.toFixed(2)));
                             $("#urlReport").append(html);
                         }
                         $('#urlReport tr[data]').show();
@@ -426,6 +430,18 @@ ${Html.s("pagetitle","压测报告")}
             loadUrlReportChart();
             loadUrlChart();
         }
-
+        function errorPer(throughput, error){
+            var count = throughput+error;
+            var data = 0;
+            if(count==0)
+                data= 0;
+            else
+                data= error/count;
+            if(data>0){
+                return "<b style='color:red'>"+data.toFixed(2)+"</b>";
+            }else{
+                return data.toFixed(2);
+            }
+        }
     </script>
 </@layout._layout>

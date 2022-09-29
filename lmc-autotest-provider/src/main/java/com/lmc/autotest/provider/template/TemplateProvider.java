@@ -127,6 +127,9 @@ public class TemplateProvider {
     {
         if(o==null)
         {    return "";}
+        if(o instanceof Double){
+            return String.format("%.2f", o);
+        }
         if(o instanceof Date)
         {   return datestring((Date) o,"yyyy-MM-dd HH:mm:ss");}
         return o.toString();

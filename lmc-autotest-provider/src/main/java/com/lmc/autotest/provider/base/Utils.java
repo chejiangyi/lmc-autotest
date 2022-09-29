@@ -1,6 +1,7 @@
 package com.lmc.autotest.provider.base;
 
 import com.free.bsf.core.db.DbHelper;
+import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.core.AutoTestTool;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.tb_node_dal;
@@ -71,6 +72,16 @@ public class Utils {
     }
 
     public String replaceChar(String str,String replace,String to){
-        return str.replace(replace,to);
+        return StringUtils.trim(str.replace(replace,to),'\n');
     }
+
+    public double errorPer(double throughput,double error){
+        val count = throughput+error;
+        if(count==0)
+            return 0;
+        else
+            return error/count;
+    }
+
+
 }

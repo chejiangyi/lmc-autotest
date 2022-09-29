@@ -52,7 +52,7 @@ public class ReportController extends SpringMvcController {
                 val task = new tb_task_dal().get(c,report.task_id);
                 val urlcount = new tb_report_url_dal().countUrls(c,report.report_url_table);
                 val maxthroughput = new tb_report_node_dal().getMaxThroughput(c,report.getReport_node_table());
-                val maxthroughputWithNoError = new tb_report_node_dal().getMaxThroughput(c,report.getReport_node_table());
+                val maxthroughputWithNoError = new tb_report_node_dal().getMaxThroughputWithNoError(c,report.getReport_node_table());
 
 
                 request.setAttribute("task", task);
