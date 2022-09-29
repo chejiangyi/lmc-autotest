@@ -72,6 +72,7 @@ public class TaskController extends SpringMvcController {
                     model = new tb_task_model();
                     model.run_heart_time = DateUtils.strToDate("1900-01-01","yyyy-MM-dd");
                     model.create_time = new Date();
+                    model.exec_result="";
                 }else {
                 }
                 model.first_filter_error_script = first_filter_error_script;
