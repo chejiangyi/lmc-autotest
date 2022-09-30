@@ -21,22 +21,22 @@ ${Html.s("pagetitle","压测报告")}
             display:flex;
             flex-wrap:wrap;
         }
-        table .current{
+         .current{
             color: #0ABD0A;
         }
-        table .avg{
+         .avg{
             color: #ba8b00;
         }
-        table .min{
+         .min{
             color: #8b4902;
         }
-        table .max{
-            color: #0000FF;
-        }
-        table .sum{
+         .max{
             color: #6f42c1;
         }
-        table .red{
+         .sum{
+            color: #0000FF;
+        }
+         .redS{
              color: red;
          }
     </style>
@@ -164,24 +164,25 @@ ${Html.s("pagetitle","压测报告")}
                             <option value="${key}">${key}</option>
                         </#list>
                     </select>
-                <input id="current" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/>现在值
-                <input id="avg" type="checkbox" onchange="loadUrlReportChart()"/>平均值
-                <input id="min" type="checkbox"  onchange="loadUrlReportChart()"/>最小值
-                <input id="max" type="checkbox"  onchange="loadUrlReportChart()"/>最大值
-                <input id="sum" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/>总和值
+                <input id="current" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="current">现在值</p>
+                <input id="avg" type="checkbox" onchange="loadUrlReportChart()"/><p class="avg">平均值</p>
+                <input id="min" type="checkbox"  onchange="loadUrlReportChart()"/><p class="min">最小值</p>
+                <input id="max" type="checkbox"  onchange="loadUrlReportChart()"/><p class="max">最大值</p>
+                <input id="sum" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="sum">总和值</p>
+                <#assign heartbeart=Utils.heartBeat() />
                 <button type="button" onclick="loadUrlReportChart()">刷新</button>
                     <table id="urlReport">
                         <tr>
                             <th style="width:15%">接口api</th>
-                            <th style="width:5%">压测次数</th>
-                            <th style="width:5%">吞吐量/s</th>
-                            <th style="width:5%">错误数/s</th>
-                            <th style="width:5%">错误率(%)/s</th>
-                            <th style="width:5%">耗时(ms)/s</th>
+                            <th style="width:5%">压测次数${Html.help("(心跳周期)每隔"+heartbeart+"秒内,累计的压测次数")}</th>
+                            <th style="width:5%">吞吐量/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒吞吐量次数")}</th>
+                            <th style="width:5%">错误数/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数")}</th>
+                            <th style="width:5%">错误率(%)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数/(平均的每秒吞吐量+平均的每秒错误次数)")}</th>
+                            <th style="width:5%">耗时(ms)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒耗时")}</th>
     <#--                        <th style="width:5%">99line耗时/s</th>-->
     <#--                        <th style="width:5%">98line耗时/s</th>-->
-                            <th style="width:5%">网络读(Bytes)/s</th>
-                            <th style="width:5%">网络写(Bytes)/s</th>
+                            <th style="width:5%">网络读(Bytes)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒网络读")}</th>
+                            <th style="width:5%">网络写(Bytes)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒网络写")}</th>
                             <th style="width:5%">操作</th>
                         </tr>
                     </table>
@@ -403,19 +404,19 @@ ${Html.s("pagetitle","压测报告")}
                             $("#urlReport").append(html);
                         }
                         $("#urlReport .current").each(function (){
-                            $(this).text("现:"+$(this).text());$(this).attr("title","当前值");if(!$("#current").is(':checked')){$(this).hide();}
+                            $(this).html("现:"+$(this).html());$(this).attr("title","当前值");if(!$("#current").is(':checked')){$(this).hide();}
                         })
                         $("#urlReport .avg").each(function (){
-                            $(this).text("均:"+$(this).text());$(this).attr("title","平均值");if(!$("#avg").is(':checked')){$(this).hide();}
+                            $(this).html("均:"+$(this).html());$(this).attr("title","平均值");if(!$("#avg").is(':checked')){$(this).hide();}
                         })
                         $("#urlReport .min").each(function (){
-                            $(this).text("小:"+$(this).text());$(this).attr("title","最小值");if(!$("#min").is(':checked')){$(this).hide();}
+                            $(this).html("小:"+$(this).html());$(this).attr("title","最小值");if(!$("#min").is(':checked')){$(this).hide();}
                         })
                         $("#urlReport .max").each(function (){
-                            $(this).text("大:"+$(this).text());$(this).attr("title","最大值");if(!$("#max").is(':checked')){$(this).hide();}
+                            $(this).html("大:"+$(this).html());$(this).attr("title","最大值");if(!$("#max").is(':checked')){$(this).hide();}
                         })
                         $("#urlReport .sum").each(function (){
-                            $(this).text("总:"+$(this).text());$(this).attr("title","总和值");if(!$("#sum").is(':checked')){$(this).hide();}
+                            $(this).html("总:"+$(this).html());$(this).attr("title","总和值");if(!$("#sum").is(':checked')){$(this).hide();}
                         })
                         $('#urlReport tr[data]').show();
                     }
@@ -530,7 +531,7 @@ ${Html.s("pagetitle","压测报告")}
                 }catch (e){}
             }
             if(key.indexOf('error')>-1&&v2>0){
-                return "<i class='red'>"+v2+"</i>";
+                return "<b class='redS'>"+v2+"</b>";
             }
             return v2;
         }

@@ -119,7 +119,8 @@ public class TaskController extends SpringMvcController {
                 StringBuilder errors = new StringBuilder();
                 val api2 = api;
                 new tb_task_dal().addResult(c, model.id,"");
-                val tranId=  DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");;
+                val tranId=  DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");
+                Ref<Boolean> hasOpen = new Ref<>(false);
                 ThreadUtils.parallelFor("并行操作节点开关", nodes.size(), nodes, (n) -> {
                     if (!nodeNames.contains(n.node))
                         return;
@@ -131,12 +132,17 @@ public class TaskController extends SpringMvcController {
                         if (es.getCode() < 0 ) {
                             errors.append(n.node + ":" + StringUtils.nullToEmpty(es.getMessage() )+ "\r\n");
                         } else {
+                            hasOpen.setData(true);
                             //errors.append(n.node + ":" +"执行成功！" + "\r\n");
                         }
                     }
                 });
+
                 if (!"".equals(errors.toString())) {
                     throw new BsfException("执行失败："+errors.toString());
+                }
+                if(!hasOpen.getData()){
+                    throw new BsfException("任务未分发到节点");
                 }
             });
             return true;

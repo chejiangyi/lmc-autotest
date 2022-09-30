@@ -83,5 +83,8 @@ public class Utils {
             return error/count;
     }
 
+    public double heartBeat(){
+        return Config.heartbeat();
+    }
 
 }
