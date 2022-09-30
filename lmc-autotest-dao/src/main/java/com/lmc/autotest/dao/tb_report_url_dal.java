@@ -83,16 +83,24 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
     }
 
     public List<Map<String,Object>> nodeReport(DbConn conn, String node, String tableName){
-        val stringSql = new StringBuilder();
-        stringSql.append(
-                "select url,sum(visit_num) as all_visit_num,max(throughput) as max_throughput,max(error) as max_error,min(visit_time) as min_visit_time,max(visit_time) as max_visit_time,\n" +
-                "avg(visit_time) as avg_visit_time,max(network_read) as max_network_read,max(network_write) as max_network_write\n" +
-                "from {table}");
+        val stringSql = new StringBuilder();val where = new StringBuilder();
+        stringSql.append("\n" +
+                "select * from (select max(id) max_id,\n" +
+                "max(visit_num) as max_visit_num,min(visit_num) as min_visit_num,avg(visit_num) as avg_visit_num,sum(visit_num) as sum_visit_num,\n" +
+                "max(throughput) as max_throughput,min(throughput) as min_throughput,avg(throughput) as avg_throughput,sum(throughput) as sum_throughput,\n" +
+                "max(error) as max_error,min(error) as min_error,avg(error) as avg_error,sum(error) as sum_error,\n" +
+                "max(visit_time) as max_visit_time,min(visit_time) as min_visit_time,avg(visit_time) as avg_visit_time,sum(visit_time) as sum_visit_time,\n" +
+                "max(network_read) as max_network_read,min(network_read) as min_network_read,avg(network_read) as avg_network_read,sum(network_read) as sum_network_read,\n" +
+                "max(network_write) as max_network_write,min(network_write) as min_network_write,avg(network_write) as avg_network_write,sum(network_write) as sum_network_write\n" +
+                "from {table} {where} group by url) as t, {table} a where t.max_id=a.id order by url");
         if(!StringUtils.isEmpty(node)){
-            stringSql.append(" where node='{node}'");
+            where.append(" where node='{node}'");
         }
-        stringSql.append(" group by url order by url");
-        val ds = conn.executeList(stringSql.toString().replace("{table}",tableName).replace("{node}",StringUtils.nullToEmpty(node)), new Object[]{});
+        val ds = conn.executeList(stringSql.toString()
+                .replace("{where}",where.toString())
+                .replace("{table}",tableName)
+                .replace("{node}",StringUtils.nullToEmpty(node)
+                ), new Object[]{});
         return ds;
     }
 

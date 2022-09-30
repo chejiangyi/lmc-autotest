@@ -2,6 +2,7 @@ package com.lmc.autotest.dao;
 
 import com.free.bsf.core.db.DbConn;
 import com.free.bsf.core.util.ConvertUtils;
+import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.dal.auto.tb_report_node_example_base_dal;
 import com.lmc.autotest.dao.model.auto.tb_report_node_example_model;
 import lombok.val;
@@ -57,32 +58,38 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
 
     public List<Map<String,Object>> nodeSumReport(DbConn conn, String tableName){
         val stringSql = new StringBuilder();
-        stringSql.append(("select DATE_FORMAT(create_time, '%Y-%m-%d %H:%i') as create_time,sum(cpu) as cpu,sum(network_read) as network_read,\n" +
-                "           sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
-                "\t\t\t\t\t sum(error) as error,sum(memory) as memory \n" +
-                "\t\t\t\t\t from {table} where id in(\n" +
-                "\t\tSELECT max(id)  from {table} group by node,DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')\n" +
-                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')").replace("{table}",tableName));
+        stringSql.append(("SELECT max(create_time) as create_time,sum(cpu) as cpu,sum(network_read) as network_read,\n" +
+                "                 sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
+                "                 sum(error) as error,sum(memory) as memory from \n" +
+                "(select *,floor((UNIX_TIMESTAMP(create_time))/{heartbeat} )as batch from {table}) as t GROUP BY batch")
+                .replace("{heartbeat}", Config.heartbeat()+"")
+                .replace("{table}",tableName));
         val ds = conn.executeList(stringSql.toString(), new Object[]{});
         return ds;
     }
 
     public List<Map<String,Object>> getMaxThroughputWithNoError(DbConn conn,String tableName){
-        String sql = ("\n" +
+        String sql = (
                 "select * from (\n" +
-                "select DATE_FORMAT(create_time, '%Y-%m-%d %H:%i') as create_time,sum(active_threads) as active_threads,sum(throughput) as throughput,sum(error) as error from {table} where id in (\n" +
-                "SELECT max(id)  from {table} group by node,DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')\n" +
-                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')) as t WHERE error=0 order by throughput desc LIMIT 0,1").replace("{table}",tableName);
+                "SELECT max(create_time) as create_time,sum(cpu) as cpu,sum(network_read) as network_read,\n" +
+                        "                 sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
+                        "                 sum(error) as error,sum(memory) as memory from \n" +
+                        "(select *,floor((UNIX_TIMESTAMP(create_time))/{heartbeat} )as batch from {table}) as t GROUP BY batch) as t WHERE error=0 order by throughput desc LIMIT 0,1")
+                .replace("{heartbeat}", Config.heartbeat()+"")
+                .replace("{table}",tableName);
         val ds = conn.executeList(sql.toString(), new Object[]{});
         return ds;
     }
 
     public List<Map<String,Object>> getMaxThroughput(DbConn conn,String tableName){
-        String sql = ("\n" +
+        String sql = (
                 "select * from (\n" +
-                "select DATE_FORMAT(create_time, '%Y-%m-%d %H:%i') as create_time,sum(active_threads) as active_threads,sum(throughput) as throughput,sum(error) as error from {table} where id in (\n" +
-                "SELECT max(id)  from {table} group by node,DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')\n" +
-                ") group by DATE_FORMAT(create_time, '%Y-%m-%d %H:%i')) as t order by throughput desc LIMIT 0,1").replace("{table}",tableName);
+                "SELECT max(create_time) as create_time,sum(cpu) as cpu,sum(network_read) as network_read,\n" +
+                "                 sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
+                "                 sum(error) as error,sum(memory) as memory from \n" +
+                "(select *,floor((UNIX_TIMESTAMP(create_time))/{heartbeat} )as batch from {table}) as t GROUP BY batch) as t order by throughput desc LIMIT 0,1")
+                .replace("{heartbeat}", Config.heartbeat()+"")
+                .replace("{table}",tableName);
         val ds = conn.executeList(sql.toString(), new Object[]{});
         return ds;
     }

@@ -21,6 +21,24 @@ ${Html.s("pagetitle","压测报告")}
             display:flex;
             flex-wrap:wrap;
         }
+        table .current{
+            color: #0ABD0A;
+        }
+        table .avg{
+            color: #ba8b00;
+        }
+        table .min{
+            color: #8b4902;
+        }
+        table .max{
+            color: #0000FF;
+        }
+        table .sum{
+            color: #6f42c1;
+        }
+        table .red{
+             color: red;
+         }
     </style>
     <div class="head">
         <div class="title">
@@ -43,7 +61,7 @@ ${Html.s("pagetitle","压测报告")}
                 <p>${model.nodes}</p>
                 <table>
                     <tr>
-                        <th style="width:3%">节点</th>
+                        <th style="width:30%">节点</th>
                         <th style="width:15%">cpu核心数</th>
                         <th style="width:20%">内存(M)</th>
                         <th style="width:15%">压测线程数</th>
@@ -146,46 +164,90 @@ ${Html.s("pagetitle","压测报告")}
                             <option value="${key}">${key}</option>
                         </#list>
                     </select>
+                <input id="current" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/>现在值
+                <input id="avg" type="checkbox" onchange="loadUrlReportChart()"/>平均值
+                <input id="min" type="checkbox"  onchange="loadUrlReportChart()"/>最小值
+                <input id="max" type="checkbox"  onchange="loadUrlReportChart()"/>最大值
+                <input id="sum" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/>总和值
                 <button type="button" onclick="loadUrlReportChart()">刷新</button>
                     <table id="urlReport">
                         <tr>
                             <th style="width:15%">接口api</th>
-                            <th style="width:5%">累计压测次数</th>
-                            <th style="width:5%">最大吞吐量/s</th>
-                            <th style="width:5%">最大错误数/s</th>
+                            <th style="width:5%">压测次数</th>
+                            <th style="width:5%">吞吐量/s</th>
+                            <th style="width:5%">错误数/s</th>
                             <th style="width:5%">错误率(%)/s</th>
-                            <th style="width:5%">最小耗时(ms)/s</th>
-                            <th style="width:5%">最大耗时(ms)/s</th>
-                            <th style="width:5%">平均耗时(ms)/s</th>
+                            <th style="width:5%">耗时(ms)/s</th>
     <#--                        <th style="width:5%">99line耗时/s</th>-->
     <#--                        <th style="width:5%">98line耗时/s</th>-->
-                            <th style="width:5%">最大网络读(Bytes)/s</th>
-                            <th style="width:5%">最大网络写(Bytes)/s</th>
+                            <th style="width:5%">网络读(Bytes)/s</th>
+                            <th style="width:5%">网络写(Bytes)/s</th>
                             <th style="width:5%">操作</th>
                         </tr>
                     </table>
                     <table style="display: none" id="urltemplate">
                         <tr data="">
                             <td>{url}</td>
-                            <td>{all_visit_num}</td>
-                            <td>{max_throughput}</td>
-                            <td>{max_error}</td>
-                            <td>{max_error_per}</td>
-                            <td>{min_visit_time}</td>
-                            <td>{max_visit_time}</td>
-                            <td>{avg_visit_time}</td>
-    <#--                        <td>{item.url}</td>-->
-    <#--                        <td>{item.url}</td>-->
-                            <td>{max_network_read}</td>
-                            <td>{max_network_write}</td>
-                            <td><a href="javascript:loadUrlChart('{url}')">查看曲线趋势</a></td>
+                            <td>
+                                <div class="current">{visit_num}</div>
+                                <div class="avg">{avg_visit_num}</div>
+                                <div class="min">{min_visit_num}</div>
+                                <div class="max">{max_visit_num}</div>
+                                <div class="sum">{sum_visit_num}</div>
+                            </td>
+                            <td>
+                                <div class="current">{throughput}</div>
+                                <div class="avg">{avg_throughput}</div>
+                                <div class="min">{min_throughput}</div>
+                                <div class="max">{max_throughput}</div>
+                                <div class="sum">{sum_throughput}</div>
+                            </td>
+                            <td>
+                                <div class="current">{error}</div>
+                                <div class="avg">{avg_error}</div>
+                                <div class="min">{min_error}</div>
+                                <div class="max">{max_error}</div>
+                                <div class="sum">{sum_error}</div>
+                            </td>
+                            <td>
+                                <div class="current">{error_per}</div>
+                                <div class="avg">/</div>
+                                <div class="min">/</div>
+                                <div class="max">/</div>
+                                <div class="sum">{sum_error_per}</div>
+                            </td>
+                            <td>
+                                <div class="current">{visit_time}</div>
+                                <div class="avg">{avg_visit_time}</div>
+                                <div class="min">{min_visit_time}</div>
+                                <div class="max">{max_visit_time}</div>
+                                <div class="sum">{sum_visit_time}</div>
+                            </td>
+                            <td>
+                                <div class="current">{network_read}</div>
+                                <div class="avg">{avg_network_read}</div>
+                                <div class="min">{min_network_read}</div>
+                                <div class="max">{max_network_read}</div>
+                                <div class="sum">{sum_network_read}</div>
+                            </td>
+                            <td>
+                                <div class="current">{network_write}</div>
+                                <div class="avg">{avg_network_write}</div>
+                                <div class="min">{min_network_write}</div>
+                                <div class="max">{max_network_write}</div>
+                                <div class="sum">{sum_network_write}</div>
+                            </td>
+                            <td><a href="javascript:loadUrlChart('{url}')">曲线趋势</a></td>
                         </tr>
                     </table>
                     <#assign urlWeiduMap={"throughput":"吞吐量/s","error":"错误量/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","visit_time":"耗时(ms)/s"}/>
 
                      <div id="urlCharts" style="display: none;padding-top: 20px" >
-                         <div class="cnt" style="text-align: center; ">
-                             <b style="font-size: 16px">接口:<span id="urlChart">无</span></b>
+                         <div class="cnt" style="text-align: left; ">
+                             <p >
+                                 <b style="font-size: 16px"><span style="color: blue">[节点]</span><span id="urlChartNode">无</span></b>
+                                 <b style="font-size: 16px"><span style="color: blue">[接口]</span><span id="urlChartUrl">无</span></b>
+                             </p>
                              <div class="chartlist">
                                  <#list urlWeiduMap?keys as key>
                                      <div id='urlChart_${key}' style='width:35%;height:250px;'></div>
@@ -329,16 +391,32 @@ ${Html.s("pagetitle","压测报告")}
                         alert(data.message);
                     } else {
                         for(var r of data.data.report){
-                            console.log("aaa",r);
-                            var html = $("#urltemplate").html().replaceAll("{url}",r.url)
-                                .replaceAll("{all_visit_num}",r.all_visit_num).replaceAll("{max_throughput}",r.max_throughput.toFixed(2))
-                                .replaceAll("{max_error_per}",errorPer(r.max_throughput,r.max_error)+"%")
-                                .replaceAll("{min_visit_time}",r.min_visit_time.toFixed(2))
-                                .replaceAll("{max_visit_time}",r.max_visit_time.toFixed(2)).replaceAll("{avg_visit_time}",r.avg_visit_time.toFixed(2))
-                                .replaceAll("{max_network_read}",r.max_network_read.toFixed(2)).replaceAll("{max_network_write}",r.max_network_write.toFixed(2))
-                                .replaceAll("{max_error}",((r.max_error==null||r.max_error>0)?"<b style='color:red'>"+r.max_error.toFixed(2)+"</b>":r.max_error.toFixed(2)));
+                            //console.log("aaa",r);
+                            var html = $("#urltemplate").html();
+
+                            for(let key of Object.keys(r)){
+                                //console.log("pp",key);
+                                html =html.replaceAll("{"+key+"}",toNumber(key,r[key]));
+                            }
+                            html = html.replaceAll("{error_per}", toNumber("error_per",errorPer( r["throughput"],r["error"])));
+                            html = html.replaceAll("{sum_error_per}", toNumber("sum_error_per",errorPer( r["sum_throughput"],r["sum_error"])));
                             $("#urlReport").append(html);
                         }
+                        $("#urlReport .current").each(function (){
+                            $(this).text("现:"+$(this).text());$(this).attr("title","当前值");if(!$("#current").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .avg").each(function (){
+                            $(this).text("均:"+$(this).text());$(this).attr("title","平均值");if(!$("#avg").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .min").each(function (){
+                            $(this).text("小:"+$(this).text());$(this).attr("title","最小值");if(!$("#min").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .max").each(function (){
+                            $(this).text("大:"+$(this).text());$(this).attr("title","最大值");if(!$("#max").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .sum").each(function (){
+                            $(this).text("总:"+$(this).text());$(this).attr("title","总和值");if(!$("#sum").is(':checked')){$(this).hide();}
+                        })
                         $('#urlReport tr[data]').show();
                     }
                 }, "json");
@@ -358,14 +436,15 @@ ${Html.s("pagetitle","压测报告")}
             $.post("/report/urlChart",
                 {
                     "id":${model.id},
-                    "node": $("#nodes").val(),
+                    "node": $("#nodes2").val(),
                     "url":urlSelect,
                 },
                 function (data) {
                     if (data.code < 0) {
                         alert(data.message);
                     } else {
-                        $("#urlChart").html(urlSelect);
+                        $("#urlChartUrl").html(urlSelect);
+                        $("#urlChartNode").html($("#nodes2").find("option:selected").text());
                         $("#urlCharts").show();
                         for(var weidu of urlWeidus){
                             var  option = {
@@ -442,6 +521,18 @@ ${Html.s("pagetitle","压测报告")}
             }else{
                 return data.toFixed(2);
             }
+        }
+        function toNumber(key,value){
+            var v2=value;
+            if(String(value).indexOf(".")>-1){
+                try {
+                    v2 = value.toFixed(2);
+                }catch (e){}
+            }
+            if(key.indexOf('error')>-1&&v2>0){
+                return "<i class='red'>"+v2+"</i>";
+            }
+            return v2;
         }
     </script>
 </@layout._layout>
