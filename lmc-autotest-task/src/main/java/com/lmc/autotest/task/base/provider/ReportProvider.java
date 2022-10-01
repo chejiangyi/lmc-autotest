@@ -16,6 +16,7 @@ import com.lmc.autotest.task.base.FileUtils;
 import com.lmc.autotest.task.base.HttpUtils;
 import com.lmc.autotest.task.base.IOUtils;
 import com.xxl.job.core.util.DateUtil;
+import lombok.Getter;
 import lombok.val;
 import lombok.var;
 
@@ -28,6 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 public class ReportProvider {
+    @Getter
     tb_report_model report_model = null;
     volatile ReportNodeInfo reportNodeInfo = null;
     volatile ReportUrlMap reportUrlMap = null;

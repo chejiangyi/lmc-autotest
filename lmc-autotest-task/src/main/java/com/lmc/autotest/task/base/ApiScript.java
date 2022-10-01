@@ -14,6 +14,8 @@ import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.val;
 import lombok.var;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 
 import javax.sql.DataSource;
@@ -91,10 +93,40 @@ public class ApiScript {
         SampleUtils.writeline(FileUtils.getSampleFile(getTaskId(),tranId.toString()), JsonUtils.serialize(sample));
     }
 
+    //线程睡眠
+    public void sleep(Integer time){
+        ThreadUtils.sleep(time);
+    }
 
     //当前时间格式化
     public String nowFormat(String format){
         return DateUtil.format(new Date(),format);
+    }
+
+    //http请求
+    public Object httpPost(String url,Object json){
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setHeader("Content-Type", "application/json");
+        httpPost.setEntity(EntityBuilder.create().setContentType(ContentType.APPLICATION_JSON).setContentEncoding("utf-8").setText(toJson(json)).build());
+        try {
+            val r = HttpClientUtils.system().toString(HttpClientUtils.system().getClient().execute(httpPost));
+            return r;
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    //http请求 form请求支持
+    public Object httpPostForm(String url,Object form){
+        HttpClient.Params params = HttpClient.Params
+                .custom()
+                .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
+                .add(toJavaObject(form)).build();
+        return HttpClientUtils.system().post(url, params);
+    }
+    //http请求 get
+    public Object httpGet(String url){
+        return HttpClientUtils.system().get(url);
     }
 
     //执行sql
@@ -159,6 +191,7 @@ public class ApiScript {
                         break;
                     if(!autoTest.checkRunning()){return;}
                     for(val map : list) {
+                        if(!autoTest.checkRunning()){break;}
                         id = Math.max(ConvertUtils.convert(map.get("id"),long.class),id);
                         if(objectMirror!=null) {
                             objectMirror.call(objectMirror, map);

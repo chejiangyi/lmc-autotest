@@ -61,7 +61,7 @@ public class TaskController extends SpringMvcController {
 
     @RequestMapping("/save")
     public ModelAndView save(Integer id, String task,
-                             String filter_store, String filter_script, String filter_table,
+                             String filter_store, String filter_script, Integer sleep_time_every_thread,
                              String first_filter_error_script, String nodes, Integer run_threads_count,
                              String http_begin_script, String http_end_script, String check_stop_script
     ) {
@@ -88,6 +88,7 @@ public class TaskController extends SpringMvcController {
                 model.update_time = new Date();
                 model.task = task;
                 model.update_user = this.getUser().getUsername();
+                model.sleep_time_every_thread=sleep_time_every_thread;
                 if(model.id==null||model.id==0){
                     new tb_task_dal().add(c,model);
                 }else {

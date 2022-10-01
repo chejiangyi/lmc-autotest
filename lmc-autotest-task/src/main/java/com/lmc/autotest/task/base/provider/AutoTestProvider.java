@@ -67,6 +67,8 @@ public class AutoTestProvider {
                 if(!this.checkRunning()){ return;}
                 hearBeat();
                 if(!this.checkRunning()){ return;}
+                checkStop();
+                if(!this.checkRunning()){ return;}
                 createSampleFile();
                 if(!this.checkRunning()){ return;}
                 filterError();
@@ -101,8 +103,13 @@ public class AutoTestProvider {
         LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务准备启动,线程逐步开启中(缓慢开启,若线程多,等待时间较长)...");
         for(int i=0;i<task_model.run_threads_count;i++){
             val index = i;
-            int waitTime= new Random(UUID.randomUUID().toString().hashCode()).nextInt(Config.maxSleepPerTheadOpen());
-            ThreadUtils.sleep(waitTime<200?200:waitTime);//给程序缓冲时间,缓慢启动,不得小于200
+            if(task_model.sleep_time_every_thread<=0) {
+                //简单的自动均衡算法
+                int waitTime = new Random(UUID.randomUUID().toString().hashCode()).nextInt(Config.maxSleepPerTheadOpen());
+                ThreadUtils.sleep(waitTime < 200 ? 200 : waitTime);//给程序缓冲时间,缓慢启动,不得小于200
+            }else{
+                ThreadUtils.sleep(task_model.sleep_time_every_thread);
+            }
             ThreadPoolUtils.System.submit("压测线程"+index,()->{
                 while (!ThreadUtils.system().isShutdown()&&isRun){
                     try {
@@ -155,6 +162,20 @@ public class AutoTestProvider {
                     DbHelper.call(Config.mysqlDataSource(),(c)-> {
                         new tb_task_dal().runHeartBeat(c, taskid);
                     });
+                }catch (Exception e){
+                    LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"心跳更新任务错误",e);
+                }
+                ThreadUtils.sleep(Config.heartbeat()*1000);
+            }
+
+        });
+        LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-任务心跳检测已开启");
+    }
+
+    private void checkStop(){
+        ThreadUtils.system().submit("检查任务终止",()->{
+            while (!ThreadUtils.system().isShutdown()&&isRun){
+                try {
                     val nodeReport = reportProvider.heartBeatReport();
                     if(!StringUtils.isEmpty(task_model.check_stop_script)) {
                         val sMap = this.initMap();
@@ -167,13 +188,13 @@ public class AutoTestProvider {
                         }
                     }
                 }catch (Exception e){
-                    LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"心跳更新任务",e);
+                    LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"检查任务终止错误",e);
                 }
                 ThreadUtils.sleep(Config.heartbeat()*1000);
             }
 
         });
-        LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-任务心跳检测已开启");
+        LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-任务终止检测已开启");
     }
 
     //生成采样表文件
@@ -247,6 +268,7 @@ public class AutoTestProvider {
     private LinkedHashMap initMap(){
         val map = new LinkedHashMap();
         map.put("task",task_model);
+        map.put("report",this.reportProvider.getReport_model());
         map.put("autotest",this);
         map.put("tranId",tranId);
         return map;

@@ -151,6 +151,7 @@ CREATE TABLE `tb_task`  (
                             `http_begin_script` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '运行前脚本',
                             `http_end_script` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '运行后脚本',
                             `check_stop_script` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '检测终止脚本',
+                            `sleep_time_every_thread` int(0) NULL DEFAULT 0 COMMENT '每个线程启动时的间隔时间',
                             PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 

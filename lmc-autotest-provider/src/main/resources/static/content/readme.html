@@ -99,7 +99,14 @@
     <p>
         api.ps.?
     </p>
-    <b>采样脚本参数: task</b>
+    <b>通用参数: report</b>
+    <p>report对象:
+        <script type="text/javascript">
+            document.write(showJson({"id":229,"report_name":"测试_2022_10_01_22_52_19","tran_id":"2022_10_01_22_52_19","task_id":2,"nodes":"LAPTOP-7V5D9SQE","nodes_info":"[{\"node\":\"LAPTOP-7V5D9SQE\",\"cpu\":8,\"memory\":16048,\"threads\":1}]","filter_table":"2022_10_01_22_52_19-2.sample","filter_store":"mysql","begin_time":"2022-10-01 22:52:19","end_time":"1900-01-01 00:00:00","create_time":"2022-10-01 22:52:19","report_node_table":"auto_tb_report_node_2022_10_01_22_52_19","report_url_table":"auto_tb_report_url_2022_10_01_22_52_19","task_name":"测试","filter_table_lines":0,"filter_table_error_lines":0}
+            ));
+        </script>
+    </p>
+    <b>通用参数: task</b>
     <p>task对象:
         <script type="text/javascript">
             document.write(showJson({
@@ -122,7 +129,8 @@
             }));
         </script>
     </p>
-    <b>第一次过滤错误样本脚本: request,response,返回是否继续执行(true/false)</b>
+
+    <b>第一次过滤错误样本脚本: 通用参数,request,response,返回是否继续执行(true/false)</b>
     <p>request对象:
         <script type="text/javascript">
             document.write(showJson({
@@ -176,7 +184,7 @@
             }));
         </script>
     </p>
-    <b>执行前脚本参数: request,返回是否继续执行(true/false)</b>
+    <b>执行前脚本参数:  通用参数,request,返回是否继续执行(true/false)</b>
     <p>request对象:
         <script type="text/javascript">
             document.write(showJson({
@@ -194,7 +202,7 @@
             }));
         </script>
     </p>
-    <b>执行后脚本参数: request,response,返回是否继续执行(true/false)</b>
+    <b>执行后脚本参数: 通用参数, request,response,返回是否继续执行(true/false)</b>
     <p>request对象:
         <script type="text/javascript">
             document.write(showJson({
@@ -248,7 +256,7 @@
             }));
         </script>
     </p>
-    <b>结束规则脚本参数: nodeReport,runtime,返回是否继续执行(true/false)</b>
+    <b>结束规则脚本参数: 通用参数, nodeReport,runtime,返回是否继续执行(true/false)</b>
     <p>runtime:运行时间(单位:秒)</p>
     <p>nodeReport:初始化时为null<br/>
     </p>
@@ -268,7 +276,35 @@
             }));
         </script>
     </p>
-    <i>api.ps.task</i>
+    <i>api.ps.task,api.ps.report,.....</i>
+</div>
+<div>
+    <h3>睡眠n毫秒</h3>
+    <p>
+        api.sleep(Integer time),谨慎使用!
+    </p>
+    <i>api.sleep(5)</i>
+</div>
+<div>
+    <h3>http Post Json请求支持,返回String</h3>
+    <p>
+        api.httpPost(String url,Object json)
+    </p>
+    <i>var result=api.httpPost("http://www.baidu.com/",{"aa":111})</i>
+</div>
+<div>
+    <h3>http Post Form请求支持,返回String</h3>
+    <p>
+        api.httpPostForm(String url,Object form)
+    </p>
+    <i>无,注意:没测试过,不建议使用</i>
+</div>
+<div>
+    <h3>http Get请求支持,返回String</h3>
+    <p>
+        api.httpGet(String url)
+    </p>
+    <i>var result=api.httpGet("http://wwww.baidu.com/")</i>
 </div>
 </body>
 </html>

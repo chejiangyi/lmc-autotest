@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
     <script src="/scripts/jquery-ui-1.8.24.js" type="text/javascript"></script>
-    <title>登录</title>
+    <title>全链路自动化测试工具 - by 车江毅</title>
     <style>
         * {
             margin: 0;
@@ -103,7 +103,7 @@
 <div class="login-content">
     <div class="login-modal-body">
         <div class="modal-content">
-            <h3>自动化测试登陆</h3>
+            <h3>全链路自动化测试平台</h3>
             <div>
                 <input class="login-name" type="text" placeholder="请输入用户名" />
             </div>

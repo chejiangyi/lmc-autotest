@@ -35,6 +35,10 @@ ${Html.s("pagetitle","编辑任务")}
                 <input class="stext" type="text" id="run_threads_count" name="run_threads_count" value="${model.run_threads_count!}" />
             </li>
             <li>
+                <label>每个线程启动间隔</label>
+                <input class="stext" type="text" id="sleep_time_every_thread" name="sleep_time_every_thread" value="${model.sleep_time_every_thread!}" />毫秒${Html.help("压测时每个线程之间启动的时间间隔,逐步启动,避免突然间并发导致程序无法响应,为0则表示采用系统自动算法均衡(一般为200-700ms)")}
+            </li>
+            <li>
                 <div id="tabs">
                     <ul>
                         <li><a href="#tabs-1">采集样本筛选脚本${Html.help("从样本库中筛选出需要压测的样本")}</a></li>
@@ -76,6 +80,10 @@ ${Html.s("pagetitle","编辑任务")}
         function save()
         {
             console.log($("#nodes").val());
+            if($("#nodes").val().length==0){
+                alert("请选择压测节点!")
+                return;
+            }
             $.post("/task/save",
                 {
                     "id": ${id!"0"},
@@ -90,6 +98,7 @@ ${Html.s("pagetitle","编辑任务")}
                     "http_begin_script":$("#http_begin_script").val(),
                     "http_end_script":$("#http_end_script").val(),
                     "check_stop_script":$("#check_stop_script").val(),
+                    "sleep_time_every_thread":$("#sleep_time_every_thread").val()
                 },
                 function (data) {
                     if (data.code < 0) {

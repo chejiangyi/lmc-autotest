@@ -46,6 +46,7 @@ public class ReportController extends SpringMvcController {
     @RequestMapping("/view")
     public ModelAndView view(Integer id) {
         html.s2("id", id);
+        html.s2("checkuser",false);//报告查看无需登陆！
         return pageVisit((m) -> {
             DbHelper.call(Config.mysqlDataSource(), c -> {
                 val report = new tb_report_dal().get(c, id);

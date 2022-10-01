@@ -133,7 +133,7 @@ ${Html.s("pagetitle","压测报告")}
                 <label>自动刷新图表</label>
                 <p style="margin-left: 10px"><input type="checkbox" id="openRefresh" >(自动刷新以下报表数据)</p>
             </li>
-            <#assign nodeWeiduMap={"cpu":"cpu(%)/s","memory":"内存(M)/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","active_threads":"活跃线程数/s","throughput":"吞吐量/s","error":"错误量/s"}/>
+            <#assign nodeWeiduMap={"cpu":"cpu(%)/s","memory":"内存(M)/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","active_threads":"活跃线程数/s","throughput":"吞吐量/s","error":"错误数/s"}/>
             <li>
                 <label>单一维度多节点对比</label>
                 <select id="weidu" name="weidu" onchange="loadNodesReportChart()">
@@ -155,7 +155,7 @@ ${Html.s("pagetitle","压测报告")}
                 <button type="button" onclick="loadNodeReportChart()">刷新</button>
                 <div class="chartlist">
                  <#list nodeWeiduMap?keys as key>
-                    <div id='nodeReport_${key}' class="cnt" style='width:35%;height:250px;'></div>
+                    <div id='nodeReport_${key}' title="${nodeWeiduMap[key]}" class="cnt" style='width:35%;height:250px;'></div>
                  </#list>
                 </div>
             </li>
@@ -244,7 +244,7 @@ ${Html.s("pagetitle","压测报告")}
                             <td><a href="javascript:loadUrlChart('{url}')">曲线趋势</a></td>
                         </tr>
                     </table>
-                    <#assign urlWeiduMap={"throughput":"吞吐量/s","error":"错误量/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","visit_time":"耗时(ms)/s"}/>
+                    <#assign urlWeiduMap={"throughput":"吞吐量/s","error":"错误数/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","visit_time":"耗时(ms)/s"}/>
 
                      <div id="urlCharts" style="display: none;padding-top: 20px" >
                          <div class="cnt" style="text-align: left; ">
@@ -267,10 +267,11 @@ ${Html.s("pagetitle","压测报告")}
     <script type="text/javascript">
         function loadNodesReportChart(){
             var nodes = "${model.nodes}".split(',');
+            var weidu = $("#weidu").val();
             $.post("/report/nodesReport",
                 {
                     "id":${model.id},
-                    "weidu": $("#weidu").val(),
+                    "weidu": weidu,
                 },
                 function (data) {
                     if (data.code < 0) {
@@ -346,7 +347,7 @@ ${Html.s("pagetitle","压测报告")}
                                 },
                                 title: {
                                     left: 'center',
-                                    text: weidu
+                                    text: $('#nodeReport_'+weidu).attr('title')
                                 },
                                 toolbox: {
                                     feature: {
