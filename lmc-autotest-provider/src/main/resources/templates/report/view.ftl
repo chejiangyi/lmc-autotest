@@ -50,7 +50,6 @@ ${Html.s("pagetitle","压测报告")}
             <li>
                 <label>报告名</label>
                 <p><b>${model.report_name}</b></p>
-                <p style="margin-left: 10px"><input type="checkbox" id="openRefresh" >自动刷新报告数据</p>
             </li>
             <li>
                 <label>任务</label>
@@ -129,6 +128,10 @@ ${Html.s("pagetitle","压测报告")}
                         <td>在 ${Html.p(maxthroughputWithNoError.create_time)!} , 节点并发线程总和${maxthroughputWithNoError.active_threads!} , 节点吞吐量总和共${maxthroughputWithNoError.throughput!}/s , 错误总和共${maxthroughputWithNoError.error!}/s。</td>
                     </tr>
                 </table>
+            </li>
+            <li>
+                <label>自动刷新图表</label>
+                <p style="margin-left: 10px"><input type="checkbox" id="openRefresh" >(自动刷新以下报表数据)</p>
             </li>
             <#assign nodeWeiduMap={"cpu":"cpu(%)/s","memory":"内存(M)/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","active_threads":"活跃线程数/s","throughput":"吞吐量/s","error":"错误量/s"}/>
             <li>
