@@ -269,7 +269,7 @@ ${Html.s("pagetitle","压测报告")}
                              </p>
                              <div class="chartlist">
                                  <#list urlWeiduMap?keys as key>
-                                     <div id='urlChart_${key}' style='width:35%;height:250px;'></div>
+                                     <div id='urlChart_${key}' title="${urlWeiduMap[key]}" style='width:35%;height:250px;'></div>
                                  </#list>
                              </div>
                          </div>
@@ -477,7 +477,7 @@ ${Html.s("pagetitle","压测报告")}
                                 },
                                 title: {
                                     left: 'center',
-                                    text: weidu
+                                    text: $('#urlChart_'+weidu).attr('title')
                                 },
                                 toolbox: {
                                     feature: {
