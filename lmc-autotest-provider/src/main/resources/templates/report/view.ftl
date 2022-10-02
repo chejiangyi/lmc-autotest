@@ -39,6 +39,9 @@ ${Html.s("pagetitle","压测报告")}
          .redS{
              color: red;
          }
+         .time1{
+             color:#FF9D0A;
+         }
     </style>
     <div class="head">
         <div class="title">
@@ -79,7 +82,7 @@ ${Html.s("pagetitle","压测报告")}
                 <label>采样数据</label>
                 <table>
                     <tr>
-                        <td style="width: 15%">采样表</td>
+                        <td style="width: 15%">采样表(文件)涉及样本数${Html.help("节点本地生成的临时样本压测文件名称,一般会自动删除!")}</td>
                         <td>${model.filter_table}</td>
                     </tr>
                     <tr>
@@ -87,7 +90,7 @@ ${Html.s("pagetitle","压测报告")}
                         <td>${urlcount}</td>
                     </tr>
                     <tr>
-                        <td>涉及样本数</td>
+                        <td>涉及样本数${Html.help("筛选样本集合,过滤率错误样本数,最后才是真正的可用有效的压测样本！")}</td>
                         <td>总样本: ${model.filter_table_lines!},
                             错误样本: ${model.filter_table_error_lines!},
                             <#assign useSamplesCount=model.filter_table_lines-model.filter_table_error_lines />
@@ -95,7 +98,7 @@ ${Html.s("pagetitle","压测报告")}
                         </td>
                     </tr>
                     <tr>
-                        <td>样本存储</td>
+                        <td>样本存储${Html.help("样本存储的存储引擎,目前仅支持mysql,未来支持es等大容量存储")}</td>
                         <td>${model.filter_store}</td>
                     </tr>
                 </table>
@@ -120,11 +123,11 @@ ${Html.s("pagetitle","压测报告")}
                 <label>压测结论</label>
                 <table>
                     <tr>
-                        <td style="width: 15%">最大承载能力</td>
+                        <td style="width: 15%">最大承载能力${Html.help("某个心跳周期内所有节点的吞吐量总和最大,则判定为最大承载能力,相应的并发数为最优参考")}</td>
                         <td>在 ${Html.p(maxthroughput.create_time)!} , 节点并发线程总和${maxthroughput.active_threads!} , 节点吞吐量总和共${maxthroughput.throughput!}/s , 错误总和共${maxthroughput.error!}/s。</td>
                     </tr>
                     <tr>
-                        <td>最佳承载能力</td>
+                        <td>最佳承载能力${Html.help("某个心跳周期内所有节点的吞吐量总和最大且无任何错误,则判定为最佳承载能力,相应的并发数为最优参考")}</td>
                         <td>在 ${Html.p(maxthroughputWithNoError.create_time)!} , 节点并发线程总和${maxthroughputWithNoError.active_threads!} , 节点吞吐量总和共${maxthroughputWithNoError.throughput!}/s , 错误总和共${maxthroughputWithNoError.error!}/s。</td>
                     </tr>
                 </table>
@@ -161,27 +164,36 @@ ${Html.s("pagetitle","压测报告")}
             </li>
             <li>
                 <label>接口性能指标统计</label>
-                    <select id="nodes2" name="nodes2" onchange="loadUrlReportChart()">
-                        <option value="">所有节点</option>
-                        <#list model.nodes?split(",") as key>
-                            <option value="${key}">${key}</option>
-                        </#list>
-                    </select>
+                <select id="nodes2" name="nodes2" onchange="loadUrlReportChart()">
+                    <option value="">所有节点</option>
+                    <#list model.nodes?split(",") as key>
+                        <option value="${key}">${key}</option>
+                    </#list>
+                </select>
+                <#assign orderMap={"url":"接口api","throughput":"现吞吐量","error":"现错误数","visit_time":"现耗时","sum_throughput":"总吞吐量","sum_error":"总错误数","sum_visit_time":"总耗时","sum_visit_num_per":"占比"}/>
+                降序
+                <select id="urlOrder" name="urlOrder" onchange="loadUrlReportChart()">
+                    <#list orderMap?keys as key>
+                        <option value="${key}">${orderMap[key]}</option>
+                    </#list>
+                </select>
                 <input id="current" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="current">现在值</p>
                 <input id="avg" type="checkbox" onchange="loadUrlReportChart()"/><p class="avg">平均值</p>
                 <input id="min" type="checkbox"  onchange="loadUrlReportChart()"/><p class="min">最小值</p>
                 <input id="max" type="checkbox"  onchange="loadUrlReportChart()"/><p class="max">最大值</p>
                 <input id="sum" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="sum">总和值</p>
+
                 <#assign heartbeart=Utils.heartBeat() />
                 <button type="button" onclick="loadUrlReportChart()">刷新</button>
                     <table id="urlReport">
                         <tr>
                             <th style="width:15%">接口api</th>
+                            <th style="width:5%">信息${Html.help("(心跳周期)每隔"+heartbeart+"秒内,[占比]:累计的压测次数/所有压测请求次数,[时间]:现在值的更新时间")}</th>
                             <th style="width:5%">压测次数${Html.help("(心跳周期)每隔"+heartbeart+"秒内,累计的压测次数")}</th>
                             <th style="width:5%">吞吐量/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒吞吐量次数")}</th>
-                            <th style="width:5%">错误数/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数")}</th>
-                            <th style="width:5%">错误率(%)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数/(平均的每秒吞吐量+平均的每秒错误次数)")}</th>
-                            <th style="width:5%">耗时(ms)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒耗时")}</th>
+                            <th style="width:5%">错误数/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数,大于0则标红")}</th>
+                            <th style="width:5%">错误率(%)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数/(平均的每秒吞吐量+平均的每秒错误次数),大于0则标红")}</th>
+                            <th style="width:5%">耗时(ms)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒耗时,大于300ms则标红")}</th>
     <#--                        <th style="width:5%">99line耗时/s</th>-->
     <#--                        <th style="width:5%">98line耗时/s</th>-->
                             <th style="width:5%">网络读(Bytes)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒网络读")}</th>
@@ -191,7 +203,10 @@ ${Html.s("pagetitle","压测报告")}
                     </table>
                     <table style="display: none" id="urltemplate">
                         <tr data="">
-                            <td>{url}</td>
+                            <td style="word-break: break-all" title="{url}">{url}</td>
+                            <td><div class="zhanbi">占:{sum_visit_num_per}</div>
+                                <div class="createtime">时:{create_time}</div>
+                            </td>
                             <td>
                                 <div class="current">{visit_num}</div>
                                 <div class="avg">{avg_visit_num}</div>
@@ -241,7 +256,7 @@ ${Html.s("pagetitle","压测报告")}
                                 <div class="max">{max_network_write}</div>
                                 <div class="sum">{sum_network_write}</div>
                             </td>
-                            <td><a href="javascript:loadUrlChart('{url}')">曲线趋势</a></td>
+                            <td><a href="javascript:loadUrlChart('{url}')">趋势图</a></td>
                         </tr>
                     </table>
                     <#assign urlWeiduMap={"throughput":"吞吐量/s","error":"错误数/s","network_read":"网络读(Bytes)/s","network_write":"网络写(Bytes)/s","visit_time":"耗时(ms)/s"}/>
@@ -389,6 +404,7 @@ ${Html.s("pagetitle","压测报告")}
                 {
                     "id":${model.id},
                     "node": $("#nodes2").val(),
+                    "order":$("#urlOrder").val(),
                 },
                 function (data) {
                     $('#urlReport tr[data]').remove()
@@ -521,14 +537,13 @@ ${Html.s("pagetitle","压测报告")}
                 data= 0;
             else
                 data= error/count;
-            if(data>0){
-                return "<b style='color:red'>"+data.toFixed(2)+"</b>";
-            }else{
-                return data.toFixed(2);
-            }
+            return data;
         }
         function toNumber(key,value){
             var v2=value;
+            if(key=='create_time'){
+                return showDate(v2);
+            }
             if(String(value).indexOf(".")>-1){
                 try {
                     v2 = value.toFixed(2);
@@ -537,7 +552,37 @@ ${Html.s("pagetitle","压测报告")}
             if(key.indexOf('error')>-1&&v2>0){
                 return "<b class='redS'>"+v2+"</b>";
             }
+            if(key=='visit_time'&&v2>300){
+                return "<b class='redS'>"+v2+"</b>";
+            }
+            if(key.indexOf('_per')>-1){
+                return "≈"+(v2*100).toFixed(2)+"%";
+            }
             return v2;
         }
+
+        function showDate(date){
+            var myDate= new Date(Date.parse(date.replace(/-/g, "/")));
+            console.log("时间",date,myDate);
+            var myTime = "";
+            if(new Date().getTime()-myDate.getTime()<10*1000){
+                myTime= "10秒内";
+            }
+            else if(new Date().getTime()-myDate.getTime()<60*1000){
+                myTime= "1分钟内";
+            }else {
+                myTime = myDate.format("hh:mm:ss");
+            }
+            return '<span class="time1" title="'+myDate.format("yyyy-MM-dd hh:mm:ss")+'">'+myTime+'</span>';
+        }
+        // function showStr(str){
+        //     if(str==null||str==""){
+        //         return str;
+        //     }
+        //     if(str.length()>100) {
+        //         return str.substr(0, 100)+"...";
+        //     }
+        //     return str;
+        // }
     </script>
 </@layout._layout>

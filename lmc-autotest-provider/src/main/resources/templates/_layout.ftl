@@ -1,33 +1,44 @@
 <#--头部样式填充-->
 <#macro _style_head>
+    <style>
+         <#if user??>
+         <#else>
+            .main_cont{
+                margin-left: 5px;
+            }
+         </#if>
+    </style>
+
 </#macro>
 <#--<#setting boolean_format="true,false" >-->
 <#macro _leftmenu>
-    <div class="leftmenu fl">
-        <ul class="level1">
-            <li>
-<#--                <p>任务管理<i></i></p>-->
-                <ul class="level2">
-                    <li><a href="/task/index/">任务管理</a></li>
-                </ul>
-                <ul class="level2">
-                    <li><a href="/report/index/">压测报告</a></li>
-                </ul>
-                <ul class="level2">
-                    <li><a href="/node/index/">节点状态</a></li>
-                </ul>
-                <ul class="level2">
-                    <li><a href="/log/index/">执行日志</a></li>
-                </ul>
-                <ul class="level2">
-                    <li><a href="/sample/index">采样查询</a></li>
-                </ul>
-<#--                <ul class="level2">-->
-<#--                    <li><a href="/user/index/">用户管理</a></li>-->
-<#--                </ul>-->
-            </li>
-        </ul>
-    </div>
+    <#if user??>
+        <div class="leftmenu fl">
+            <ul class="level1">
+                <li>
+    <#--                <p>任务管理<i></i></p>-->
+                    <ul class="level2">
+                        <li><a href="/task/index/">任务管理</a></li>
+                    </ul>
+                    <ul class="level2">
+                        <li><a href="/report/index/">压测报告</a></li>
+                    </ul>
+                    <ul class="level2">
+                        <li><a href="/node/index/">节点状态</a></li>
+                    </ul>
+                    <ul class="level2">
+                        <li><a href="/log/index/">执行日志</a></li>
+                    </ul>
+                    <ul class="level2">
+                        <li><a href="/sample/index">采样查询</a></li>
+                    </ul>
+    <#--                <ul class="level2">-->
+    <#--                    <li><a href="/user/index/">用户管理</a></li>-->
+    <#--                </ul>-->
+                </li>
+            </ul>
+        </div>
+    </#if>
 </#macro>
 
 <#macro _footer>

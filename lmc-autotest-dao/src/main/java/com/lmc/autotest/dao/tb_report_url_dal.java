@@ -82,17 +82,17 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
         return ConvertUtils.convert(obj,int.class);
     }
 
-    public List<Map<String,Object>> nodeReport(DbConn conn, String node, String tableName){
+    public List<Map<String,Object>> nodeReport(DbConn conn, String node, String tableName,String order){
         val stringSql = new StringBuilder();val where = new StringBuilder();
         stringSql.append("\n" +
-                "select * from (select max(id) max_id,\n" +
+                "select *,sum_visit_num/sum(sum_visit_num) over() as sum_visit_num_per from (select max(id) max_id,\n" +
                 "max(visit_num) as max_visit_num,min(visit_num) as min_visit_num,avg(visit_num) as avg_visit_num,sum(visit_num) as sum_visit_num,\n" +
                 "max(throughput) as max_throughput,min(throughput) as min_throughput,avg(throughput) as avg_throughput,sum(throughput) as sum_throughput,\n" +
                 "max(error) as max_error,min(error) as min_error,avg(error) as avg_error,sum(error) as sum_error,\n" +
                 "max(visit_time) as max_visit_time,min(visit_time) as min_visit_time,avg(visit_time) as avg_visit_time,sum(visit_time) as sum_visit_time,\n" +
                 "max(network_read) as max_network_read,min(network_read) as min_network_read,avg(network_read) as avg_network_read,sum(network_read) as sum_network_read,\n" +
                 "max(network_write) as max_network_write,min(network_write) as min_network_write,avg(network_write) as avg_network_write,sum(network_write) as sum_network_write\n" +
-                "from {table} {where} group by url) as t, {table} a where t.max_id=a.id order by url");
+                "from {table} {where} group by url) as t, {table} a where t.max_id=a.id order by "+order+" desc");
         if(!StringUtils.isEmpty(node)){
             where.append(" where node='{node}'");
         }

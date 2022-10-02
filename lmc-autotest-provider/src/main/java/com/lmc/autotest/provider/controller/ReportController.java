@@ -121,11 +121,11 @@ public class ReportController extends SpringMvcController {
     }
 
     @RequestMapping("/urlReport")
-    public ModelAndView urlReport(Integer id,String node) {
+    public ModelAndView urlReport(Integer id,String node,String order) {
         return jsonVisit((m) -> {
             return DbHelper.get(Config.mysqlDataSource(), c -> {
                 val report = new tb_report_dal().get(c, id);
-                List<Map<String,Object>> r = new tb_report_url_dal().nodeReport(c, node, report.report_url_table);
+                List<Map<String,Object>> r = new tb_report_url_dal().nodeReport(c, node, report.report_url_table,order);
                 Map<String,Object> urlreport= new HashMap<>();
                 urlreport.put("report",r);
                 return urlreport;
