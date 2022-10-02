@@ -32,9 +32,9 @@
                     <ul class="level2">
                         <li><a href="/sample/index">采样查询</a></li>
                     </ul>
-    <#--                <ul class="level2">-->
-    <#--                    <li><a href="/user/index/">用户管理</a></li>-->
-    <#--                </ul>-->
+                    <ul class="level2">
+                        <li><a target="_blank" href="https://gitee.com/chejiangyi/lmc-autotest">帮助文档</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
@@ -63,7 +63,7 @@ ${Html.s("_html",html)}
     <head>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width"/>
-        <title> ${Html.g("pagetitle")!}</title>
+        <title> ${Html.g("pagetitle")!} by 车江毅</title>
         <link href="/content/css/css.css" rel="stylesheet"/>
         <#--<link href="/content/HighChartPackCss.css" rel="stylesheet"/>-->
         <link href="/content/pager.css" rel="stylesheet"/>
