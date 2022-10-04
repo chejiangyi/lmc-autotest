@@ -57,12 +57,14 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
         return ds;
     }
 
+    private String tempTable=" select batch,node,max(create_time) as create_time,max(cpu) as cpu,max(network_read) as network_read,max(network_write) as network_write,max(active_threads) as active_threads,max(throughput) as throughput,max(error) as error,max(memory) as memory from (" +
+            "select *,floor((UNIX_TIMESTAMP(create_time))/{heartbeat} )as batch from {table}) as t1 GROUP BY batch,node";
     public List<Map<String,Object>> nodeSumReport(DbConn conn, String tableName){
         val stringSql = new StringBuilder();
         stringSql.append(("SELECT max(create_time) as create_time,sum(cpu)*100 as cpu,sum(network_read) as network_read,\n" +
                 "                 sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
                 "                 sum(error) as error,sum(memory) as memory from \n" +
-                "(select *,floor((UNIX_TIMESTAMP(create_time))/{heartbeat} )as batch from {table}) as t GROUP BY batch")
+                "("+tempTable+") as t GROUP BY batch")
                 .replace("{heartbeat}", Config.heartbeat()+"")
                 .replace("{table}",tableName));
         val ds = conn.executeList(stringSql.toString(), new Object[]{});
@@ -75,7 +77,7 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
                 "SELECT max(create_time) as create_time,sum(cpu)*100 as cpu,sum(network_read) as network_read,\n" +
                         "                 sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
                         "                 sum(error) as error,sum(memory) as memory from \n" +
-                        "(select *,floor((UNIX_TIMESTAMP(create_time))/{heartbeat} )as batch from {table}) as t GROUP BY batch) as t WHERE error=0 order by throughput desc LIMIT 0,1")
+                        "("+tempTable+") as t GROUP BY batch) as t WHERE error=0 order by throughput desc LIMIT 0,1")
                 .replace("{heartbeat}", Config.heartbeat()+"")
                 .replace("{table}",tableName);
         val ds = conn.executeList(sql.toString(), new Object[]{});
@@ -88,7 +90,7 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
                 "SELECT max(create_time) as create_time,sum(cpu)*100 as cpu,sum(network_read) as network_read,\n" +
                 "                 sum(network_write) as network_write,sum(active_threads) as active_threads,sum(throughput) as throughput,\n" +
                 "                 sum(error) as error,sum(memory) as memory from \n" +
-                "(select *,floor((UNIX_TIMESTAMP(create_time))/{heartbeat} )as batch from {table}) as t GROUP BY batch) as t order by throughput desc LIMIT 0,1")
+                "("+tempTable+") as t GROUP BY batch) as t order by throughput desc LIMIT 0,1")
                 .replace("{heartbeat}", Config.heartbeat()+"")
                 .replace("{table}",tableName);
         val ds = conn.executeList(sql.toString(), new Object[]{});
