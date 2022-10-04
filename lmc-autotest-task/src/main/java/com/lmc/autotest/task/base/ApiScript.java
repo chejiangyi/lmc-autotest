@@ -95,7 +95,16 @@ public class ApiScript {
 
     //线程睡眠
     public void sleep(Integer time){
-        ThreadUtils.sleep(time);
+        TimeWatchUtils.print(true,"睡眠",()->{
+            int timeSpan = 500;
+            val count = time/timeSpan;
+            for(var i=0;i<count;i++){
+                val autoTest = (AutoTestProvider)this.ps.get("autotest");
+                if(!autoTest.checkRunning()){return;}
+                ThreadUtils.sleep(timeSpan);
+            }
+            ThreadUtils.sleep(time%timeSpan);
+        });
     }
 
     //当前时间格式化
@@ -145,7 +154,6 @@ public class ApiScript {
     }
     //执行sql
     public void streamSql(String sql,Object[] ps,ScriptObjectMirror objectMirror){
-        val task = this.ps.get("task");
         try{
             val autoTest = (AutoTestProvider)this.ps.get("autotest");
              DbHelper.call(ContextUtils.getBean(DataSource.class,false),(c)->{

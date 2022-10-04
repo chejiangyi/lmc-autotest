@@ -13,7 +13,7 @@ import com.lmc.autotest.dao.tb_report_url_dal;
 import com.lmc.autotest.service.LogTool;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.dao.tb_task_dal;
-import com.lmc.autotest.task.AutoTestManager;
+import com.lmc.autotest.task.NodeManager;
 import com.lmc.autotest.task.base.*;
 import com.lmc.autotest.task.base.FileUtils;
 import com.xxl.job.core.util.DateUtil;
@@ -30,15 +30,18 @@ import java.util.*;
 public class AutoTestProvider {
     private tb_task_model task_model = null;
     private ReportProvider reportProvider = null;
+    private NodeProvider nodeProvider=null;
+    @Getter
     private Integer taskid=-1;
     @Getter
     private boolean isRun =false;
     //private String tempid= UUID.randomUUID().toString().replace("-","");
     private Date startTime = new Date();
     private String tranId = "";
-    public AutoTestProvider(Integer taskid,String tranId){
+    public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider){
         this.taskid=taskid;
         this.tranId = tranId;
+        this.nodeProvider = nodeProvider;
     }
 
     public AutoTestProvider init(){
@@ -91,12 +94,14 @@ public class AutoTestProvider {
                 new tb_task_dal().closeHeartBeat(c, taskid);
                 new tb_task_dal().appendResult(c, taskid,  "\r\n"+ reason2);
             });
+            if(NodeManager.Default.getAutoTestProvider()==this&&NodeManager.Default.getAutoTestProvider().tranId.equals(this.tranId)) {
+                NodeManager.Default.close(taskid, reason, true);
+            }
             LogTool.info(this.getClass(),taskid, Config.appName(), StringUtils.nullToEmpty(task_model.task) + "-压测任务已关闭");
         } catch (Exception e) {
             LogTool.error(this.getClass(), taskid,Config.appName(), "关闭原因更新数据库出错", e);
         }
         disposeFile();
-        AutoTestManager.Default.close(taskid, reason,true);
     }
 
     private void autoTest(){
@@ -268,6 +273,7 @@ public class AutoTestProvider {
     private LinkedHashMap initMap(){
         val map = new LinkedHashMap();
         map.put("task",task_model);
+        map.put("node",this.nodeProvider.getNode_model());
         map.put("report",this.reportProvider.getReport_model());
         map.put("autotest",this);
         map.put("tranId",tranId);

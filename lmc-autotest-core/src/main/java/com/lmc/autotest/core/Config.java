@@ -44,7 +44,7 @@ public class Config {
 
     //每次开启线程的最大间隔周期,用于压测时给被压测程序反应时间,单位毫秒
     public static Integer maxSleepPerTheadOpen(){
-        return PropertyUtils.getPropertyCache("autotest.node.maxSleepPerThreadOpen",500);
+        return PropertyUtils.getPropertyCache("autotest.node.maxSleepPerThreadOpen",1000);
     }
     //http 连接池是否开启
     public static boolean httpPoolEnabled(){

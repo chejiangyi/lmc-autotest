@@ -15,7 +15,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_task 表自动dal映射,不要手工修改
  * 
  * @author 车江毅
- * @since 2022-10-01 17:12:22
+ * @since 2022-10-04 07:18:01
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_task_base_dal {
@@ -42,8 +42,6 @@ public class tb_task_base_dal {
             model.filter_script,
             /**第一次执行过滤错误脚本*/
             model.first_filter_error_script,
-            /**执行节点*/
-            model.nodes,
             /**运行线程数*/
             model.run_threads_count,
             /**运行前脚本*/
@@ -53,10 +51,14 @@ public class tb_task_base_dal {
             /**检测终止脚本*/
             model.check_stop_script,
             /**每个线程启动时的间隔时间*/
-            model.sleep_time_every_thread
+            model.sleep_time_every_thread,
+            /**节点数量*/
+            model.node_count,
+            /**运行节点*/
+            model.run_nodes
         };
-        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,first_filter_error_script,nodes,run_threads_count,http_begin_script,http_end_script,check_stop_script,sleep_time_every_thread)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,first_filter_error_script,run_threads_count,http_begin_script,http_end_script,check_stop_script,sleep_time_every_thread,node_count,run_nodes)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -82,8 +84,6 @@ public class tb_task_base_dal {
             model.filter_script,
            /**第一次执行过滤错误脚本*/
             model.first_filter_error_script,
-           /**执行节点*/
-            model.nodes,
            /**运行线程数*/
             model.run_threads_count,
            /**运行前脚本*/
@@ -94,9 +94,13 @@ public class tb_task_base_dal {
             model.check_stop_script,
            /**每个线程启动时的间隔时间*/
             model.sleep_time_every_thread,
+           /**节点数量*/
+            model.node_count,
+           /**运行节点*/
+            model.run_nodes,
             model.id
         };
-        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,first_filter_error_script=?,nodes=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=?,sleep_time_every_thread=? where id=?", par);
+        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,first_filter_error_script=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=?,sleep_time_every_thread=?,node_count=?,run_nodes=? where id=?", par);
         return rev == 1;
 
     }
@@ -182,10 +186,6 @@ public class tb_task_base_dal {
         if (dr.containsKey("first_filter_error_script")) {
             o.first_filter_error_script = ConvertUtils.convert(dr.get("first_filter_error_script"),String.class);
         }
-        /**执行节点*/
-        if (dr.containsKey("nodes")) {
-            o.nodes = ConvertUtils.convert(dr.get("nodes"),String.class);
-        }
         /**运行线程数*/
         if (dr.containsKey("run_threads_count")) {
             o.run_threads_count = ConvertUtils.convert(dr.get("run_threads_count"),Integer.class);
@@ -205,6 +205,14 @@ public class tb_task_base_dal {
         /**每个线程启动时的间隔时间*/
         if (dr.containsKey("sleep_time_every_thread")) {
             o.sleep_time_every_thread = ConvertUtils.convert(dr.get("sleep_time_every_thread"),Integer.class);
+        }
+        /**节点数量*/
+        if (dr.containsKey("node_count")) {
+            o.node_count = ConvertUtils.convert(dr.get("node_count"),Integer.class);
+        }
+        /**运行节点*/
+        if (dr.containsKey("run_nodes")) {
+            o.run_nodes = ConvertUtils.convert(dr.get("run_nodes"),String.class);
         }
         return o;
     }

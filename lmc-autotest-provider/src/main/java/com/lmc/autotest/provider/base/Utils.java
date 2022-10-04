@@ -72,7 +72,15 @@ public class Utils {
     }
 
     public String replaceChar(String str,String replace,String to){
-        return StringUtils.trim(str.replace(replace,to),'\n');
+        return StringUtils.trim(StringUtils.trim(str,'\r'),'\n').replace(replace,to);
+    }
+
+    public String titleContent(String title,String content){
+        if(StringUtils.isEmpty(content)){
+            return "";
+        }else {
+            return "<i class='title'>"+title+"</i>:"+content;
+        }
     }
 
     public double errorPer(double throughput,double error){

@@ -1,6 +1,11 @@
 ﻿<#import "../_layout.ftl" as layout>
 ${Html.s("pagetitle","任务列表")}
 <@layout._layout>
+    <style>
+        .title{
+            color: #8b4902;
+        }
+    </style>
 <div class="head">
     <div class="title">
     ${pagetitle}
@@ -44,7 +49,10 @@ ${Html.s("pagetitle","任务列表")}
             <td>${Utils.printRunState(item.run_heart_time)}</td>
             <td>${item.create_user}<br/>${Html.p(item.create_time)}</td>
             <td>${item.update_user}<br/>${Html.p(item.update_time)}</td>
-            <td>${Utils.replaceChar(item.exec_result,"\n","<br/>")!}</td>
+            <td style="text-align: left">
+                <p>${Utils.titleContent("分配节点",item.run_nodes)!}</p>
+                <p>${Utils.titleContent("执行结果",Utils.replaceChar(item.exec_result,"\n","<br/>"))!}</p>
+            </td>
             <td>
                 <a href="javascript:setRunState(${item.id},'${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}')" class="btn1"> ${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}</a>
                 <a href="/task/edit/?id=${item.id}" class="btn1" target="_blank">编辑</a>

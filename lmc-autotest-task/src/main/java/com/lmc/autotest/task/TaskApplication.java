@@ -17,6 +17,6 @@ import java.util.Date;
 public class TaskApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaskApplication.class, args);
-		new NodeProvider().create().heartbeat();
+		NodeManager.Default.init();
 	}
 }

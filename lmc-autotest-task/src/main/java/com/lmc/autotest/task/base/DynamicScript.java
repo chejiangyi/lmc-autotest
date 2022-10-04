@@ -3,13 +3,16 @@ package com.lmc.autotest.task.base;
 import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.LogUtils;
+import com.free.bsf.core.util.ThreadUtils;
 import com.free.bsf.core.util.TimeWatchUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.service.LogTool;
+import com.lmc.autotest.task.base.provider.AutoTestProvider;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import lombok.val;
+import lombok.var;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.script.*;
@@ -49,12 +52,10 @@ public class DynamicScript {
 
 
     public static void main(String[] args) {
-        val o = run("111","return 1;",null);
-        val form = (LinkedHashMap)JsonUtils.deserialize("{a:1,b:'c',jsondata:[{key:'bbbb',title:'文本2',value:'o',type:'aaaa'}]}", LinkedHashMap.class);
-        TimeWatchUtils.print(true,"耗时",()->{
-            for(int i=0;i<10000;i++){
-                val form2 = run("测试性能","var i=0;api.setDesign('文本2','11');api.log(api.getDesign('文本2'));[1,2,3].map(function(x){return x * x;});",form);
-            }
-        });
+        for(int i=0;i<10;i++) {
+            TimeWatchUtils.print(true, "睡眠", () -> {
+                ThreadUtils.sleep(2000);
+            });
+        }
     }
 }

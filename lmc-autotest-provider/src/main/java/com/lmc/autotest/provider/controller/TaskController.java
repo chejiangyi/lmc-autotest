@@ -16,6 +16,7 @@ import com.lmc.autotest.dao.tb_node_dal;
 import com.lmc.autotest.dao.tb_task_dal;
 import com.lmc.autotest.provider.SpringMvcController;
 import com.lmc.autotest.provider.pager.Pager1;
+import com.lmc.autotest.service.TaskService;
 import com.netflix.discovery.util.StringUtil;
 import com.xxl.job.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +64,8 @@ public class TaskController extends SpringMvcController {
     public ModelAndView save(Integer id, String task,
                              String filter_store, String filter_script, Integer sleep_time_every_thread,
                              String first_filter_error_script, String nodes, Integer run_threads_count,
-                             String http_begin_script, String http_end_script, String check_stop_script
+                             String http_begin_script, String http_end_script, String check_stop_script,
+                             Integer node_count
     ) {
         return jsonVisit((m) -> {
             DbHelper.call(Config.mysqlDataSource(), c -> {
@@ -83,7 +85,7 @@ public class TaskController extends SpringMvcController {
                 model.filter_script = filter_script;
                 model.filter_store = filter_store;
                 model.http_end_script = http_end_script;
-                model.nodes = nodes;
+                model.node_count = node_count;
                 model.run_threads_count = run_threads_count;
                 model.update_time = new Date();
                 model.task = task;
@@ -103,48 +105,7 @@ public class TaskController extends SpringMvcController {
     public ModelAndView setRunState(Integer id,String todo) {
         return jsonVisit((m) -> {
             DbHelper.call(Config.mysqlDataSource(), c -> {
-                tb_task_model model = new tb_task_dal().get(c, id);
-                String api = "";
-                if (AutoTestTool.isOnLine(model.run_heart_time)&&"停止".equals(todo)) {
-                    api = "closetask";
-                }
-                if(!AutoTestTool.isOnLine(model.run_heart_time)&&"运行".equals(todo)){
-                    api = "opentask";
-                }
-                if("".equals(api)){
-                    throw new BsfException("重复操作");
-                }
-                val nodeNames = Lists.newArrayList(StringUtils.trim(model.nodes, ',').split(","));
-                val nodes = new tb_node_dal().getOnlineNodes(c);
-                val lock = new Object();
-                StringBuilder errors = new StringBuilder();
-                val api2 = api;
-                new tb_task_dal().addResult(c, model.id,"");
-                val tranId=  DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");
-                Ref<Boolean> hasOpen = new Ref<>(false);
-                ThreadUtils.parallelFor("并行操作节点开关", nodes.size(), nodes, (n) -> {
-                    if (!nodeNames.contains(n.node))
-                        return;
-                    val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.port + "/" + api2 + "/",
-                            HttpClient.Params.custom().add("taskId", id)
-                                    .add("tranId", tranId).build());
-                    ApiResponseEntity es = JsonUtils.deserialize(rs, ApiResponseEntity.class);
-                    synchronized (lock) {
-                        if (es.getCode() < 0 ) {
-                            errors.append(n.node + ":" + StringUtils.nullToEmpty(es.getMessage() )+ "\r\n");
-                        } else {
-                            hasOpen.setData(true);
-                            //errors.append(n.node + ":" +"执行成功！" + "\r\n");
-                        }
-                    }
-                });
-
-                if (!"".equals(errors.toString())) {
-                    throw new BsfException("执行失败："+errors.toString());
-                }
-                if(!hasOpen.getData()){
-                    throw new BsfException("任务未分发到节点");
-                }
+                new TaskService().operatorTask(c,id,todo);
             });
             return true;
         });

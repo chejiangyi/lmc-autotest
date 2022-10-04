@@ -11,7 +11,7 @@ import lombok.*;
  * tb_task 表自动实体映射,不要手工修改
  * 
  * @author 车江毅
- * @since 2022-10-01 17:12:22
+ * @since 2022-10-04 07:18:01
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -61,10 +61,6 @@ public class tb_task_model implements Serializable {
     */    
     public String first_filter_error_script;
     /**
-    * 执行节点
-    */    
-    public String nodes;
-    /**
     * 运行线程数
     */    
     public Integer run_threads_count;
@@ -84,4 +80,12 @@ public class tb_task_model implements Serializable {
     * 每个线程启动时的间隔时间
     */    
     public Integer sleep_time_every_thread;
+    /**
+    * 节点数量
+    */    
+    public Integer node_count;
+    /**
+    * 运行节点
+    */    
+    public String run_nodes;
 }

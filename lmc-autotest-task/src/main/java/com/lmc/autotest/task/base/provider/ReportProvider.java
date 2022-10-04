@@ -39,7 +39,7 @@ public class ReportProvider {
                 //lock tb_task data
                 new tb_task_dal().runHeartBeat(c,task_model.id);
                 var nodes = new tb_node_dal().getOnlineNodes(c);
-                var nodeNames = Arrays.asList(task_model.nodes.split(","));
+                var nodeNames = Arrays.asList(task_model.run_nodes.split(","));
                 nodes=nodes.stream().filter(n->nodeNames.contains(n.node)).collect(Collectors.toList());
                 val nodeInfos = new ArrayList<NodeInfo>();
                 for(val n:nodes){
@@ -63,7 +63,7 @@ public class ReportProvider {
                     model.setTask_id(task_model.id);
                     model.setFilter_table(FileUtils.getSampleFile(task_model.id,tranId));
                     model.setTask_name(task_model.task);
-                    model.setNodes(task_model.nodes);
+                    model.setNodes(task_model.run_nodes);
                     model.setNodes_info(JsonUtils.serialize(nodeInfos));
                     model.setTran_id(tranId);
                     model.setFilter_table_error_lines(0);

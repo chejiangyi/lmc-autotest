@@ -9,6 +9,7 @@ import com.lmc.autotest.dao.model.auto.tb_node_model;
 import lombok.val;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class tb_node_dal extends tb_node_base_dal {
@@ -31,6 +32,37 @@ public class tb_node_dal extends tb_node_base_dal {
             }
         }
         return nodes;
+    }
+
+    public List<tb_node_model> getOnlineNotUsedNodes(DbConn conn){
+        List<tb_node_model> nodes = new ArrayList<>();
+        for(val o:this.list(conn)){
+            if(AutoTestTool.isOnLine(o.heatbeat_time)&&o.used==false){
+                nodes.add(o);
+            }
+        }
+        return nodes;
+    }
+
+    public List<tb_node_model> getClearNodes(DbConn conn){
+        List<tb_node_model> nodes = new ArrayList<>();
+        for(val o:this.list(conn)){
+            //超过10个心跳周期,节点被清理
+            if((new Date().getTime() - o.heatbeat_time.getTime())>10*Config.heartbeat()*1000){
+                nodes.add(o);
+            }
+        }
+        return nodes;
+    }
+
+    public boolean updateUsed(DbConn conn,int id,boolean used){
+        val par = new Object[]{
+                /**节点状态*/
+                used,
+                id
+        };
+        int rev = conn.executeSql("update tb_node set used=? where id=?", par);
+        return rev == 1;
     }
 
 }

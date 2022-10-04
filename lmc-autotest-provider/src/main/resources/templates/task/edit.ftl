@@ -23,12 +23,8 @@ ${Html.s("pagetitle","编辑任务")}
                 </select>
             </li>
             <li>
-                <label>执行节点</label>
-                <select id="nodes" name="nodes" multiple style="height: 100px">
-                    <#list Utils.getOnlineNodes() as item>
-                        <option value="${item}" ${Html.w(Utils.isContainNode(model.nodes,item),"selected='selected'","")}>${item}</option>
-                    </#list>
-                </select>
+                <label>执行节点数量</label>
+                <input class="stext" type="text" id="node_count" name="node_count" value="${model.node_count!}" />
             </li>
             <li>
                 <label>节点并行线程数量</label>
@@ -79,11 +75,6 @@ ${Html.s("pagetitle","编辑任务")}
 
         function save()
         {
-            console.log($("#nodes").val());
-            if($("#nodes").val().length==0){
-                alert("请选择压测节点!")
-                return;
-            }
             $.post("/task/save",
                 {
                     "id": ${id!"0"},
@@ -92,7 +83,7 @@ ${Html.s("pagetitle","编辑任务")}
                     "filter_script": $("#filter_script").val(),
                     "filter_table":$("#filter_table").val(),
                     "first_filter_error_script":$("#first_filter_error_script").val(),
-                    "nodes":$("#nodes").val().join(','),
+                    "node_count":$("#node_count").val(),
                     "corn":$("#corn").val(),
                     "run_threads_count":$("#run_threads_count").val(),
                     "http_begin_script":$("#http_begin_script").val(),

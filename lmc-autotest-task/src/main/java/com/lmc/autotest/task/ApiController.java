@@ -24,7 +24,7 @@ public class ApiController  {
 			{
 				tranId= DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");;
 			}
-			AutoTestManager.Default.open(taskId,tranId);
+			NodeManager.Default.open(taskId,tranId);
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
@@ -34,7 +34,7 @@ public class ApiController  {
 	@PostMapping("/closetask/")
 	public ApiResponseEntity<Integer> closeTask(Integer taskId) {
 		try {
-			AutoTestManager.Default.close(taskId,"用户执行关闭",false);
+			NodeManager.Default.close(taskId,"用户执行关闭",false);
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));

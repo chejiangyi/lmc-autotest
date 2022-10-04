@@ -544,6 +544,14 @@ ${Html.s("pagetitle","压测报告")}
             if(key=='create_time'){
                 return showDate(v2);
             }
+            if(key.indexOf('_per')>-1){
+                var v3 = (v2*100).toFixed(2);
+                var pv3="≈"+v3+"%";
+                if(key.indexOf('error')>-1&&v3>0){
+                    return "<b class='redS'>"+pv3+"</b>";
+                }
+                return pv3;
+            }
             if(String(value).indexOf(".")>-1){
                 try {
                     v2 = value.toFixed(2);
@@ -555,9 +563,7 @@ ${Html.s("pagetitle","压测报告")}
             if(key=='visit_time'&&v2>300){
                 return "<b class='redS'>"+v2+"</b>";
             }
-            if(key.indexOf('_per')>-1){
-                return "≈"+(v2*100).toFixed(2)+"%";
-            }
+
             return v2;
         }
 
@@ -565,10 +571,11 @@ ${Html.s("pagetitle","压测报告")}
             var myDate= new Date(Date.parse(date.replace(/-/g, "/")));
             console.log("时间",date,myDate);
             var myTime = "";
-            if(new Date().getTime()-myDate.getTime()<10*1000){
-                myTime= "10秒内";
+            var timespan = new Date().getTime()-myDate.getTime();
+            if(timespan<15*1000){
+                myTime= (timespan/1000).toFixed(0)+"秒内";
             }
-            else if(new Date().getTime()-myDate.getTime()<60*1000){
+            else if(timespan<60*1000){
                 myTime= "1分钟内";
             }else {
                 myTime = myDate.format("hh:mm:ss");
