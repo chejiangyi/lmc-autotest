@@ -1,13 +1,10 @@
 package com.lmc.autotest.provider.controller;
 
-import com.alibaba.fastjson.TypeReference;
 import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.http.HttpClient;
 import com.free.bsf.core.util.*;
-import com.free.bsf.message.channel.QiYeWeiXinProvider;
-import com.google.common.collect.Lists;
 import com.lmc.autotest.core.ApiResponseEntity;
 import com.lmc.autotest.core.AutoTestTool;
 import com.lmc.autotest.core.Config;
@@ -17,8 +14,6 @@ import com.lmc.autotest.dao.tb_task_dal;
 import com.lmc.autotest.provider.SpringMvcController;
 import com.lmc.autotest.provider.pager.Pager1;
 import com.lmc.autotest.service.TaskService;
-import com.netflix.discovery.util.StringUtil;
-import com.xxl.job.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Controller;

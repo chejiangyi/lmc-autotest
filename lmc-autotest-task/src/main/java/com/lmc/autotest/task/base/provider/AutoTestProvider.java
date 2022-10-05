@@ -16,13 +16,8 @@ import com.lmc.autotest.dao.tb_task_dal;
 import com.lmc.autotest.task.NodeManager;
 import com.lmc.autotest.task.base.*;
 import com.lmc.autotest.task.base.FileUtils;
-import com.xxl.job.core.util.DateUtil;
 import lombok.Getter;
 import lombok.val;
-import lombok.var;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
-import sun.swing.StringUIClientPropertyKey;
 
 import java.io.File;
 import java.util.*;

@@ -3,12 +3,12 @@ package com.lmc.autotest.dao;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbConn;
 import com.free.bsf.core.util.ConvertUtils;
+import com.free.bsf.core.util.DateUtils;
 import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.dao.dal.auto.tb_report_base_dal;
 import com.lmc.autotest.dao.model.auto.tb_log_model;
 import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
-import com.xxl.job.core.util.DateUtil;
 import lombok.val;
 
 import java.util.ArrayList;
@@ -67,11 +67,11 @@ public class tb_report_dal extends tb_report_base_dal {
             sb.append(" and task_name like concat('%', ?, '%')");
         }
         if(!StringUtils.isEmpty(create_time_from)){
-            par.add(DateUtil.parse(create_time_from,"yyyy-MM-dd HH:mm:ss"));
+            par.add(DateUtils.strToDate(create_time_from,"yyyy-MM-dd HH:mm:ss"));
             sb.append(" and create_time_from > ?");
         }
         if(!StringUtils.isEmpty(create_time_to)){
-            par.add(DateUtil.parse(create_time_to,"yyyy-MM-dd HH:mm:ss"));
+            par.add(DateUtils.strToDate(create_time_to,"yyyy-MM-dd HH:mm:ss"));
             sb.append(" and create_time_to < ?");
         }
 

@@ -12,7 +12,6 @@ import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
-import com.netflix.discovery.converters.Auto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

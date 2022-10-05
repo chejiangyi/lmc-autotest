@@ -1,7 +1,7 @@
 package com.lmc.autotest.provider.pager;
 
+import com.free.bsf.core.util.StringUtils;
 import com.free.bsf.core.util.WebUtils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 分页控件1

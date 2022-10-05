@@ -9,11 +9,9 @@ import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.service.LogTool;
 import com.lmc.autotest.task.base.provider.AutoTestProvider;
-import com.xxl.job.core.util.DateUtil;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import lombok.val;
 import lombok.var;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -109,7 +107,7 @@ public class ApiScript {
 
     //当前时间格式化
     public String nowFormat(String format){
-        return DateUtil.format(new Date(),format);
+        return org.apache.http.client.utils.DateUtils.formatDate(new Date(),format);
     }
 
     //http请求

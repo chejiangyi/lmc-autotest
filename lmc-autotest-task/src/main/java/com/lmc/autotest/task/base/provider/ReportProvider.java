@@ -15,7 +15,6 @@ import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.task.base.FileUtils;
 import com.lmc.autotest.task.base.HttpUtils;
 import com.lmc.autotest.task.base.IOUtils;
-import com.xxl.job.core.util.DateUtil;
 import lombok.Getter;
 import lombok.val;
 import lombok.var;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 

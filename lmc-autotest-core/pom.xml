@@ -29,12 +29,23 @@
 		</dependency>
 		<dependency>
 			<groupId>com.free.bsf</groupId>
-			<artifactId>free-bsf-starter</artifactId>
+			<artifactId>free-bsf-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-<!--			<version>2.2.1</version>-->
+			<groupId>com.free.bsf</groupId>
+			<artifactId>free-bsf-autotest</artifactId>
+		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.quartz-scheduler</groupId>-->
+<!--			<artifactId>quartz</artifactId>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
 		</dependency>
 	</dependencies>
 

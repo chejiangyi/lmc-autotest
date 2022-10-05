@@ -4,20 +4,17 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbConn;
 import com.free.bsf.core.http.HttpClient;
-import com.free.bsf.core.util.HttpClientUtils;
-import com.free.bsf.core.util.JsonUtils;
-import com.free.bsf.core.util.StringUtils;
-import com.free.bsf.core.util.ThreadUtils;
-import com.google.common.collect.Lists;
+import com.free.bsf.core.util.*;
 import com.lmc.autotest.core.ApiResponseEntity;
 import com.lmc.autotest.core.AutoTestTool;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.dao.tb_node_dal;
 import com.lmc.autotest.dao.tb_task_dal;
-import com.xxl.job.core.util.DateUtil;
 import lombok.val;
 import lombok.var;
+import org.apache.commons.compress.utils.Lists;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -31,7 +28,7 @@ public class TaskService {
             String api = "";
             if (AutoTestTool.isOnLine(model.run_heart_time) && "停止".equals(todo)) {
                 api = "closetask";
-                val nodeNames = Lists.newArrayList(StringUtils.trim(model.run_nodes, ',').split(","));
+                val nodeNames = Arrays.asList(StringUtils.trim(model.run_nodes, ',').split(","));
                 nodes = nodes.stream().filter(n->nodeNames.contains(n.node)).collect(Collectors.toList());
             }
             if (!AutoTestTool.isOnLine(model.run_heart_time) && "运行".equals(todo)) {
@@ -54,7 +51,7 @@ public class TaskService {
             StringBuilder errors = new StringBuilder();
             val api2 = api;
             new tb_task_dal().addResult(c, model.id, "");
-            val tranId = DateUtil.format(new Date(), "yyyy_MM_dd_HH_mm_ss");
+            val tranId = DateUtils.format(new Date(), "yyyy_MM_dd_HH_mm_ss");
             ThreadUtils.parallelFor("并行操作节点开关", nodes.size(), nodes, (n) -> {
                 val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.port + "/" + api2 + "/",
                         HttpClient.Params.custom().add("taskId", id)

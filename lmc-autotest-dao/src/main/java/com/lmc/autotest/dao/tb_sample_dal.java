@@ -7,7 +7,6 @@ import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.dao.dal.auto.tb_sample_example_base_dal;
 import com.lmc.autotest.dao.model.auto.tb_log_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
-import com.xxl.job.core.util.DateUtil;
 import lombok.val;
 
 import java.util.ArrayList;

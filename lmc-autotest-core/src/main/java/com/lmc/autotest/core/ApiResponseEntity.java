@@ -1,6 +1,6 @@
 package com.lmc.autotest.core;
 
-import com.alibaba.csp.sentinel.util.StringUtil;
+import com.free.bsf.core.util.StringUtils;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -69,7 +69,7 @@ public class ApiResponseEntity<T> {
      * @return ApiResponseEntity
      */
     public static<T> ApiResponseEntity<T> success(String msg, T data) {
-        if (StringUtil.isEmpty(msg)) {
+        if (StringUtils.isEmpty(msg)) {
             msg = ResponseCode.SUCCESS.getMsg();
         }
         return new ApiResponseEntity<T>(ResponseCode.SUCCESS.getCode(), msg, data);
@@ -98,7 +98,7 @@ public class ApiResponseEntity<T> {
      * @return ApiResponseEntity
      */
     public static<T> ApiResponseEntity<T> fail(int code, String msg) {
-        if (StringUtil.isEmpty(msg)) {
+        if (StringUtils.isEmpty(msg)) {
             msg = ResponseCode.FAIL.getMsg();
         }
         return new ApiResponseEntity<T>(code, msg, null);
@@ -111,7 +111,7 @@ public class ApiResponseEntity<T> {
      * @return ApiResponseEntity
      */
     public static<T> ApiResponseEntity<T> fail(String msg, T data) {
-        if (StringUtil.isEmpty(msg)) {
+        if (StringUtils.isEmpty(msg)) {
             msg = ResponseCode.FAIL.getMsg();
         }
         return new ApiResponseEntity(ResponseCode.FAIL.getCode(), msg, data);

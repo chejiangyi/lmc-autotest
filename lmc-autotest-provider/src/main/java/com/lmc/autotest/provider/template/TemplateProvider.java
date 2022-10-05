@@ -1,7 +1,7 @@
 package com.lmc.autotest.provider.template;
 
+import com.free.bsf.core.util.StringUtils;
 import com.free.bsf.core.util.WebUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +52,7 @@ public class TemplateProvider {
         if(key.contains("."))
         {
             Object r =null;
-            String[] path = StringUtils.split(key,'.');
+            String[] path = key.split(".");
             if(path != null && path.length>0) {
                 for (int i = 0; i < path.length; i++) {
                     String p = path[i];
@@ -102,7 +102,7 @@ public class TemplateProvider {
             return str;
         if (str.length() <= maxlen)
             return str;
-        return StringUtils.substring(str,0,maxlen)+"...";
+        return StringUtils.subString2(str,maxlen)+"...";
     }
 
     /**

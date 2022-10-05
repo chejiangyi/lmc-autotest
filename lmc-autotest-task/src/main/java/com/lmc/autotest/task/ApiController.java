@@ -2,8 +2,8 @@ package com.lmc.autotest.task;
 import com.free.bsf.core.util.ExceptionUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
 import com.lmc.autotest.task.base.ApiScript;
-import com.xxl.job.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +22,7 @@ public class ApiController  {
 		try {
 			if(tranId==null)
 			{
-				tranId= DateUtil.format(new Date(),"yyyy_MM_dd_HH_mm_ss");;
+				tranId= DateUtils.formatDate(new Date(),"yyyy_MM_dd_HH_mm_ss");;
 			}
 			NodeManager.Default.open(taskId,tranId);
 			return ApiResponseEntity.success(1);

@@ -12,7 +12,6 @@ import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.provider.SpringMvcController;
 import com.lmc.autotest.provider.base.Utils;
 import com.lmc.autotest.provider.pager.Pager1;
-import com.xxl.job.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;

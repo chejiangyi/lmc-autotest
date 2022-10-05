@@ -1,7 +1,7 @@
 package com.lmc.autotest.provider;
 
-import com.ctrip.framework.apollo.util.ExceptionUtil;
 import com.free.bsf.core.util.ContextUtils;
+import com.free.bsf.core.util.ExceptionUtils;
 import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.TimeWatchUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
@@ -72,7 +72,7 @@ public class SpringMvcController {
                 //默认错误拦截处理
                 response.setStatus(500);
                 modelAndView = new ModelAndView("forward:/systemerror/index/");
-                request.setAttribute("error", ExceptionUtil.getDetailMessage(exp));
+                request.setAttribute("error", ExceptionUtils.getDetailMessage(exp));
                 log.error("页面打开出错:"+request.getRequestURI(),exp);
             }
             return  modelAndView;
@@ -116,7 +116,7 @@ public class SpringMvcController {
 //                if(exp instanceof FlowException) {
 //                    jsondata = ApiResponseEntity.fail(-1,((FlowException)exp).getDetailMessage());
 //                }else{
-                    jsondata =  new ApiResponseEntity(-1,ExceptionUtil.getDetailMessage(exp),null);
+                    jsondata =  new ApiResponseEntity(-1,ExceptionUtils.getDetailMessage(exp),null);
                     //ApiResponseEntity.fail(-1, ExceptionUtil.getDetailMessage(exp));
                 //}
                 String json = JsonUtils.serialize(jsondata);

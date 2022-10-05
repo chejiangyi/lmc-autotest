@@ -6,7 +6,6 @@ import com.free.bsf.core.util.ConvertUtils;
 import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.dao.dal.auto.tb_task_base_dal;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
-import com.xxl.job.core.util.DateUtil;
 import lombok.val;
 
 import java.util.ArrayList;

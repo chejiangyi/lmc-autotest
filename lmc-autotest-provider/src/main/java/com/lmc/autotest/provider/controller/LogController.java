@@ -8,7 +8,6 @@ import com.free.bsf.core.util.HttpClientUtils;
 import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.StringUtils;
 import com.free.bsf.core.util.ThreadUtils;
-import com.google.common.collect.Lists;
 import com.lmc.autotest.core.ApiResponseEntity;
 import com.lmc.autotest.core.AutoTestTool;
 import com.lmc.autotest.core.Config;
