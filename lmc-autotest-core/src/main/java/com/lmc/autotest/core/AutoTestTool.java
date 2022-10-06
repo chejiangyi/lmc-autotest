@@ -4,6 +4,12 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.util.DateUtils;
 import lombok.val;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +24,51 @@ public class AutoTestTool {
             return true;
         }else
             return false;
+    }
+
+    public static void downLoad(HttpServletResponse response, File file,String fileName){
+        if(!file.exists()){
+            throw new BsfException("文件"+file.getName()+"不存在");
+        }
+        try {
+            // 读到流中
+            try(InputStream inStream = new FileInputStream(file.getAbsolutePath())) {
+                String fileName2 = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+                // 设置输出的格式
+                response.reset();
+                response.setContentType("bin");
+                response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName2 + "\"");
+                // 循环取出流中的数据
+                byte[] b = new byte[100];
+                int len;
+                while ((len = inStream.read(b)) > 0)
+                {    response.getOutputStream().write(b, 0, len);}
+             }
+        } catch (IOException e) {
+            throw new BsfException("文件下载失败");
+        }
+    }
+    public static void upload(HttpServletResponse response, File file,String fileName){
+        if(!file.exists()){
+            throw new BsfException("文件"+file.getName()+"不存在");
+        }
+        try {
+            // 读到流中
+            try(InputStream inStream = new FileInputStream(file.getAbsolutePath())) {
+                String fileName2 = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+                // 设置输出的格式
+                response.reset();
+                response.setContentType("bin");
+                response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName2 + "\"");
+                // 循环取出流中的数据
+                byte[] b = new byte[100];
+                int len;
+                while ((len = inStream.read(b)) > 0)
+                {    response.getOutputStream().write(b, 0, len);}
+            }
+        } catch (IOException e) {
+            throw new BsfException("文件下载失败");
+        }
     }
 
 //    public static Date cornNextTime(Date date, String cron)  {

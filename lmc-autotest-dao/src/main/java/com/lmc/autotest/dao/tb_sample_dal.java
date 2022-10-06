@@ -6,6 +6,7 @@ import com.free.bsf.core.util.ConvertUtils;
 import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.dao.dal.auto.tb_sample_example_base_dal;
 import com.lmc.autotest.dao.model.auto.tb_log_model;
+import com.lmc.autotest.dao.model.auto.tb_report_url_example_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
 import lombok.val;
 
@@ -30,7 +31,9 @@ public class tb_sample_dal extends tb_sample_example_base_dal {
                 rs.add(createModel(dr));
             }
         }
-        totalSize.setData(ConvertUtils.convert(db.executeScalar(countSql,par.toArray()),int.class));
+        if(totalSize!=null) {
+            totalSize.setData(ConvertUtils.convert(db.executeScalar(countSql, par.toArray()), int.class));
+        }
         return rs;
     }
 
@@ -50,17 +53,60 @@ public class tb_sample_dal extends tb_sample_example_base_dal {
     }
 
     public String copyNewTable(DbConn conn, String name){
-        conn.executeSql("CREATE TABLE tb_sample_"+name+" LIKE tb_sample_example",new Object[]{});
-        return "tb_sample_"+name;
+        conn.executeSql("CREATE TABLE "+name+" LIKE tb_sample_example",new Object[]{});
+        return name;
     }
 
     public boolean tableIsExist(DbConn db, String name){
         String sql = "SHOW TABLES like ? ";
-        val ds = db.executeList(sql, new Object[]{"tb_sample_"+name});
+        val ds = db.executeList(sql, new Object[]{name});
         if (ds != null && ds.size() > 0)
         {
            return true;
         }
         return false;
+    }
+
+    public boolean batch(DbConn conn,String table, List<tb_sample_example_model> models){
+        val pars = new ArrayList<Object>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("insert into "+table+"(url,app_name,header,body,create_time,fromip,traceid,trace_top,method,operator_type) values");
+        for(val model: models){
+            val par = new Object[]{
+                    /***/
+                    model.url,
+                    /***/
+                    model.app_name,
+                    /***/
+                    model.header,
+                    /***/
+                    model.body,
+                    /***/
+                    model.create_time,
+                    /***/
+                    model.fromip,
+                    /***/
+                    model.traceid,
+                    /**是否是顶部trace*/
+                    model.trace_top,
+                    /***/
+                    model.method,
+                    /**枚举:未知,操作,仅查询*/
+                    model.operator_type
+            };
+            for(val o:par) {
+                pars.add(o);
+            }
+            sql.append("(?,?,?,?,?,?,?,?,?,?),");
+        }
+        int rev = conn.executeSql(StringUtils.trimRight(sql.toString(),',')+";", pars.toArray());
+        return rev == 1;
+    }
+
+    public boolean clear(DbConn conn,String table) {
+        val par = new Object[]{};
+        String Sql = "truncate table "+table;
+        int rev = conn.executeSql(Sql, par);
+        return rev == 1;
     }
 }

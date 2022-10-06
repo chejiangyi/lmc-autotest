@@ -17,9 +17,17 @@ ${Html.s("pagetitle","采样查询")}
             </select>
             <label>Where SQl</label>
             <input type="text" class="text longtext" style="width: 450px" name="sql" value="${sql!}" />${Html.help("普通的sql查询模式,如: url like '%192.168%' and operator_type!='未知'")}
-            <input type="submit" class="btn1" value="搜索" accesskey="S" />
+            <input type="hidden" id="download" name="download" value="0"/>
+            <input type="submit" class="btn1" value="搜索" accesskey="S" onclick="$('#download').val('0');return true;" />
+            <input type="submit" class="btn1" value="下载" accesskey="D" onclick="$('#download').val('1');return true;" />${Html.help("一次最多能下载2万条样本")}
+            <input type="button" class="btn1" value="仅保留最近2周样本" accesskey="D" onclick="clearSample()" />${Html.help("清理过多样本信息,仅保留最近2周自动录制的样本")}
         </div>
     </form>
+    <div>
+        <input type="file" name="file" id="file" />
+        <input type="submit" class="btn1" id="btnUpload" value="上传到我的样本" accesskey="U" />${Html.help("上传样本到我的(当前用户名)样本表中,用户可通过自定义的样本进行压测!")}
+        <input type="button" class="btn1" value="清空我的样本" accesskey="D" onclick="clearMy()" />${Html.help("清空我的样本文件,如果要指定条件清除,请到数据库中手工清理!")}
+    </div>
     <div class="tab_cont">
         <div class="List">
             <@_list/>
@@ -63,5 +71,65 @@ ${Html.s("pagetitle","采样查询")}
 </div>
 </#macro>
 <script type="text/javascript">
+    $('#btnUpload').click(function(){
+        var files = $('#file')[0].files[0];//单个
+        var data = new FormData();
+        data.append('file', files);
 
+        $.ajax({
+            url: '/sample/import',
+            type: 'POST',
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success:function(data){
+                if (data.code < 0) {
+                    alert(data.message);
+                } else {
+                    alert('上传成功');
+                }
+            }
+        });
+    });
+    function clearSample() {
+        if(!confirm("请确认清理2周自动录制的样本,删除后不可恢复？"))
+        {
+            return;
+        }
+        $.ajax({
+            url: '/sample/clearsample/',
+            type: "post",
+            data: {
+            },
+            success: function (data) {
+                if (data.code > 0) {
+                    window.location.reload();
+                }
+                else {
+                    alert(data.message);
+                }
+            }
+        });
+    }
+    function clearMy() {
+        if(!confirm("请确认清空我的样本,删除后不可恢复？"))
+        {
+            return;
+        }
+        $.ajax({
+            url: '/sample/clearmy/',
+            type: "post",
+            data: {
+            },
+            success: function (data) {
+                if (data.code > 0) {
+                    window.location.reload();
+                }
+                else {
+                    alert(data.message);
+                }
+            }
+        });
+    }
 </script>

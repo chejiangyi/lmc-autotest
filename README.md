@@ -24,8 +24,8 @@ mvn install
 ## 设计文档
 * [全链路压测原型](/doc/全链路压测.rp)
 * [全链路压测sql](/doc/install.sql)
-* 全链路压测设计图
-![Image text](/doc/全链路压测设计图.jpg)
+* [全链路压测设计图](/README-Design.md)
+
 
 ## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)

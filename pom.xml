@@ -41,6 +41,11 @@
 				<artifactId>free-bsf-autotest</artifactId>
 				<version>${bsf.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>easyexcel</artifactId>
+				<version>3.1.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 </project>
