@@ -8,6 +8,20 @@ ${Html.s("pagetitle","节点列表")}
         .noused{
             color: blue;
         }
+        .cpu{
+            color: #6f42c1;
+        }
+        .memory{
+            color: #8b4902;
+        }
+        .thread{
+            color: #08575B;
+        }
+        table b{
+            font-family: inherit;
+             font-weight: bold;
+            margin:  0 1px;
+        }
     </style>
 <div class="head">
     <div class="title">
@@ -37,8 +51,8 @@ ${Html.s("pagetitle","节点列表")}
             <td>${item.id}</td>
             <td>${item.node!}</td>
             <td>${Utils.printRunState(item.heatbeat_time)}:${Html.w(item.used,"<i class='used'>使用中</i>","<i class='noused'>空闲</i>")!}${Html.help("运行状态/使用状态;运行状态表示节点是否健康运行,使用状态表示节点是否被任务占用")}</td>
-            <td style="text-align: left">cpu:${Html.p(item.cpu*100)}%/${Html.p(item.local_cpu)}核${Html.help("cpu占用率%/cpu核心数")}<br/>内存:${Html.p(item.memory)!}M/${Html.p(item.local_memory)}M${Html.help("节点占用内存大小(M)/系统内存大小(M)")}<br/>
-                活动线程:${Html.p(item.threads)!}${Html.help("压测时压测任务的正在进行的活跃线程数")}<br/>IP(端口):${Html.p(item.ip)!}(${Html.p(item.port)!})${Html.help("节点所在服务器的ip(节点打开的端口)")}<br/>
+            <td style="text-align: left">cpu:<b class="cpu">${Html.p(item.cpu*100)}</b>%/${Html.p(item.local_cpu)}核${Html.help("cpu占用率%/cpu核心数")}<br/>内存:<b class="memory">${Html.p(item.memory)!}</b>M/${Html.p(item.local_memory)}M${Html.help("节点占用内存大小(M)/系统内存大小(M);节点占用内存大小=JvmTotal内存-JvmFree内存;")}<br/>
+                活动线程:<b class="thread">${Html.p(item.threads)!}</b>${Html.help("压测时压测任务的正在进行的活跃线程数")}<br/>IP(端口):${Html.p(item.ip)!}(${Html.p(item.port)!})${Html.help("节点所在服务器的ip(节点打开的端口)")}<br/>
             </td>
             <td>
                 <a href="/log/index/?node=${item.node}" class="del">日志</a>

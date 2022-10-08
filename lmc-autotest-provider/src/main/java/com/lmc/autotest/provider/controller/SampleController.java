@@ -113,6 +113,9 @@ public class SampleController extends SpringMvcController {
                             dal.copyNewTable(c, table);
                         }
                         EasyExcel.read(file2.getAbsolutePath(), tb_sample_example_model.class, new PageReadListener<tb_sample_example_model>(dataList -> {
+                            for(val d:dataList) {
+                                AutoTestTool.setObjectNullToEmpty(d);
+                            }
                             dal.batch(c, table, dataList);
                         })).sheet().doRead();
                     });

@@ -2,6 +2,7 @@ package com.lmc.autotest.task;
 import com.free.bsf.core.util.ExceptionUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
 import com.lmc.autotest.task.base.ApiScript;
+import com.lmc.autotest.task.base.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.DateUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,10 +42,23 @@ public class ApiController  {
 		}
 	}
 
-	@PostMapping("/test/")
+	@RequestMapping("/test/")
 	public ApiResponseEntity<Integer> test() {
 		try {
 			return ApiResponseEntity.success(1);
+		}catch (Exception e){
+			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
+		}
+	}
+
+	@RequestMapping("/health/")
+	public ApiResponseEntity<String> health() {
+		try {
+			StringBuilder sb = new StringBuilder();
+			sb.append("\r\n最大内存:"+ IOUtils.maxMemory());
+			sb.append("\r\n空余内存:"+ IOUtils.freeMemory());
+			sb.append("\r\n使用内存:"+ IOUtils.totalMemory());
+			return ApiResponseEntity.success(sb.toString());
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
 		}

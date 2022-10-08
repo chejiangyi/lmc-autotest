@@ -1,5 +1,11 @@
 package com.lmc.autotest.task.base;
 
+import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
+import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
+import com.alibaba.druid.stat.TableStat;
 import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
@@ -15,6 +21,7 @@ import lombok.var;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.springframework.util.CollectionUtils;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -136,23 +143,53 @@ public class ApiScript {
         return HttpClientUtils.system().get(url);
     }
 
-    //执行sql
-    public Object querySql(String sql,Object...ps){
-        try{
-        val r = DbHelper.get(ContextUtils.getBean(DataSource.class,false),(c)->{
-//            c.getConn()
-            return c.executeList(sql,ps);
-        });
-        return  r;
-        }catch (Exception e){
-            val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
-            LogTool.error(ApiScript.class,getTaskId(),"bsf",msg,e);
-            throw new BsfException(msg);
+//    //执行sql
+//    public Object querySql(String sql,Object...ps){
+//        try{
+//        val r = DbHelper.get(ContextUtils.getBean(DataSource.class,false),(c)->{
+////            c.getConn()
+//            return c.executeList(sql,ps);
+//        });
+//        return  r;
+//        }catch (Exception e){
+//            val msg = "动态sql出错:"+sql+",参数:"+JsonUtils.serialize(ps);
+//            LogTool.error(ApiScript.class,getTaskId(),"bsf",msg,e);
+//            throw new BsfException(msg);
+//        }
+//    }
+
+    protected void checkSelectSql(String sql){
+        //SQLStatement sqlStatement = SQLUtils.parseSingleMysqlStatement(sql);
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, DbType.mysql);
+        if (CollectionUtils.isEmpty(stmtList)) {
+            throw new BsfException("未检测到sql");
+        }
+        val tableNames = new ArrayList<String>();
+        for (SQLStatement sqlStatement : stmtList) {
+            if(!(sqlStatement instanceof SQLSelectStatement)){
+                throw new BsfException("检测到非select语句:"+sqlStatement.toString());
+            }
+            MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
+            sqlStatement.accept(visitor);
+            Map<TableStat.Name, TableStat> tables = visitor.getTables();
+            Set<TableStat.Name> tableNameSet = tables.keySet();
+            for (TableStat.Name name : tableNameSet) {
+                String tableName = name.getName();
+                if (!StringUtils.isEmpty(tableName)) {
+                    tableNames.add(tableName);
+                }
+            }
+        }
+        for(val tableName:tableNames){
+            if(!tableName.startsWith("auto_tb_sample_")){
+                throw new BsfException("仅支持查询auto_tb_sample_开头的样本表");
+            }
         }
     }
     //执行sql
     public void streamSql(String sql,Object[] ps,ScriptObjectMirror objectMirror){
         try{
+            checkSelectSql(sql);
             val autoTest = (AutoTestProvider)this.ps.get("autotest");
              DbHelper.call(ContextUtils.getBean(DataSource.class,false),(c)->{
                  Ref<Long> size=new Ref(0L);
@@ -184,8 +221,8 @@ public class ApiScript {
     }
     //执行sql2
     public void streamSql2(String sql,Object[] ps,ScriptObjectMirror objectMirror){
-
         try{
+            checkSelectSql(sql);
             val autoTest = (AutoTestProvider)this.ps.get("autotest");
             DbHelper.call(ContextUtils.getBean(DataSource.class,false),(c)->{
                 Long id=0L;Long size=0L;
@@ -216,5 +253,23 @@ public class ApiScript {
         }
     }
 
+    public static void main(String[] args) {
+        val api = new ApiScript("",new LinkedHashMap());
+        String[] sql = new String[]{"select * from auto_tb_sample_a",
+                "update from auto_tb_sample_a set a=1",
+                "select * from b set a=1",
+                "insert b values(?,?,?,?)",
+                "select * from b where a=1",
+                "1=2"
+        };
+        for(val s:sql) {
+            try {
+                api.checkSelectSql(s);
+            }catch (Exception e){
+                System.err.println(sql);
+                System.err.println(e);
+            }
+        }
+    }
 
 }

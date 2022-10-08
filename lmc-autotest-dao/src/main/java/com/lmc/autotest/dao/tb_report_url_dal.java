@@ -84,8 +84,17 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
 
     public List<Map<String,Object>> nodeReport(DbConn conn, String node, String tableName,String order){
         val stringSql = new StringBuilder();val where = new StringBuilder();
+        String lineSql = "(select visit_time from \n" +
+                "(select visit_time,FLOOR(count(0) over()*{per})  as num,\n" +
+                "CASE url \n" +
+                "    WHEN @curUrl{num}  THEN @curRow{num} := @curRow{num} + 1 \n" +
+                "    ELSE @curRow{num} := 1\n" +
+                "END AS orderNo,\n" +
+                "@curUrl{num} := url AS url\n" +
+                "from {table} t2,(SELECT @curRow{num} := 0,@curUrl{num} := '') o where t2.url =a.url   order by visit_time) tt2\n" +
+                "where tt2.num=tt2.orderNo)";
         stringSql.append("\n" +
-                "select *,sum_visit_num/sum(sum_visit_num) over() as sum_visit_num_per from (select max(id) max_id,\n" +
+                "select *,sum_visit_num/sum(sum_visit_num) over() as sum_visit_num_per,{98line} as jiuba_visit_time,{95line} as jiuwu_visit_time,{90line} as jiuling_visit_time from (select max(id) max_id,\n" +
                 "max(visit_num) as max_visit_num,min(visit_num) as min_visit_num,avg(visit_num) as avg_visit_num,sum(visit_num) as sum_visit_num,\n" +
                 "max(throughput) as max_throughput,min(throughput) as min_throughput,avg(throughput) as avg_throughput,sum(throughput) as sum_throughput,\n" +
                 "max(error) as max_error,min(error) as min_error,avg(error) as avg_error,sum(error) as sum_error,\n" +
@@ -97,10 +106,13 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
             where.append(" where node='{node}'");
         }
         val ds = conn.executeList(stringSql.toString()
-                .replace("{where}",where.toString())
-                .replace("{table}",tableName)
-                .replace("{node}",StringUtils.nullToEmpty(node)
-                ), new Object[]{});
+                        .replace("{90line}",lineSql.replace("{per}","0.9").replace("{num}","1"))
+                        .replace("{95line}",lineSql.replace("{per}","0.95").replace("{num}","2"))
+                        .replace("{98line}",lineSql.replace("{per}","0.98").replace("{num}","3"))
+                        .replace("{where}",where.toString())
+                        .replace("{table}",tableName)
+                        .replace("{node}",StringUtils.nullToEmpty(node))
+                , new Object[]{});
         return ds;
     }
 

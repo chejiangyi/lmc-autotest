@@ -42,6 +42,15 @@ ${Html.s("pagetitle","压测报告")}
          .time1{
              color:#FF9D0A;
          }
+         .line90{
+             color: #15B6DF;
+         }
+         .line95{
+             color: #0070a9;
+         }
+         .line98{
+             color: #0489C7;
+         }
     </style>
     <div class="head">
         <div class="title">
@@ -193,12 +202,13 @@ ${Html.s("pagetitle","压测报告")}
                             <th style="width:5%">吞吐量/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒吞吐量次数")}</th>
                             <th style="width:5%">错误数/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数,大于0则标红")}</th>
                             <th style="width:5%">错误率(%)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒错误次数/(平均的每秒吞吐量+平均的每秒错误次数),大于0则标红")}</th>
-                            <th style="width:5%">耗时(ms)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒耗时,大于300ms则标红")}</th>
     <#--                        <th style="width:5%">99line耗时/s</th>-->
     <#--                        <th style="width:5%">98line耗时/s</th>-->
-                            <th style="width:5%">网络读(Bytes)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒网络读")}</th>
-                            <th style="width:5%">网络写(Bytes)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒网络写")}</th>
-                            <th style="width:5%">操作</th>
+                            <th style="width:5%">网络读(B)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒网络读 单位:字节")}</th>
+                            <th style="width:5%">网络写(B)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒网络写 单位:字节")}</th>
+                            <th style="width:5%">耗时(ms)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒耗时,大于300ms则标红")}</th>
+                            <th style="width:5%">耗时Line(ms)/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒耗时排序集合的的90,98,95百分位,大于300ms则标红")}</th>
+                            <th style="width:3%">操作</th>
                         </tr>
                     </table>
                     <table style="display: none" id="urltemplate">
@@ -236,13 +246,6 @@ ${Html.s("pagetitle","压测报告")}
                                 <div class="sum">{sum_error_per}</div>
                             </td>
                             <td>
-                                <div class="current">{visit_time}</div>
-                                <div class="avg">{avg_visit_time}</div>
-                                <div class="min">{min_visit_time}</div>
-                                <div class="max">{max_visit_time}</div>
-                                <div class="sum">{sum_visit_time}</div>
-                            </td>
-                            <td>
                                 <div class="current">{network_read}</div>
                                 <div class="avg">{avg_network_read}</div>
                                 <div class="min">{min_network_read}</div>
@@ -255,6 +258,18 @@ ${Html.s("pagetitle","压测报告")}
                                 <div class="min">{min_network_write}</div>
                                 <div class="max">{max_network_write}</div>
                                 <div class="sum">{sum_network_write}</div>
+                            </td>
+                            <td>
+                                <div class="current">{visit_time}</div>
+                                <div class="avg">{avg_visit_time}</div>
+                                <div class="min">{min_visit_time}</div>
+                                <div class="max">{max_visit_time}</div>
+                                <div class="sum">{sum_visit_time}</div>
+                            </td>
+                            <td>
+                                <div class="line90">{jiuling_visit_time}</div>
+                                <div class="line95">{jiuwu_visit_time}</div>
+                                <div class="line98">{jiuba_visit_time}</div>
                             </td>
                             <td><a href="javascript:loadUrlChart('{url}')">趋势图</a></td>
                         </tr>
@@ -412,7 +427,7 @@ ${Html.s("pagetitle","压测报告")}
                         alert(data.message);
                     } else {
                         for(var r of data.data.report){
-                            //console.log("aaa",r);
+                            console.log("aaa2",r);
                             var html = $("#urltemplate").html();
 
                             for(let key of Object.keys(r)){
@@ -437,6 +452,15 @@ ${Html.s("pagetitle","压测报告")}
                         })
                         $("#urlReport .sum").each(function (){
                             $(this).html("总:"+$(this).html());$(this).attr("title","总和值");if(!$("#sum").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .line90").each(function (){
+                            $(this).html("90L:"+$(this).html());$(this).attr("title","90百分位,90line");if(!$("#sum").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .line95").each(function (){
+                            $(this).html("95L:"+$(this).html());$(this).attr("title","95百分位,95line");if(!$("#sum").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .line98").each(function (){
+                            $(this).html("98L:"+$(this).html());$(this).attr("title","98百分位,98line");if(!$("#sum").is(':checked')){$(this).hide();}
                         })
                         $('#urlReport tr[data]').show();
                     }
@@ -560,7 +584,7 @@ ${Html.s("pagetitle","压测报告")}
             if(key.indexOf('error')>-1&&v2>0){
                 return "<b class='redS'>"+v2+"</b>";
             }
-            if(key=='visit_time'&&v2>300){
+            if(key.indexOf('visit_time')>-1&&key.indexOf('sum')<0&&v2>300){
                 return "<b class='redS'>"+v2+"</b>";
             }
 

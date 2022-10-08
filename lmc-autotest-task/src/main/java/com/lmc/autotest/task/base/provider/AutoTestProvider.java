@@ -96,6 +96,7 @@ public class AutoTestProvider {
         } catch (Exception e) {
             LogTool.error(this.getClass(), taskid,Config.appName(), "关闭原因更新数据库出错", e);
         }
+        System.gc();//建议进行内存回收!
         disposeFile();
     }
 
