@@ -84,7 +84,7 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
 
     public List<Map<String,Object>> nodeReport(DbConn conn, String node, String tableName,String order){
         val stringSql = new StringBuilder();val where = new StringBuilder();
-        String lineSql = "(select visit_time from \n" +
+        String lineSql = "IFNULL((select visit_time from \n" +
                 "(select visit_time,FLOOR(count(0) over()*{per})  as num,\n" +
                 "CASE url \n" +
                 "    WHEN @curUrl{num}  THEN @curRow{num} := @curRow{num} + 1 \n" +
@@ -92,7 +92,7 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
                 "END AS orderNo,\n" +
                 "@curUrl{num} := url AS url\n" +
                 "from {table} t2,(SELECT @curRow{num} := 0,@curUrl{num} := '') o where t2.url =a.url   order by visit_time) tt2\n" +
-                "where tt2.num=tt2.orderNo)";
+                "where tt2.num=tt2.orderNo),0)";
         stringSql.append("\n" +
                 "select *,sum_visit_num/sum(sum_visit_num) over() as sum_visit_num_per,{98line} as jiuba_visit_time,{95line} as jiuwu_visit_time,{90line} as jiuling_visit_time from (select max(id) max_id,\n" +
                 "max(visit_num) as max_visit_num,min(visit_num) as min_visit_num,avg(visit_num) as avg_visit_num,sum(visit_num) as sum_visit_num,\n" +
