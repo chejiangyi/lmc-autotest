@@ -72,6 +72,8 @@ public class SampleController extends SpringMvcController {
             }finally {
                 file.delete();
             }
+            return pageVisit((m) -> {
+            });
         }
         return pageVisit((m) -> {
                     Ref<Integer> totalSize = new Ref<>(0);

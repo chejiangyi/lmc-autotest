@@ -25,7 +25,7 @@ ${Html.s("pagetitle","采样查询")}
     </form>
     <div>
         <input type="file" name="file" id="file" />
-        <input type="submit" class="btn1" id="btnUpload" value="上传到我的样本" accesskey="U" />${Html.help("上传样本到我的(当前用户名)样本表中,用户可通过自定义的样本进行压测!")}
+        <input type="submit" class="btn1" id="btnUpload" value="上传到我的样本" accesskey="U" />${Html.help("上传样本到我的(当前用户名)样本表中,用户可通过自定义的样本进行压测!请“下载”样本(删掉数据后)为模板进行导入。")}
         <input type="button" class="btn1" value="清空我的样本" accesskey="D" onclick="clearMy()" />${Html.help("清空我的样本文件,如果要指定条件清除,请到数据库中手工清理!")}
     </div>
     <div class="tab_cont">

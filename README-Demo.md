@@ -3,6 +3,7 @@
 ## 定制脚本
 总共有5个脚本会涉及到编写（如图），点击右下角有脚本编写的详细说明文档（如图）！
 ![案例demo](doc/demo/demo1.png)
+[脚本编写详解](/lmc-autotest-provider/src/main/resources/static/content/readme.html)
 * 表面上支持js es5的语法,原理是底层采用java nashorn script engine进行解析，所以脚本执行就看本身引擎解析的能力了，比如JSON.parse等原生的函数也是支持的。
 * 底层也扩展了自定义的一些函数方法，比如api,streamSql2,api.writeSample,api.log,api.error,api.debug,api.nowFormat,api.ps.*等扩展，详细请看管理站点中的文档为准！
 
@@ -48,5 +49,12 @@
    return false;
    }
 ```
+#### 6. 其他脚本示例
+```
+  /*飞书通知*/
+ var content = "节点:"+api.ps.node.node+"通知任务开启压测:taskid="+api.ps.task.id;
+ api.httpPost("https://open.feishu.cn/open-apis/bot/v2/hook/6c26281e-20cf-46db-b4ec-a4ad8a3963e1",{"msg_type":"text","content":{"text":content}});
+```
+
 
 by 车江毅

@@ -33,10 +33,12 @@ public class AutoTestProvider {
     //private String tempid= UUID.randomUUID().toString().replace("-","");
     private Date startTime = new Date();
     private String tranId = "";
-    public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider){
+    private Integer index=-1;
+    public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider,Integer index){
         this.taskid=taskid;
         this.tranId = tranId;
         this.nodeProvider = nodeProvider;
+        this.index=index;
     }
 
     public AutoTestProvider init(){
@@ -273,6 +275,7 @@ public class AutoTestProvider {
         map.put("report",this.reportProvider.getReport_model());
         map.put("autotest",this);
         map.put("tranId",tranId);
+        map.put("index",index);
         return map;
     }
 

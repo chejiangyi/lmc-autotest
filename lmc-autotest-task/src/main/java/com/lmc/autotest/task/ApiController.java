@@ -1,7 +1,6 @@
 package com.lmc.autotest.task;
 import com.free.bsf.core.util.ExceptionUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
-import com.lmc.autotest.task.base.ApiScript;
 import com.lmc.autotest.task.base.IOUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.utils.DateUtils;
@@ -19,13 +18,16 @@ public class ApiController  {
 
 
 	@PostMapping("/opentask/")
-	public ApiResponseEntity<Integer> openTask(Integer taskId,String tranId) {
+	public ApiResponseEntity<Integer> openTask(Integer taskId,String tranId,Integer index) {
 		try {
 			if(tranId==null)
 			{
 				tranId= DateUtils.formatDate(new Date(),"yyyy_MM_dd_HH_mm_ss");;
 			}
-			NodeManager.Default.open(taskId,tranId);
+			if(index==null){
+				index=0;
+			}
+			NodeManager.Default.open(taskId,tranId,index);
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));

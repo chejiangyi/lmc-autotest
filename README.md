@@ -25,11 +25,13 @@ mvn install
 * [全链路压测原型](/doc/全链路压测.rp)
 * [全链路压测sql](/doc/install.sql)
 * [全链路压测设计图](/README-Design.md)
+* [压测报告示例图](/doc/demo/test-demo.jpg)
 
 
 ## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)
 * [任务编写案例](/README-Demo.md)
+* [样本导入案例](/README-Sample.md)
 * [快速安装](/README-Install.md)
 
 ## 进阶篇

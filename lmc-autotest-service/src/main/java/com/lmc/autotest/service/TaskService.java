@@ -52,10 +52,12 @@ public class TaskService {
             val api2 = api;
             new tb_task_dal().addResult(c, model.id, "");
             val tranId = DateUtils.format(new Date(), "yyyy_MM_dd_HH_mm_ss");
-            ThreadUtils.parallelFor("并行操作节点开关", nodes.size(), nodes, (n) -> {
+            val nodes2=nodes;
+            ThreadUtils.parallelFor("并行操作节点开关", nodes2.size(), nodes2, (n) -> {
+                val index = nodes2.indexOf(n);
                 val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.port + "/" + api2 + "/",
                         HttpClient.Params.custom().add("taskId", id)
-                                .add("tranId", tranId).build());
+                                .add("tranId", tranId).add("index",index).build());
                 ApiResponseEntity es = JsonUtils.deserialize(rs, ApiResponseEntity.class);
                 synchronized (lock) {
                     if (es.getCode() < 0) {

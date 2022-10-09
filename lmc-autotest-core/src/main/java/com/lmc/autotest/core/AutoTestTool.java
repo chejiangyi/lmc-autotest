@@ -45,6 +45,7 @@ public class AutoTestTool {
                 int len;
                 while ((len = inStream.read(b)) > 0)
                 {    response.getOutputStream().write(b, 0, len);}
+                response.getOutputStream().flush();
              }
         } catch (IOException e) {
             throw new BsfException("文件下载失败");
