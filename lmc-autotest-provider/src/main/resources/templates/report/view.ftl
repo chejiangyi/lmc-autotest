@@ -159,11 +159,12 @@ ${Html.s("pagetitle","压测报告")}
             <li>
                 <label>多维度单节点对比</label>
                     <select id="nodes" name="nodes" onchange="loadNodeReportChart()">
-                        <option value="">所有节点</option>
+                        <option value="">所有节点(相加)</option>
                         <#list model.nodes?split(",") as key>
                             <option value="${key}">${key}</option>
                         </#list>
                     </select>
+                ${Html.help("以节点为维度,可指定单个节点测算,也可以将所有节点的值累加得到总吞吐量和错误数")}
                 <button type="button" onclick="loadNodeReportChart()">刷新</button>
                 <div class="chartlist">
                  <#list nodeWeiduMap?keys as key>
@@ -174,11 +175,12 @@ ${Html.s("pagetitle","压测报告")}
             <li>
                 <label>接口性能指标统计</label>
                 <select id="nodes2" name="nodes2" onchange="loadUrlReportChart()">
-                    <option value="">所有节点</option>
+                    <option value="">不区分节点</option>
                     <#list model.nodes?split(",") as key>
                         <option value="${key}">${key}</option>
                     </#list>
                 </select>
+                ${Html.help("以url为维度,可指定单个节点测算,也可以不指定节点测算某个url的统计值,这些统计值不会累加!")}
                 <#assign orderMap={"url":"接口api","throughput":"现吞吐量","error":"现错误数","visit_time":"现耗时","sum_throughput":"总吞吐量","sum_error":"总错误数","sum_visit_time":"总耗时","sum_visit_num_per":"占比"}/>
                 降序
                 <select id="urlOrder" name="urlOrder" onchange="loadUrlReportChart()">
@@ -190,7 +192,7 @@ ${Html.s("pagetitle","压测报告")}
                 <input id="avg" type="checkbox" onchange="loadUrlReportChart()"/><p class="avg">平均值</p>
                 <input id="min" type="checkbox"  onchange="loadUrlReportChart()"/><p class="min">最小值</p>
                 <input id="max" type="checkbox"  onchange="loadUrlReportChart()"/><p class="max">最大值</p>
-                <input id="sum" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="sum">总和值</p>
+                <input id="sum" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="sum">总和值</p>${Html.help("现在值:表示当前时间最后获取的值;平均值:表示当前时间及之前历史获取的平均值;最小值:表示当前时间及之前历史获取的最大值;最大值:表示当前时间及之前历史获取的最大值;总和值:表示当前时间持续累计的总和")}
 
                 <#assign heartbeart=Utils.heartBeat() />
                 <button type="button" onclick="loadUrlReportChart()">刷新</button>

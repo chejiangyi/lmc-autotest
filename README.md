@@ -32,6 +32,7 @@ mvn install
 * [定制场景录制文档](/README-ModHeader.md)
 * [任务编写案例](/README-Demo.md)
 * [样本导入案例](/README-Sample.md)
+* [自动录制样本流量](/README-Code.md)
 * [快速安装](/README-Install.md)
 
 ## 进阶篇

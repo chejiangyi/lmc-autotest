@@ -111,7 +111,12 @@ public class AutoTestProvider {
                 int waitTime = new Random(UUID.randomUUID().toString().hashCode()).nextInt(Config.maxSleepPerTheadOpen());
                 ThreadUtils.sleep(waitTime < 200 ? 200 : waitTime);//给程序缓冲时间,缓慢启动,不得小于200
             }else{
-                ThreadUtils.sleep(task_model.sleep_time_every_thread);
+                //超过1分钟不合理
+                if(task_model.sleep_time_every_thread>60*1000){
+                    ThreadUtils.sleep(60*1000);
+                }else {
+                    ThreadUtils.sleep(task_model.sleep_time_every_thread);
+                }
             }
             ThreadPoolUtils.System.submit("压测线程"+index,()->{
                 while (!ThreadUtils.system().isShutdown()&&isRun){

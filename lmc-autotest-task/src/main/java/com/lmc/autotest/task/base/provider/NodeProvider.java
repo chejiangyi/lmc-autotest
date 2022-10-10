@@ -56,19 +56,18 @@ public class NodeProvider {
                 updateState(true);
                 errorStateCheckCount=0;
                 LogTool.error(AutoTestProvider.class, 0,Config.appName(),"自动重置状态",new Exception("心跳检查发现节点状态不一致,自动重置状态为使用中"));
-                return;
             }
         }
-        if(NodeManager.Default.getAutoTestProvider()==null&&node_model.used==true){
+        else if(NodeManager.Default.getAutoTestProvider()==null&&node_model.used==true){
             errorStateCheckCount++;
             if(errorStateCheckCount>3){
                 updateState(false);
                 errorStateCheckCount=0;
                 LogTool.error(AutoTestProvider.class, 0,Config.appName(),"自动重置状态",new Exception("心跳检查发现节点状态不一致,自动重置状态为未使用"));
-                return;
             }
+        }else {
+            errorStateCheckCount = 0;
         }
-        errorStateCheckCount=0;
     }
 
     public void updateState(boolean used){

@@ -38,7 +38,7 @@ public class ApiController  {
 	public ApiResponseEntity<Integer> closeTask(Integer taskId) {
 		try {
 			NodeManager.Default.close(taskId,"用户执行关闭",false);
-			return ApiResponseEntity.success(1);
+			return ApiResponseEntity.success(taskId);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
 		}
@@ -48,6 +48,15 @@ public class ApiController  {
 	public ApiResponseEntity<Integer> test() {
 		try {
 			return ApiResponseEntity.success(1);
+		}catch (Exception e){
+			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
+		}
+	}
+
+	@RequestMapping("/run/")
+	public ApiResponseEntity<Integer> run() {
+		try {
+			return ApiResponseEntity.success(NodeManager.Default.getAutoTestProvider()==null?0:NodeManager.Default.getAutoTestProvider().getTaskid());
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
 		}
