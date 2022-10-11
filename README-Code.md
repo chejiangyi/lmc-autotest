@@ -29,6 +29,9 @@
         <optional>true</optional>
     </dependency>
 ```
+* [源码编译文档](https://gitee.com/chejiangyi/free-bsf-all/blob/1.2-SNAPSHOT/ )
+* [bsf-core编译版本](https://gitee.com/chejiangyi/lmc-autotest/releases/tag/1.0 )
+* [bsf-autotest编译版本](https://gitee.com/chejiangyi/lmc-autotest/releases/tag/1.0 )
 #### 配置开关
 参考配置出处[bsf-autotest](https://gitee.com/chejiangyi/free-bsf-all/blob/1.2-SNAPSHOT/free-bsf-autotest/README.md )
 ```
