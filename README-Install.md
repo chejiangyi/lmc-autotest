@@ -7,7 +7,7 @@
 * [节点端task包](https://gitee.com/chejiangyi/lmc-autotest/releases/ )
 
 
-#### 普通运行
+#### 第一种部署方案: 普通运行
 ```
 nohup java -jar \
 -Dspring.datasource.druid.url=jdbc:mysql://127.0.0.1:3306/pre-autotest?useSSL=false \
@@ -22,7 +22,7 @@ nohup java -jar \
 lmc-autotest-task.jar > task.log 2>&1 &
 ```
 
-#### docker 打包
+#### 第二种部署方案: docker 打包
 压测任务节点打包
 ```
 vim Dockerfile
@@ -60,7 +60,7 @@ docker run -it \
 lmc-autotest-provider /bin/bash
 ```
 
-##### task任务节点内存调优笔记
+##### 其他:task任务节点内存调优笔记
 ```
 期望:
 task压测节点日常基本不用,需要内存要收缩到最低;这样在无压测任务时，特别是在容器部署场景,内存可以让给其他业务应用。
