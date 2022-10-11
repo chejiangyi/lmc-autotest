@@ -3,7 +3,7 @@
 ## 定制脚本
 总共有5个脚本会涉及到编写（如图），点击右下角有脚本编写的详细说明文档（如图）！
 ![案例demo](doc/demo/demo1.png)
-[脚本编写详解](/lmc-autotest-provider/src/main/resources/static/content/readme.html)
+[脚本编写详解](/doc/demo/readme.html.png)
 * 表面上支持js es5的语法,原理是底层采用java nashorn script engine进行解析，所以脚本执行就看本身引擎解析的能力了，比如JSON.parse等原生的函数也是支持的。
 * 底层也扩展了自定义的一些函数方法，比如api,streamSql2,api.writeSample,api.log,api.error,api.debug,api.nowFormat,api.ps.*等扩展，详细请看管理站点中的文档为准！
 
