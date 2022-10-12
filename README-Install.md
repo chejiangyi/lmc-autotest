@@ -61,16 +61,11 @@ lmc-autotest-provider /bin/bash
 ```
 
 ##### 其他:task任务节点内存调优笔记
-- 期望:task压测节点日常基本不用,需要内存要收缩到最低;这样在无压测任务时，特别是在容器部署场景,内存可以让给其他业务应用。
+期望:task压测节点日常基本不用,需要内存要收缩到最低;这样在无压测任务时，特别是在容器部署场景,内存可以让给其他业务应用。
 一旦需要进行压测,节点可以内存伸缩(逐步申请内存，反应慢一点影响不大),最终达到稳态。压测结束后,内存再次收缩最小到最低。
-- 调优参数(其他调优参数还在探索):
-* -Xss256k #压测线程原理简单，调用栈无需很深,可以减少线程的栈大小。
-* -XX:MinHeapFreeRatio=5 #free内存无需很多,要用的时候重新申请即可。
-* -XX:MaxHeapFreeRatio=10 #free内存无需很多,要用的时候重新申请即可。
-- 其他:[计算公式参考]单个节点最大线程数(一般2000-3000够了)*256k(Xss)+50M=限制内存大小(如果要限制task节点最大内存 -Xmx)
+
 ```
-示例:
-java -jar -Xss256k -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Xmx??M lmc-autotest-task.jar
+java -jar -Xss256k -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Xmx256M lmc-autotest-task.jar
 ```
 
 by 车江毅
