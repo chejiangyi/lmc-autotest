@@ -11,14 +11,14 @@
 ```
 nohup java -jar \
 -Dspring.datasource.druid.url=jdbc:mysql://127.0.0.1:3306/pre-autotest?useSSL=false \
--Dspring.datasource.druid.username={数据库账号} \
--Dspring.datasource.druid.password={数据库密码} \
+-Dspring.datasource.druid.username={数据库} \
+-Dspring.datasource.druid.password={数据库} \
 lmc-autotest-provider.jar > provider.log 2>&1 &
 
 nohup java -jar \
 -Dspring.datasource.druid.url=jdbc:mysql://127.0.0.1:3306/pre-autotest?useSSL=false \
--Dspring.datasource.druid.username={数据库账号} \
--Dspring.datasource.druid.password={数据库密码} \
+-Dspring.datasource.druid.username={数据库} \
+-Dspring.datasource.druid.password={数据库} \
 lmc-autotest-task.jar > task.log 2>&1 &
 ```
 
@@ -37,8 +37,8 @@ docker push {镜像仓库}/lmc-autotest-task:latest
 docker run -it \
 -p 8081:8081 \
 -e spring.datasource.druid.url="jdbc:mysql://{数据库地址+ip}/autotest?useSSL=false" \
--e spring.datasource.druid.username="{数据库账号}" \
--e spring.datasource.druid.password="{数据库密码}" \
+-e spring.datasource.druid.username="{数据库}" \
+-e spring.datasource.druid.password="{数据库}" \
 lmc-autotest-task /bin/bash
 ```
 压测任务管理站点
@@ -55,8 +55,8 @@ docker push {镜像仓库}/lmc-autotest-provider:latest
 docker run -it \
 -p 8080:8080 \
 -e spring.datasource.druid.url="jdbc:mysql://{数据库地址+ip}/autotest?useSSL=false" \
--e spring.datasource.druid.username="{数据库账号}" \
--e spring.datasource.druid.password="{数据库密码}" \
+-e spring.datasource.druid.username="{数据库}" \
+-e spring.datasource.druid.password="{数据库}" \
 lmc-autotest-provider /bin/bash
 ```
 
