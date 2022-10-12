@@ -21,7 +21,7 @@ nohup java -jar \
 -Dspring.datasource.druid.password={数据库} \
 lmc-autotest-task.jar > task.log 2>&1 &
 ```
-注意:虚机部署多个节点 task还需要传入autotest.node=test(默认为服务器hostname)
+注意:虚机部署多个节点 task还需要传入autotest.node=test1 (节点名，默认为服务器hostname,不能重复)
 
 
 #### 第二种部署方案: docker 打包
