@@ -50,9 +50,9 @@ public class Config {
     public static boolean httpPoolEnabled(){
         return PropertyUtils.getPropertyCache("autotest.node.httpPool.enabled",true);
     }
-    //http 连接池最大大小(每个host)
+    //http 连接池最大大小(每个host),默认1万不做限制
     public static int httpPoolMaxSize(){
-        return PropertyUtils.getPropertyCache("autotest.node.httpPool.maxSize",1000);
+        return PropertyUtils.getPropertyCache("autotest.node.httpPool.maxSize",10000);
     }
     //http 连接池链接超时时间 单位毫秒
     public static int httpPoolConnectTimeout(){
