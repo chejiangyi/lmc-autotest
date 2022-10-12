@@ -11,14 +11,14 @@
 ```
 nohup java -jar \
 -Dspring.datasource.druid.url=jdbc:mysql://127.0.0.1:3306/pre-autotest?useSSL=false \
--Dspring.datasource.druid.username=sa \
--Dspring.datasource.druid.password=sa \
+-Dspring.datasource.druid.username={数据库账号} \
+-Dspring.datasource.druid.password={数据库密码} \
 lmc-autotest-provider.jar > provider.log 2>&1 &
 
 nohup java -jar \
 -Dspring.datasource.druid.url=jdbc:mysql://127.0.0.1:3306/pre-autotest?useSSL=false \
--Dspring.datasource.druid.username=sa \
--Dspring.datasource.druid.password=sa \
+-Dspring.datasource.druid.username={数据库账号} \
+-Dspring.datasource.druid.password={数据库密码} \
 lmc-autotest-task.jar > task.log 2>&1 &
 ```
 
