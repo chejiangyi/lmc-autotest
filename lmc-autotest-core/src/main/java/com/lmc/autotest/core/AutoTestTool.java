@@ -1,8 +1,11 @@
 package com.lmc.autotest.core;
 
 import com.free.bsf.core.base.BsfException;
+import com.free.bsf.core.db.DbHelper;
+import com.free.bsf.core.util.ConvertUtils;
 import com.free.bsf.core.util.DateUtils;
 import com.free.bsf.core.util.LogUtils;
+import com.free.bsf.core.util.ThreadUtils;
 import lombok.val;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +23,27 @@ import java.time.temporal.TemporalUnit;
 import java.util.Date;
 
 public class AutoTestTool {
+    //时钟对齐,只允许心跳起始点开始!最多一个心跳周期内对齐成功
+    public static void clockCorrection(){
+        Date startDate = new Date();
+        while (!ThreadUtils.system().isShutdown()) {
+            Date now = DbHelper.get(Config.mysqlDataSource(), (c) -> {
+                Object time = c.executeScalar("select now() as time", new Object[]{});
+                Date n = ConvertUtils.convert(time, Date.class);
+                return n;
+            });
+            if (now!=null && DateUtils.date2LocalDateTime(now).getSecond() % Config.heartbeat() == 0) {
+                return;
+            }
+            if((new Date().getTime()-startDate.getTime())>(Config.heartbeat()+1)*1000) {
+                throw new BsfException("时钟对齐超时,时钟对齐失败");
+            }
+            ThreadUtils.sleep(100);
+        }
+    }
+
     public static boolean isOnLine(Date date){
-        val newDate =  DateUtils.date2LocalDateTime(date).plus(2*Config.heartbeat(), ChronoUnit.SECONDS);
+        LocalDateTime newDate =  DateUtils.date2LocalDateTime(date).plus(2*Config.heartbeat(), ChronoUnit.SECONDS);
         if(newDate.isAfter(LocalDateTime.now())){
             return true;
         }else

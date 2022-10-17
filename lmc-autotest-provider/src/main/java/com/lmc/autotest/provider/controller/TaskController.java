@@ -60,6 +60,7 @@ public class TaskController extends SpringMvcController {
                              String filter_store, String filter_script, Integer sleep_time_every_thread,
                              String first_filter_error_script, String nodes, Integer run_threads_count,
                              String http_begin_script, String http_end_script, String check_stop_script,
+                             Boolean use_http_keepalive,
                              Integer node_count
     ) {
         return jsonVisit((m) -> {
@@ -86,6 +87,7 @@ public class TaskController extends SpringMvcController {
                 model.task = task;
                 model.update_user = this.getUser().getUsername();
                 model.sleep_time_every_thread=sleep_time_every_thread;
+                model.use_http_keepalive = use_http_keepalive;
                 if(model.id==null||model.id==0){
                     new tb_task_dal().add(c,model);
                 }else {

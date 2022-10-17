@@ -24,13 +24,13 @@ ${Html.s("pagetitle","编辑任务")}
             </li>
             <li>
                 <label>执行节点数量</label>
-                <input class="stext" type="text" id="node_count" name="node_count" value="${model.node_count!}" />
+                <input class="stext" type="text" id="node_count" name="node_count" value="${model.node_count!}" />${Html.help("系统会根据当前[空闲]的节点,智能调度!")}
+                <label>复用HTTP链接</label>
+                <input type="checkbox" id="use_http_keepalive" name="use_http_keepalive" ${Html.w2("==",model.use_http_keepalive,true,"checked='checked'","")}>${Html.help("使用keep-alive头,底层采用http连接池尽量复用链接!开启后会有额外少量连接池维护和切换的cpu损耗,cpu不够的情况下反而会降低吞吐量!")}
             </li>
             <li>
                 <label>节点并行线程数量</label>
-                <input class="stext" type="text" id="run_threads_count" name="run_threads_count" value="${model.run_threads_count!}" />
-            </li>
-            <li>
+                <input class="stext" type="text" id="run_threads_count" name="run_threads_count" value="${model.run_threads_count!}" />${Html.help("在cpu允许的情况下,建议线程数2000-3000之间,会更好发挥并发性能!")}
                 <label>每个线程启动间隔</label>
                 <input class="stext" type="text" id="sleep_time_every_thread" name="sleep_time_every_thread" value="${model.sleep_time_every_thread!}" />毫秒${Html.help("压测时每个线程之间启动的时间间隔,逐步启动,避免突然间并发导致程序无法响应,为0则表示采用系统自动算法均衡(一般为200-700ms)")}
             </li>
@@ -89,7 +89,8 @@ ${Html.s("pagetitle","编辑任务")}
                     "http_begin_script":$("#http_begin_script").val(),
                     "http_end_script":$("#http_end_script").val(),
                     "check_stop_script":$("#check_stop_script").val(),
-                    "sleep_time_every_thread":$("#sleep_time_every_thread").val()
+                    "sleep_time_every_thread":$("#sleep_time_every_thread").val(),
+                    "use_http_keepalive":$("#use_http_keepalive").is(':checked')
                 },
                 function (data) {
                     if (data.code < 0) {

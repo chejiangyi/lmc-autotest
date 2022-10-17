@@ -4,6 +4,7 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.*;
+import com.lmc.autotest.core.AutoTestTool;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
@@ -137,7 +138,7 @@ public class AutoTestProvider {
                                         return;
                                     }
                                 }
-                                val r = HttpUtils.request(j,false);
+                                val r = HttpUtils.request(j,false,task_model.use_http_keepalive);
                                 //后
                                 if (!StringUtils.isEmpty(task_model.http_end_script)) {
                                     val sMap2= this.initMap();
@@ -182,6 +183,12 @@ public class AutoTestProvider {
 
     private void checkStop(){
         ThreadUtils.system().submit("检查任务终止",()->{
+            try {
+                AutoTestTool.clockCorrection();
+                LogTool.info(AutoTestProvider.class,taskid,Config.appName(),"任务上报时钟起始时间:"+DateUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            }catch (Exception e){
+                LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"检查任务终止时,时钟对齐出错",e);
+            }
             while (!ThreadUtils.system().isShutdown()&&isRun){
                 try {
                     val nodeReport = reportProvider.heartBeatReport();
@@ -231,7 +238,7 @@ public class AutoTestProvider {
                 SampleUtils.readline(temp, (line) -> {
                     if (isRun) {
                         tb_sample_example_model j = JsonUtils.deserialize(line, tb_sample_example_model.class);
-                        val r = HttpUtils.request(j,false);
+                        val r = HttpUtils.request(j,false,task_model.use_http_keepalive);
                         val sMap2= this.initMap();
                         sMap2.put("request", j);
                         sMap2.put("response", r);

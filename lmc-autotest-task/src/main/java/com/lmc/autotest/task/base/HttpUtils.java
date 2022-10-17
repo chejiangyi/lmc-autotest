@@ -37,14 +37,14 @@ public class HttpUtils {
             System.setProperty("http.maxConnections", Config.httpPoolMaxSize() + "");
         }
     }
-    public static HttpResponse request(tb_sample_example_model request,Boolean printLog){
+    public static HttpResponse request(tb_sample_example_model request,Boolean printLog,boolean keepAlivePool){
         HttpRequest r = new HttpRequest();
         r.httpUrl=StringUtils.nullToEmpty(request.getUrl());r.method=StringUtils.nullToEmpty(request.getMethod());
         r.header = JsonUtils.deserialize(request.header, new TypeReference<HashMap<String,String>>() {});
         r.body = request.getBody();
         r.appName = StringUtils.nullToEmpty(request.app_name);
         //LogUtils.info(HttpUtils.class, Config.nodeName(),"访问:"+r.httpUrl);
-        val rs = httpRequest(r);
+        val rs = httpRequest(r,keepAlivePool);
         if(printLog){
             Map info = new HashMap(2);
             info.put("request",r);
@@ -83,7 +83,7 @@ public class HttpUtils {
             return false;
         }
     }
-    private static HttpResponse httpRequest(HttpRequest httpRequest){
+    private static HttpResponse httpRequest(HttpRequest httpRequest,Boolean keepAlivePool){
         HttpURLConnection conn=null;
         HttpResponse response = new HttpResponse();
         val beginTime = new Date().getTime();
@@ -162,7 +162,7 @@ public class HttpUtils {
             response.timeMs = new Date().getTime()-beginTime;
             //释放连接以为不能复用连接池,但是可以避免连接溢出风险
             //底层太复杂,做好关闭连接池的配置预案,但是会降低性能
-            if(Config.httpPoolEnabled()==false) {
+            if(Config.httpPoolEnabled()==false||keepAlivePool==false) {
                 if (conn != null) {
                     conn.disconnect();
                 }

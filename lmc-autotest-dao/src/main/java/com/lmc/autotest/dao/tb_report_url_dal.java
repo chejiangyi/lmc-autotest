@@ -59,14 +59,14 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
                 /**网络读/s*/
                 model.network_read,
                 /***/
-                model.create_time,
+                //model.create_time,
                 /**网络写/s*/
                 model.network_write
             };
             for(val o:par) {
                 pars.add(o);
             }
-            sql.append("(?,?,?,?,?,?,?,?,?),");
+            sql.append("(?,?,?,?,?,?,?,now(),?),");
         }
         int rev = conn.executeSql(StringUtils.trimRight(sql.toString(),',')+";", pars.toArray());
         return rev == 1;

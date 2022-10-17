@@ -154,6 +154,7 @@ CREATE TABLE `tb_task`  (
                             `sleep_time_every_thread` int(0) NULL DEFAULT 0 COMMENT '每个线程启动时的间隔时间',
                             `node_count` int(0) NULL DEFAULT NULL COMMENT '节点数量',
                             `run_nodes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '运行节点',
+                            `use_http_keepalive` bit(1) NULL DEFAULT b'0' COMMENT '是否使用http keepalive',
                             PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 

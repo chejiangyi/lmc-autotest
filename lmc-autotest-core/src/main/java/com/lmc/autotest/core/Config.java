@@ -18,6 +18,7 @@ public class Config {
         return PropertyUtils.getPropertyCache("spring.application.name","");
     }
 
+    //值允许4,5,6三个值
     public static int heartbeat(){
         return 5;
     }
@@ -46,7 +47,7 @@ public class Config {
     public static Integer maxSleepPerTheadOpen(){
         return PropertyUtils.getPropertyCache("autotest.node.maxSleepPerThreadOpen",1000);
     }
-    //http 连接池是否开启
+    //http 连接池是否开启。
     public static boolean httpPoolEnabled(){
         return PropertyUtils.getPropertyCache("autotest.node.httpPool.enabled",true);
     }

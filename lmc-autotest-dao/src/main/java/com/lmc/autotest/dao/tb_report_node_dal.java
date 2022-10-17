@@ -29,12 +29,12 @@ public class tb_report_node_dal extends tb_report_node_example_base_dal {
                 /***/
                 model.error,
                 /***/
-                model.create_time,
+                //model.create_time,
                 /***/
                 model.memory
         };
         int rev = conn.executeSql("insert into "+table+"(node,cpu,network_read,network_write,active_threads,throughput,error,create_time,memory)" +
-                "values(?,?,?,?,?,?,?,?,?)", par);
+                "values(?,?,?,?,?,?,?,now(),?)", par);
         return rev == 1;
     }
     public String copyNewTable(DbConn conn, String name){
