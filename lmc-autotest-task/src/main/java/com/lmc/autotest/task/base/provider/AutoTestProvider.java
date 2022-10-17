@@ -22,6 +22,9 @@ import lombok.val;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class AutoTestProvider {
     private tb_task_model task_model = null;
@@ -35,6 +38,7 @@ public class AutoTestProvider {
     private Date startTime = new Date();
     private String tranId = "";
     private Integer index=-1;
+    private ScheduledExecutorService checkStopThreadPool = Executors.newScheduledThreadPool(1);
     public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider,Integer index){
         this.taskid=taskid;
         this.tranId = tranId;
@@ -86,6 +90,10 @@ public class AutoTestProvider {
     public void close(String reason){
         isRun = false;
         try {
+            if(checkStopThreadPool!=null){
+                checkStopThreadPool.shutdown();
+                checkStopThreadPool=null;
+            }
             String reason2 = Config.nodeName() + ":" + StringUtils.nullToEmpty(reason);
             DbHelper.call(Config.mysqlDataSource(), (c) -> {
                 val task = new tb_task_dal().getWithLock(c, taskid);
@@ -182,33 +190,32 @@ public class AutoTestProvider {
     }
 
     private void checkStop(){
-        ThreadUtils.system().submit("检查任务终止",()->{
-            try {
-                AutoTestTool.clockCorrection();
-                LogTool.info(AutoTestProvider.class,taskid,Config.appName(),"任务上报时钟起始时间:"+DateUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
-            }catch (Exception e){
-                LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"检查任务终止时,时钟对齐出错",e);
-            }
-            while (!ThreadUtils.system().isShutdown()&&isRun){
+        try {
+            AutoTestTool.clockCorrection();
+            LogTool.info(AutoTestProvider.class,taskid,Config.appName(),"任务周期上报起始时间:"+DateUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss:SSS"));
+        }catch (Exception e){
+            LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"检查任务终止时,时钟对齐出错",e);
+        }
+        checkStopThreadPool.scheduleAtFixedRate(()->{
+            if(!ThreadUtils.system().isShutdown()&&isRun) {
+                //LogTool.info(this.getClass(), taskid, Config.appName(), "任务信息上报");
                 try {
                     val nodeReport = reportProvider.heartBeatReport();
-                    if(!StringUtils.isEmpty(task_model.check_stop_script)) {
+                    if (!StringUtils.isEmpty(task_model.check_stop_script)) {
                         val sMap = this.initMap();
-                        sMap.put("nodeReport",nodeReport==null?null:nodeReport.toModel());
-                        sMap.put("runtime",(new Date().getTime()-startTime.getTime())/1000);
+                        sMap.put("nodeReport", nodeReport == null ? null : nodeReport.toModel());
+                        sMap.put("runtime", (new Date().getTime() - startTime.getTime()) / 1000);
                         val r2 = DynamicScript.run("任务终止判断脚本", task_model.check_stop_script, sMap);
-                        if(r2!=null&&(r2 instanceof Boolean)&&(boolean)r2==false){
-                            LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-压测任务命中任务终止判断脚本规则");
+                        if (r2 != null && (r2 instanceof Boolean) && (boolean) r2 == false) {
+                            LogTool.info(this.getClass(), taskid, Config.appName(), StringUtils.nullToEmpty(task_model.task) + "-压测任务命中任务终止判断脚本规则");
                             close("命中任务终止判断脚本规则");
                         }
                     }
-                }catch (Exception e){
-                    LogTool.error(AutoTestProvider.class,taskid,Config.appName(),"检查任务终止错误",e);
+                } catch (Exception e) {
+                    LogTool.error(AutoTestProvider.class, taskid, Config.appName(), "检查任务终止错误", e);
                 }
-                ThreadUtils.sleep(Config.heartbeat()*1000);
             }
-
-        });
+        },0,Config.heartbeat(), TimeUnit.SECONDS);
         LogTool.info(this.getClass(),taskid,Config.appName(),StringUtils.nullToEmpty(task_model.task)+"-任务终止检测已开启");
     }
 

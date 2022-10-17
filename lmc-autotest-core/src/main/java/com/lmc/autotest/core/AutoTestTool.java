@@ -38,7 +38,7 @@ public class AutoTestTool {
             if((new Date().getTime()-startDate.getTime())>(Config.heartbeat()+1)*1000) {
                 throw new BsfException("时钟对齐超时,时钟对齐失败");
             }
-            ThreadUtils.sleep(100);
+            ThreadUtils.sleep(50);
         }
     }
 
