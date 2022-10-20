@@ -71,7 +71,7 @@ public class SpringMvcController {
             {
                 //默认错误拦截处理
                 response.setStatus(500);
-                modelAndView = new ModelAndView("forward:/systemerror/index/");
+                // modelAndView = new ModelAndView("forward:/systemerror/index/");
                 request.setAttribute("error", ExceptionUtils.getDetailMessage(exp));
                 log.error("页面打开出错:"+request.getRequestURI(),exp);
             }

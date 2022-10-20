@@ -92,10 +92,10 @@ ${Html.s("_html",html)}
             </#if>
         </div>
     </div>
-    <div style="color:red">${error!}</div>
     <div class="content w">
         <@leftmenu/>
         <div class="main_cont">
+            <div style="color:red">${error!}</div>
             <#nested />
         </div>
     </div>
