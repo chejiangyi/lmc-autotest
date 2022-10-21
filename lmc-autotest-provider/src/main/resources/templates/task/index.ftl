@@ -54,9 +54,11 @@ ${Html.s("pagetitle","任务列表")}
                 <p>${Utils.titleContent("执行结果",Utils.replaceChar(item.exec_result,"\n","<br/>"))!}</p>
             </td>
             <td>
-                <a href="javascript:setRunState(${item.id},'${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}')" class="btn1"> ${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}</a>
-                <a href="/task/edit/?id=${item.id}" class="btn1" target="_blank">编辑</a>
-                <#if Utils.showRunState(item.run_heart_time)=="停止" >
+                 <#if user.isAdminOrIsUser(item.create_user_id)>
+                    <a href="javascript:setRunState(${item.id},'${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}')" class="btn1"> ${Html.w(Utils.showRunState(item.run_heart_time)=="停止","运行","停止")}</a>
+                 </#if>
+                <a href="/task/edit/?id=${item.id}" class="btn1" target="_blank">${Html.w(user.isAdminOrIsUser(item.create_user_id),"编辑","查看")}</a>
+                <#if Utils.showRunState(item.run_heart_time)=="停止" && user.isAdminOrIsUser(item.create_user_id)>
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>
                 <br/>

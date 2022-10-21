@@ -36,7 +36,7 @@ public class HomeController extends SpringMvcController {
                 tb_user_dal dal = new tb_user_dal();
                 val user = dal.login(c,username,password);
                 if(user!=null){
-                    val u=new User();u.setUsername(user.name);
+                    val u=new User();u.setUsername(user.name);u.setRole(user.role);u.setUserid(user.id);
                     User.setCurrent(u);
                 }else{
                     throw new BsfException("登陆失败");

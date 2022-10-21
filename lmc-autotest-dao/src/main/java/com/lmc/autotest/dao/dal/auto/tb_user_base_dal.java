@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_user 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-22 14:29:28
+ * @since 2022-10-21 11:42:26
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_user_base_dal {
@@ -30,10 +30,12 @@ public class tb_user_base_dal {
                 /***/
                 model.pwd,
                 /***/
-                model.create_time
+                model.create_time,
+                /**0:普通用户 1:管理员*/
+                model.role
         };
-        int rev = conn.executeSql("insert into tb_user(name,pwd,create_time)" +
-                "values(?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_user(name,pwd,create_time,role)" +
+                "values(?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -45,9 +47,11 @@ public class tb_user_base_dal {
                 model.pwd,
                 /***/
                 model.create_time,
+                /**0:普通用户 1:管理员*/
+                model.role,
                 model.id
         };
-        int rev = conn.executeSql("update tb_user set name=?,pwd=?,create_time=? where id=?", par);
+        int rev = conn.executeSql("update tb_user set name=?,pwd=?,create_time=?,role=? where id=?", par);
         return rev == 1;
 
     }
@@ -100,6 +104,10 @@ public class tb_user_base_dal {
         /***/
         if (dr.containsKey("create_time")) {
             o.create_time = ConvertUtils.convert(dr.get("create_time"), Date.class);
+        }
+        /**0:普通用户 1:管理员*/
+        if (dr.containsKey("role")) {
+            o.role = ConvertUtils.convert(dr.get("role"), Integer.class);
         }
         return o;
     }

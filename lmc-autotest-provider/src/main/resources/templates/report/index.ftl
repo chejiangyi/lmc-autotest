@@ -38,7 +38,9 @@ ${Html.s("pagetitle","报表查询")}
             <label>创建时间</label>
             <input type="text" class="text midtext" style="width:150px;" name="create_time_from" value="${create_time_from!}" /> 至 <input type="text" class="text midtext" style="width:150px;" name="create_time_to" value="${create_time_to!}" />
             <input type="submit" class="btn1" value="搜索" accesskey="S" />
-            <input type="button" class="btn1" value="仅保留5份报告" onclick="clearReport()" />
+             <#if user.isAdmin()>
+                <input type="button" class="btn1" value="仅保留5份报告" onclick="clearReport()" />
+            </#if>
         </div>
     </form>
     <div class="tab_cont">
@@ -64,7 +66,10 @@ ${Html.s("pagetitle","报表查询")}
             <td>${item.task_name}</td>
             <td>${Html.p(item.create_time)}</td>
             <td>
-                <a href="/report/view/?id=${item.id}" class="del">查看</a>  <a href="javascript:del(${item.id})" class="del">删除</a>
+                <a href="/report/view/?id=${item.id}" class="del">查看</a>
+                <#if user.isAdminOrIsUser(item.create_user_id)>
+                    <a href="javascript:del(${item.id})" class="del">删除</a>
+                </#if>
             </td>
         </tr>
     </#list>

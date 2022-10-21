@@ -4,6 +4,7 @@ import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbConn;
 import com.free.bsf.core.util.ConvertUtils;
 import com.free.bsf.core.util.StringUtils;
+import com.lmc.autotest.core.AutoTestTool;
 import com.lmc.autotest.dao.dal.auto.tb_sample_example_base_dal;
 import com.lmc.autotest.dao.model.auto.tb_log_model;
 import com.lmc.autotest.dao.model.auto.tb_report_url_example_model;
@@ -22,6 +23,8 @@ public class tb_sample_dal extends tb_sample_example_base_dal {
         String tableSql = "select * from {table} where {sql}".replace("{table}",table2).replace("{sql}",sql2);
         StringBuilder sb = new StringBuilder(" from ("+tableSql+") t ");
         String sql = "select * "+sb.toString() +" order by t.id desc "+String.format(" limit %s,%s",(pageindex-1)*pagesize,pagesize);
+        //sql 安全检查
+        AutoTestTool.checkSampleSelectSql(sql);
         String countSql = "select count(0) "+sb.toString();
         val ds = db.executeList(sql, par.toArray());
         if (ds != null && ds.size() > 0)

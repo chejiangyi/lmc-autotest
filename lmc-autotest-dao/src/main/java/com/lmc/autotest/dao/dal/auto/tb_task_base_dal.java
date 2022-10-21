@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_task 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-17 11:31:42
+ * @since 2022-10-21 11:42:26
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_task_base_dal {
@@ -60,10 +60,12 @@ public class tb_task_base_dal {
                 /**运行节点*/
                 model.run_nodes,
                 /**是否使用http keepalive*/
-                model.use_http_keepalive
+                model.use_http_keepalive,
+                /**创建用户id*/
+                model.create_user_id
         };
-        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,first_filter_error_script,run_threads_count,http_begin_script,http_end_script,check_stop_script,sleep_time_every_thread,node_count,run_nodes,use_http_keepalive)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_task(task,filter_store,run_heart_time,create_user,create_time,update_time,update_user,exec_result,filter_script,first_filter_error_script,run_threads_count,http_begin_script,http_end_script,check_stop_script,sleep_time_every_thread,node_count,run_nodes,use_http_keepalive,create_user_id)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -105,9 +107,11 @@ public class tb_task_base_dal {
                 model.run_nodes,
                 /**是否使用http keepalive*/
                 model.use_http_keepalive,
+                /**创建用户id*/
+                model.create_user_id,
                 model.id
         };
-        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,first_filter_error_script=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=?,sleep_time_every_thread=?,node_count=?,run_nodes=?,use_http_keepalive=? where id=?", par);
+        int rev = conn.executeSql("update tb_task set task=?,filter_store=?,run_heart_time=?,create_user=?,create_time=?,update_time=?,update_user=?,exec_result=?,filter_script=?,first_filter_error_script=?,run_threads_count=?,http_begin_script=?,http_end_script=?,check_stop_script=?,sleep_time_every_thread=?,node_count=?,run_nodes=?,use_http_keepalive=?,create_user_id=? where id=?", par);
         return rev == 1;
 
     }
@@ -220,6 +224,10 @@ public class tb_task_base_dal {
         /**是否使用http keepalive*/
         if (dr.containsKey("use_http_keepalive")) {
             o.use_http_keepalive = ConvertUtils.convert(dr.get("use_http_keepalive"), Boolean.class);
+        }
+        /**创建用户id*/
+        if (dr.containsKey("create_user_id")) {
+            o.create_user_id = ConvertUtils.convert(dr.get("create_user_id"), Integer.class);
         }
         return o;
     }

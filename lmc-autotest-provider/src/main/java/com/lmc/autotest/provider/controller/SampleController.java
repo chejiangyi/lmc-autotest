@@ -89,6 +89,11 @@ public class SampleController extends SpringMvcController {
                         return new tb_sample_dal().tables(c).stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
                     });
 
+                    tables = tables.stream().filter(t->
+                            User.getCurrent().isAdmin()||
+                            DateUtils.strToDate(t.replace("auto_tb_sample_",""),"yyyy_MM_dd")!=null||
+                            t.equalsIgnoreCase("auto_tb_sample_"+User.getCurrent().getUsername())).collect(Collectors.toList());
+
                     request.setAttribute("model", list);
                     request.setAttribute("tables", tables);
                 }

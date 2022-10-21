@@ -1,12 +1,16 @@
 package com.lmc.autotest.core;
 
+import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
+import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
+import com.alibaba.druid.stat.TableStat;
 import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.db.DbHelper;
-import com.free.bsf.core.util.ConvertUtils;
-import com.free.bsf.core.util.DateUtils;
-import com.free.bsf.core.util.LogUtils;
-import com.free.bsf.core.util.ThreadUtils;
+import com.free.bsf.core.util.*;
 import lombok.val;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -20,7 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
-import java.util.Date;
+import java.util.*;
 
 public class AutoTestTool {
     //时钟对齐,只允许心跳起始点开始!最多一个心跳周期内对齐成功
@@ -124,6 +128,35 @@ public class AutoTestTool {
                 }catch (Exception e){
                     LogUtils.error(AutoTestTool.class,Config.appName(),"反射出错",e);
                 }
+            }
+        }
+    }
+
+    public static void checkSampleSelectSql(String sql){
+        //SQLStatement sqlStatement = SQLUtils.parseSingleMysqlStatement(sql);
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, DbType.mysql);
+        if (CollectionUtils.isEmpty(stmtList)) {
+            throw new BsfException("未检测到sql");
+        }
+        val tableNames = new ArrayList<String>();
+        for (SQLStatement sqlStatement : stmtList) {
+            if(!(sqlStatement instanceof SQLSelectStatement)){
+                throw new BsfException("检测到非select语句:"+sqlStatement.toString());
+            }
+            MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
+            sqlStatement.accept(visitor);
+            Map<TableStat.Name, TableStat> tables = visitor.getTables();
+            Set<TableStat.Name> tableNameSet = tables.keySet();
+            for (TableStat.Name name : tableNameSet) {
+                String tableName = name.getName();
+                if (!StringUtils.isEmpty(tableName)) {
+                    tableNames.add(tableName);
+                }
+            }
+        }
+        for(val tableName:tableNames){
+            if(!tableName.startsWith("auto_tb_sample_")){
+                throw new BsfException("仅支持查询auto_tb_sample_开头的样本表");
             }
         }
     }

@@ -20,7 +20,9 @@ ${Html.s("pagetitle","采样查询")}
             <input type="hidden" id="download" name="download" value="0"/>
             <input type="submit" class="btn1" value="搜索" accesskey="S" onclick="$('#download').val('0');return true;" />
             <input type="submit" class="btn1" value="下载" accesskey="D" onclick="$('#download').val('1');return true;" />${Html.help("一次最多能下载2万条样本")}
-            <input type="button" class="btn1" value="仅保留最近2周样本" accesskey="D" onclick="clearSample()" />${Html.help("清理过多样本信息,仅保留最近2周自动录制的样本")}
+             <#if user.isAdmin()>
+                <input type="button" class="btn1" value="仅保留最近2周样本" accesskey="D" onclick="clearSample()" />${Html.help("清理过多样本信息,仅保留最近2周自动录制的样本")}
+            </#if>
         </div>
     </form>
     <div>

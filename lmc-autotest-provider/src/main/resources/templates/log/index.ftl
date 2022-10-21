@@ -43,7 +43,9 @@ ${Html.s("pagetitle","日志列表")}
             <label>内容</label><input type="text" class="text midtext" style="width:300px;" name="message" value="${message!}" />
             <label>创建时间</label><input type="text" class="text midtext" style="width:150px;" name="create_time_from" value="${create_time_from!}" /> 至 <input type="text" class="text midtext" style="width:150px;" name="create_time_to" value="${create_time_to!}" />
             <input type="submit" class="btn1" value="搜索" accesskey="S" />
-            <input type="button" class="btn1" value="清空" onclick="clearLog()" />
+            <#if user.isAdmin()>
+                <input type="button" class="btn1" value="清空" onclick="clearLog()" />
+            </#if>
         </div>
     </form>
     <div class="tab_cont">

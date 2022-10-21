@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_log 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-09-28 11:59:33
+ * @since 2022-10-21 11:42:25
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_log_base_dal {
@@ -26,17 +26,17 @@ public class tb_log_base_dal {
     public boolean add(DbConn conn, tb_log_model model) {
         val par = new Object[]{
                 /***/
+                model.task_id,
+                /***/
                 model.node,
                 /***/
                 model.type,
                 /***/
                 model.create_time,
                 /***/
-                model.message,
-                /***/
-                model.task_id
+                model.message
         };
-        int rev = conn.executeSql("insert into tb_log(node,type,create_time,message,task_id)" +
+        int rev = conn.executeSql("insert into tb_log(task_id,node,type,create_time,message)" +
                 "values(?,?,?,?,?)", par);
         return rev == 1;
     }
@@ -44,6 +44,8 @@ public class tb_log_base_dal {
     public boolean edit(DbConn conn, tb_log_model model) {
         val par = new Object[]{
                 /***/
+                model.task_id,
+                /***/
                 model.node,
                 /***/
                 model.type,
@@ -51,11 +53,9 @@ public class tb_log_base_dal {
                 model.create_time,
                 /***/
                 model.message,
-                /***/
-                model.task_id,
                 model.id
         };
-        int rev = conn.executeSql("update tb_log set node=?,type=?,create_time=?,message=?,task_id=? where id=?", par);
+        int rev = conn.executeSql("update tb_log set task_id=?,node=?,type=?,create_time=?,message=? where id=?", par);
         return rev == 1;
 
     }
@@ -98,6 +98,10 @@ public class tb_log_base_dal {
             o.id = ConvertUtils.convert(dr.get("id"), Integer.class);
         }
         /***/
+        if (dr.containsKey("task_id")) {
+            o.task_id = ConvertUtils.convert(dr.get("task_id"), Integer.class);
+        }
+        /***/
         if (dr.containsKey("node")) {
             o.node = ConvertUtils.convert(dr.get("node"), String.class);
         }
@@ -112,10 +116,6 @@ public class tb_log_base_dal {
         /***/
         if (dr.containsKey("message")) {
             o.message = ConvertUtils.convert(dr.get("message"), String.class);
-        }
-        /***/
-        if (dr.containsKey("task_id")) {
-            o.task_id = ConvertUtils.convert(dr.get("task_id"), Integer.class);
         }
         return o;
     }

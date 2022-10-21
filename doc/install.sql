@@ -1,18 +1,8 @@
 /*
  Navicat Premium Data Transfer
+ by 车江毅
 
- Source Server         : 192.168.8.56
- Source Server Type    : MySQL
- Source Server Version : 80027
- Source Host           : 192.168.8.56:3306
- Source Schema         : autotest
-
- Target Server Type    : MySQL
- Target Server Version : 80027
- File Encoding         : 65001
-
- Author: chejiangyi
- Date: 27/09/2022 13:11:29
+ Date: 21/10/2022 13:35:19
 */
 
 SET NAMES utf8mb4;
@@ -30,7 +20,7 @@ CREATE TABLE `tb_log`  (
                            `create_time` datetime(0) NULL DEFAULT NULL,
                            `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL,
                            PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 118 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_node
@@ -49,7 +39,7 @@ CREATE TABLE `tb_node`  (
                             `local_memory` int(0) NULL DEFAULT NULL,
                             `used` bit(1) NULL DEFAULT b'0' COMMENT '节点状态 1:使用中 0:未使用',
                             PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_report
@@ -72,9 +62,11 @@ CREATE TABLE `tb_report`  (
                               `task_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
                               `filter_table_lines` int(0) NULL DEFAULT NULL,
                               `filter_table_error_lines` int(0) NULL DEFAULT NULL,
+                              `create_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '用户',
+                              `create_user_id` int(0) NULL DEFAULT NULL COMMENT '用户id',
                               PRIMARY KEY (`id`) USING BTREE,
                               UNIQUE INDEX `事务id`(`tran_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 157 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 280 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_report_node_example
@@ -129,7 +121,7 @@ CREATE TABLE `tb_sample_example`  (
                                       `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
                                       `operator_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '枚举:未知,操作,仅查询',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 427 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_task
@@ -155,6 +147,7 @@ CREATE TABLE `tb_task`  (
                             `node_count` int(0) NULL DEFAULT NULL COMMENT '节点数量',
                             `run_nodes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '运行节点',
                             `use_http_keepalive` bit(1) NULL DEFAULT b'0' COMMENT '是否使用http keepalive',
+                            `create_user_id` int(0) NULL DEFAULT NULL COMMENT '创建用户id',
                             PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
@@ -167,11 +160,11 @@ CREATE TABLE `tb_user`  (
                             `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
                             `pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
                             `create_time` datetime(0) NULL DEFAULT NULL,
+                            `role` tinyint(0) NULL DEFAULT 0 COMMENT '0:普通用户 1:管理员',
                             PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
-
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- 添加管理员账户
-INSERT INTO `tb_user`( `name`, `pwd`, `create_time`) VALUES ('admin', 'admin', now());
+INSERT INTO `tb_user`( `name`, `pwd`, `create_time`,`role`) VALUES ('admin', 'admin', now(),1);
 
 SET FOREIGN_KEY_CHECKS = 1;

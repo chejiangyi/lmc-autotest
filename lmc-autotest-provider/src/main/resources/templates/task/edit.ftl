@@ -62,7 +62,7 @@ ${Html.s("pagetitle","编辑任务")}
             </li>
 
             <li>
-               <#if Utils.showRunState(model.run_heart_time)=="停止" >
+               <#if Utils.showRunState(model.run_heart_time)=="停止" && user.isAdminOrIsUser(model.create_user_id)  >
                     <input type="button" class="btn1" style="" value="保存" onclick="return save()" />
                </#if>
             </li>

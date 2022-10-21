@@ -32,6 +32,11 @@
                     <ul class="level2">
                         <li><a href="/sample/index">采样查询</a></li>
                     </ul>
+                    <#if user??&&user.isAdmin()>
+                    <ul class="level2">
+                        <li><a href="/user/index">用户管理</a></li>
+                    </ul>
+                    </#if>
                     <ul class="level2">
                         <li><a target="_blank" href="https://gitee.com/chejiangyi/lmc-autotest">帮助文档</a></li>
                     </ul>
@@ -85,7 +90,7 @@ ${Html.s("_html",html)}
         <span style="color: white; font-size: 25px; margin-left: 25px; font-weight: bold; font-family: 微软雅黑;">全链路自动化测试平台</span>
         <div class="fr mr10">
             <#if user??>
-                <span id="toptips" class="remind fl"><span id="toptips1">${user.username!}</span></span>
+                <span id="toptips" class="remind fl" title="${user.roleName()}"><span id="toptips1">${user.username!}</span></span>
                 <a href="/loginout" class="fl">退出</a>
             <#else>
                 <a href="/" class="fl">登录</a>

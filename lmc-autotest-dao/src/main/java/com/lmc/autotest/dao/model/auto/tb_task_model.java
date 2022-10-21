@@ -10,7 +10,7 @@ import lombok.*;
  * tb_task 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-17 11:31:42
+ * @since 2022-10-21 11:42:26
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -91,4 +91,8 @@ public class tb_task_model implements Serializable {
      * 是否使用http keepalive
      */
     public Boolean use_http_keepalive;
+    /**
+     * 创建用户id
+     */
+    public Integer create_user_id;
 }
