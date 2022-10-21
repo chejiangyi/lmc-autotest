@@ -10,7 +10,7 @@ import lombok.*;
  * tb_user 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-21 11:42:26
+ * @since 2022-10-21 13:49:23
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -29,4 +29,8 @@ public class tb_user_model implements Serializable {
      * 0:普通用户 1:管理员
      */
     public Integer role;
+    /**
+     * 限制节点数
+     */
+    public Integer limit_node_count;
 }

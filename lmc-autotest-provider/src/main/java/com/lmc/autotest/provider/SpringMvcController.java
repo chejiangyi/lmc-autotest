@@ -117,7 +117,7 @@ public class SpringMvcController {
 //                if(exp instanceof FlowException) {
 //                    jsondata = ApiResponseEntity.fail(-1,((FlowException)exp).getDetailMessage());
 //                }else{
-                    jsondata =  new ApiResponseEntity(-1,ExceptionUtils.getDetailMessage(exp),null);
+                    jsondata =  new ApiResponseEntity(-1,exp.getMessage(),null);
                     //ApiResponseEntity.fail(-1, ExceptionUtil.getDetailMessage(exp));
                 //}
                 String json = JsonUtils.serialize(jsondata);

@@ -54,6 +54,7 @@ public class UserController extends SpringMvcController {
             });
             val temp = new tb_user_model();
             temp.role=0;
+            temp.limit_node_count=100;
             request.setAttribute("model", model==null?temp:model);
         });
     }
@@ -70,7 +71,8 @@ public class UserController extends SpringMvcController {
 
     @RequestMapping("/save")
     public ModelAndView save(Integer id, String name,
-                             String pwd, Integer role
+                             String pwd, Integer role,
+                             Integer limit_node_count
     ) {
         return jsonVisit((m) -> {
             if(!checkAlphabet(name)){
@@ -88,6 +90,7 @@ public class UserController extends SpringMvcController {
                 model.name=name;
                 model.pwd=pwd;
                 model.role=role;
+                model.limit_node_count=limit_node_count;
 
                 if(model.id==null||model.id==0){
                     new tb_user_dal().add(c,model);

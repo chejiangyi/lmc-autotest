@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_user 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-21 11:42:26
+ * @since 2022-10-21 13:49:23
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_user_base_dal {
@@ -32,10 +32,12 @@ public class tb_user_base_dal {
                 /***/
                 model.create_time,
                 /**0:普通用户 1:管理员*/
-                model.role
+                model.role,
+                /**限制节点数*/
+                model.limit_node_count
         };
-        int rev = conn.executeSql("insert into tb_user(name,pwd,create_time,role)" +
-                "values(?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_user(name,pwd,create_time,role,limit_node_count)" +
+                "values(?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -49,9 +51,11 @@ public class tb_user_base_dal {
                 model.create_time,
                 /**0:普通用户 1:管理员*/
                 model.role,
+                /**限制节点数*/
+                model.limit_node_count,
                 model.id
         };
-        int rev = conn.executeSql("update tb_user set name=?,pwd=?,create_time=?,role=? where id=?", par);
+        int rev = conn.executeSql("update tb_user set name=?,pwd=?,create_time=?,role=?,limit_node_count=? where id=?", par);
         return rev == 1;
 
     }
@@ -108,6 +112,10 @@ public class tb_user_base_dal {
         /**0:普通用户 1:管理员*/
         if (dr.containsKey("role")) {
             o.role = ConvertUtils.convert(dr.get("role"), Integer.class);
+        }
+        /**限制节点数*/
+        if (dr.containsKey("limit_node_count")) {
+            o.limit_node_count = ConvertUtils.convert(dr.get("limit_node_count"), Integer.class);
         }
         return o;
     }

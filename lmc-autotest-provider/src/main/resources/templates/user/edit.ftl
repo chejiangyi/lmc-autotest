@@ -26,6 +26,11 @@ ${Html.s("pagetitle","编辑用户")}
                 <input class="mylongtext" type="text" id="pwd" name="pwd" value="${model.pwd!}" />
             </li>
             <li>
+                <label>限制最大节点数</label>
+                <input class="mylongtext" type="text" id="limit_node_count" name="limit_node_count" value="${model.limit_node_count!}" />
+                ${Html.help("限制用户在压测的时候最多使用的节点数量")}
+            </li>
+            <li>
                <#if user.isAdmin()  >
                    <input type="button" class="btn1" style="" value="保存" onclick="return save()" />
                </#if>
@@ -42,6 +47,7 @@ ${Html.s("pagetitle","编辑用户")}
                     "name": $("#name").val(),
                     "pwd": $("#pwd").val(),
                     "role": $("#role").val(),
+                    "limit_node_count": $("#limit_node_count").val()
                 },
                 function (data) {
                     if (data.code < 0) {

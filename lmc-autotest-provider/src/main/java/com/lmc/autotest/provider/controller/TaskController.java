@@ -11,7 +11,9 @@ import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.dao.tb_node_dal;
 import com.lmc.autotest.dao.tb_task_dal;
+import com.lmc.autotest.dao.tb_user_dal;
 import com.lmc.autotest.provider.SpringMvcController;
+import com.lmc.autotest.provider.base.User;
 import com.lmc.autotest.provider.pager.Pager1;
 import com.lmc.autotest.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -102,6 +104,10 @@ public class TaskController extends SpringMvcController {
     public ModelAndView setRunState(Integer id,String todo) {
         return jsonVisit((m) -> {
             DbHelper.call(Config.mysqlDataSource(), c -> {
+                tb_task_model model = new tb_task_dal().get(c, id);
+                val user = new tb_user_dal().get(c,User.getCurrent().getUserid());
+                if(model.node_count> user.limit_node_count)
+                    throw new BsfException(String.format("当前任务所需节点数为%s,超过当前用户最大可调用的压测节点数%s,请调整任务可用节点数或联系管理员取消限制",model.node_count,user.limit_node_count));
                 new TaskService().operatorTask(c,id,todo);
             });
             return true;

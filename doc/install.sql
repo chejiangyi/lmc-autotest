@@ -161,10 +161,11 @@ CREATE TABLE `tb_user`  (
                             `pwd` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
                             `create_time` datetime(0) NULL DEFAULT NULL,
                             `role` tinyint(0) NULL DEFAULT 0 COMMENT '0:普通用户 1:管理员',
+                            `limit_node_count` int(0) NULL DEFAULT 0 COMMENT '限制节点数',
                             PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- 添加管理员账户
-INSERT INTO `tb_user`( `name`, `pwd`, `create_time`,`role`) VALUES ('admin', 'admin', now(),1);
+INSERT INTO `tb_user`( `name`, `pwd`, `create_time`,`role`,`limit_node_count`) VALUES ('admin', 'admin', now(),1,200);
 
 SET FOREIGN_KEY_CHECKS = 1;
