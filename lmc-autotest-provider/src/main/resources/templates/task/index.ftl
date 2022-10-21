@@ -61,6 +61,7 @@ ${Html.s("pagetitle","任务列表")}
                 <#if Utils.showRunState(item.run_heart_time)=="停止" && user.isAdminOrIsUser(item.create_user_id)>
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>
+                <a href="javascript:copy(${item.id})" class="del">复制</a>
                 <br/>
                 <a href="/report/index/?report_name=${item.task}" class="btn1">压测报告</a>
                 <a href="/log/index/?taskid=${item.id}" class="btn1">日志</a>
@@ -99,6 +100,27 @@ ${Html.s("pagetitle","任务列表")}
             }
             $.ajax({
                 url: '/task/del/',
+                type: "post",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.code > 0) {
+                        window.location.reload();
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                }
+            });
+        }
+        function copy(id) {
+            if(!confirm("请确认复制压测任务？"))
+            {
+                return;
+            }
+            $.ajax({
+                url: '/task/copy/',
                 type: "post",
                 data: {
                     id: id

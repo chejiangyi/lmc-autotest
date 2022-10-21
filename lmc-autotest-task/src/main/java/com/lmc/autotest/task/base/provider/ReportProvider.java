@@ -66,6 +66,8 @@ public class ReportProvider {
                     model.setTran_id(tranId);
                     model.setFilter_table_error_lines(0);
                     model.setFilter_table_lines(0);
+                    model.create_user=task_model.create_user;
+                    model.create_user_id=task_model.create_user_id;
                     new tb_report_dal().tryAdd(c,model);
                 }
                 report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);

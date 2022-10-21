@@ -72,24 +72,26 @@ public class TaskController extends SpringMvcController {
                     model = new tb_task_model();
                     model.run_heart_time = DateUtils.strToDate("1900-01-01","yyyy-MM-dd");
                     model.create_time = new Date();
+                    model.run_nodes="";
                     model.exec_result="";
+                    model.create_user = this.getUser().getUsername();
+                    model.create_user_id=this.getUser().getUserid();
                 }else {
                 }
                 model.first_filter_error_script = first_filter_error_script;
                 model.http_begin_script = http_begin_script;
                 model.check_stop_script = check_stop_script;
 //                model.filter_table = filter_table;
-                model.create_user = this.getUser().getUsername();
                 model.filter_script = filter_script;
                 model.filter_store = filter_store;
                 model.http_end_script = http_end_script;
                 model.node_count = node_count;
                 model.run_threads_count = run_threads_count;
-                model.update_time = new Date();
                 model.task = task;
-                model.update_user = this.getUser().getUsername();
                 model.sleep_time_every_thread=sleep_time_every_thread;
                 model.use_http_keepalive = use_http_keepalive;
+                model.update_time = new Date();
+                model.update_user = this.getUser().getUsername();
                 if(model.id==null||model.id==0){
                     new tb_task_dal().add(c,model);
                 }else {
@@ -124,6 +126,28 @@ public class TaskController extends SpringMvcController {
                 }
                 if(model!=null) {
                     new tb_task_dal().delete(c, id);
+                }
+            });
+            return true;
+        });
+    }
+
+    @RequestMapping("/copy/")
+    public ModelAndView copy(Integer id) {
+        return jsonVisit((m) -> {
+            DbHelper.call(Config.mysqlDataSource(), c -> {
+                tb_task_model model = new tb_task_dal().get(c, id);
+                if(model!=null) {
+                    model.id=0;
+                    model.task="复制-"+model.task;
+                    model.create_user = this.getUser().getUsername();
+                    model.create_user_id=this.getUser().getUserid();
+                    model.update_time = new Date();
+                    model.update_user = this.getUser().getUsername();
+                    model.run_heart_time = DateUtils.strToDate("1900-01-01","yyyy-MM-dd");
+                    model.exec_result="";
+                    model.run_nodes="";
+                    new tb_task_dal().add(c, model);
                 }
             });
             return true;
