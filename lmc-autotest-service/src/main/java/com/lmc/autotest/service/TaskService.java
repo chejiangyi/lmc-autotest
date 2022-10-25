@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class TaskService {
     //任务操作锁,未来多节点换成分布式锁
     private static Object TASK_OPERATOR_LOCK = new Object();
-    public void operatorTask(DbConn c,Integer id,String todo){
+    public void operatorTask(DbConn c,Integer id,String todo,Integer userid){
         synchronized (TASK_OPERATOR_LOCK) {
             tb_task_model model = new tb_task_dal().get(c, id);
             var nodes = new tb_node_dal().getOnlineNodes(c);
@@ -56,7 +56,7 @@ public class TaskService {
             ThreadUtils.parallelFor("并行操作节点开关", nodes2.size(), nodes2, (n) -> {
                 val index = nodes2.indexOf(n);
                 val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.port + "/" + api2 + "/",
-                        HttpClient.Params.custom().add("taskId", id)
+                        HttpClient.Params.custom().add("taskId", id).add("userid",userid)
                                 .add("tranId", tranId).add("index",index).build());
                 ApiResponseEntity es = JsonUtils.deserialize(rs, ApiResponseEntity.class);
                 synchronized (lock) {

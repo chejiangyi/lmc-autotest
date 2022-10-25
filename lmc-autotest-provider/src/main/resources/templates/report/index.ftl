@@ -57,6 +57,7 @@ ${Html.s("pagetitle","报表查询")}
         <th style="width:20%">报表名</th>
         <th style="width:20%">关联任务</th>
         <th style="width:15%">创建时间</th>
+        <th style="width:15%">操作用户</th>
         <th style="width:10%">操作</th>
     </tr>
     <#list model as item>
@@ -65,6 +66,7 @@ ${Html.s("pagetitle","报表查询")}
             <td>${item.report_name}</td>
             <td>${item.task_name}</td>
             <td>${Html.p(item.create_time)}</td>
+            <td>${item.create_user!}</td>
             <td>
                 <a href="/report/view/?id=${item.id}" class="del">查看</a>
                 <#if user.isAdminOrIsUser(item.create_user_id)>

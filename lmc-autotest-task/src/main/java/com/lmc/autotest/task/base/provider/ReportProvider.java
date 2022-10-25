@@ -31,13 +31,14 @@ public class ReportProvider {
     tb_report_model report_model = null;
     volatile ReportNodeInfo reportNodeInfo = null;
     volatile ReportUrlMap reportUrlMap = null;
-    public void init(tb_task_model task_model,String tranId){
+    public void init(tb_task_model task_model,String tranId,Integer userid){
             report_model = DbHelper.get(Config.mysqlDataSource(), (c) -> {
                 val taskTemp = new tb_task_dal().getWithLock(c,task_model.id);
                 //lock tb_task data
                 new tb_task_dal().runHeartBeat(c,task_model.id);
                 var nodes = new tb_node_dal().getOnlineNodes(c);
                 var nodeNames = Arrays.asList(task_model.run_nodes.split(","));
+                var user = new tb_user_dal().get(c,userid);
                 nodes=nodes.stream().filter(n->nodeNames.contains(n.node)).collect(Collectors.toList());
                 val nodeInfos = new ArrayList<NodeInfo>();
                 for(val n:nodes){
@@ -66,8 +67,8 @@ public class ReportProvider {
                     model.setTran_id(tranId);
                     model.setFilter_table_error_lines(0);
                     model.setFilter_table_lines(0);
-                    model.create_user=task_model.create_user;
-                    model.create_user_id=task_model.create_user_id;
+                    model.create_user=user.name;
+                    model.create_user_id=user.id;
                     new tb_report_dal().tryAdd(c,model);
                 }
                 report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);

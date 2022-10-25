@@ -39,11 +39,13 @@ public class AutoTestProvider {
     private String tranId = "";
     private Integer index=-1;
     private ScheduledExecutorService checkStopThreadPool = Executors.newScheduledThreadPool(1);
-    public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider,Integer index){
+    private Integer userid=0;
+    public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider,Integer index,Integer userid){
         this.taskid=taskid;
         this.tranId = tranId;
         this.nodeProvider = nodeProvider;
         this.index=index;
+        this.userid=userid;
     }
 
     public AutoTestProvider init(){
@@ -56,7 +58,7 @@ public class AutoTestProvider {
                 throw new BsfException(taskid + "任务不存在");
 
             this.reportProvider = new ReportProvider();
-            this.reportProvider.init(task_model,this.tranId);
+            this.reportProvider.init(task_model,this.tranId,this.userid);
             return this;
         } catch (Exception e) {
             LogTool.error(this.getClass(), taskid,Config.appName(), "初始化自动化测试失败", e);

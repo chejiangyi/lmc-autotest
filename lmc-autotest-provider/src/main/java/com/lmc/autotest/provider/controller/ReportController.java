@@ -175,4 +175,18 @@ public class ReportController extends SpringMvcController {
             return true;
         });
     }
+
+    @RequestMapping("/del/")
+    public ModelAndView del(Integer id) {
+        return jsonVisit((m) -> {
+            DbHelper.call(Config.mysqlDataSource(), c -> {
+                val dal = new tb_report_dal();
+                val report = dal.get(c,id);
+                dal.dropTable(c,report.report_node_table);
+                dal.dropTable(c,report.report_url_table);
+                dal.delete(c,report.id);
+            });
+            return true;
+        });
+    }
 }

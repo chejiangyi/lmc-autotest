@@ -12,13 +12,13 @@ ${Html.s("pagetitle","用户列表")}
     </div>
 </div>
 <div class="orderlist m10 myorder">
-<#--    <form action="/task/index/" method="post" id="searchForm">-->
+    <form action="/user/index/" method="post" id="searchForm">
 <#--        <div class="search">-->
 <#--            <label>任务名</label><input type="text" class="text midtext" style="width:150px;" name="task" value="${task!}" />-->
 <#--            <label>创建人</label><input type="text" class="text midtext" style="width:150px;" name="create_user" value="${create_user!}" />-->
 <#--            <input type="submit" class="btn1" value="搜索" accesskey="S" />-->
 <#--        </div>-->
-<#--    </form>-->
+    </form>
     <div class="tab_cont">
         <div class="List">
             <@_list/>

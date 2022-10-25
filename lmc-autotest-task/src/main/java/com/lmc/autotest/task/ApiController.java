@@ -18,7 +18,7 @@ public class ApiController  {
 
 
 	@PostMapping("/opentask/")
-	public ApiResponseEntity<Integer> openTask(Integer taskId,String tranId,Integer index) {
+	public ApiResponseEntity<Integer> openTask(Integer taskId,String tranId,Integer index,Integer userid) {
 		try {
 			if(tranId==null)
 			{
@@ -27,7 +27,7 @@ public class ApiController  {
 			if(index==null){
 				index=0;
 			}
-			NodeManager.Default.open(taskId,tranId,index);
+			NodeManager.Default.open(taskId,tranId,index,userid);
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));

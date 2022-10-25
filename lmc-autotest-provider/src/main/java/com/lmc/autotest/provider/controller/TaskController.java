@@ -110,7 +110,7 @@ public class TaskController extends SpringMvcController {
                 val user = new tb_user_dal().get(c,User.getCurrent().getUserid());
                 if(model.node_count> user.limit_node_count)
                     throw new BsfException(String.format("当前任务所需节点数为%s,超过当前用户最大可调用的压测节点数%s,请调整任务可用节点数或联系管理员取消限制",model.node_count,user.limit_node_count));
-                new TaskService().operatorTask(c,id,todo);
+                new TaskService().operatorTask(c,id,todo,user.id);
             });
             return true;
         });

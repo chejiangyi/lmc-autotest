@@ -27,7 +27,7 @@ public class NodeManager {
             throw e;
         }
     }
-    public synchronized void open(Integer taskId,String tranId,Integer index){
+    public synchronized void open(Integer taskId,String tranId,Integer index,Integer userid){
         if(autoTestProvider !=null){
             throw new BsfException("任务已经在运行中");
         }
@@ -35,7 +35,7 @@ public class NodeManager {
             throw new BsfException("节点正在运行任务");
         }
         this.nodeProvider.updateState(true);
-        AutoTestProvider t = new AutoTestProvider(taskId,tranId,nodeProvider,index);
+        AutoTestProvider t = new AutoTestProvider(taskId,tranId,nodeProvider,index, userid);
         t.init();
         autoTestProvider=t;
         t.run();
