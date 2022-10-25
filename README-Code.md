@@ -76,4 +76,4 @@ autotest.store.mysql.password={填入密码}
 源码比较简单,需要集成的人可以抽取源码另外打包亦可！
 
 
-by 车江毅
+by [车江毅](https://www.cnblogs.com/chejiangyi/)

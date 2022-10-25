@@ -75,4 +75,4 @@ lmc-autotest-provider /bin/bash
 java -jar -Xss256k -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Xmx256M lmc-autotest-task.jar
 ```
 
-by 车江毅
+by [车江毅](https://www.cnblogs.com/chejiangyi/)

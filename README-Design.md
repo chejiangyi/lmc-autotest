@@ -6,4 +6,4 @@
 ### 压测任务生命周期图
 ![Image text](/doc/task_life.jpg)
 
-by 车江毅
+by [车江毅](https://www.cnblogs.com/chejiangyi/)

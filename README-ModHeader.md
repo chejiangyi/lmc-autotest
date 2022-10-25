@@ -14,4 +14,4 @@
 ##  自动化测试搜索录制的api请求(筛选样本)
 ![筛选插件头](doc/modheader/modheaer4.png)
 
-by 车江毅
+by [车江毅](https://www.cnblogs.com/chejiangyi/)
