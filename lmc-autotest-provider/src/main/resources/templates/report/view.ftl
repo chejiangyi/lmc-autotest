@@ -181,7 +181,7 @@ ${Html.s("pagetitle","压测报告")}
                     </#list>
                 </select>
                 ${Html.help("以url为维度,可指定单个节点测算,也可以不指定节点测算某个url的统计值,这些统计值不会累加!")}
-                <#assign orderMap={"url":"接口api","throughput":"现吞吐量","error":"现错误数","visit_time":"现耗时","sum_throughput":"总吞吐量","sum_error":"总错误数","sum_visit_time":"总耗时","sum_visit_num_per":"占比"}/>
+                <#assign orderMap={"url":"接口api","throughput":"现吞吐量","error":"现错误数","visit_time":"现耗时","sum_throughput":"总吞吐量","sum_error":"总错误数","sum_visit_time":"总耗时","sum_visit_num_per":"占比","jiuling_visit_time":"90Line耗时","jiuwu_visit_time":"95Line耗时","jiuba_visit_time":"98Line耗时"}/>
                 降序
                 <select id="urlOrder" name="urlOrder" onchange="loadUrlReportChart()">
                     <#list orderMap?keys as key>
