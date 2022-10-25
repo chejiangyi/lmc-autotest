@@ -244,6 +244,9 @@ public class AutoTestProvider {
                 file.renameTo(new File(temp));
                 //重新生成文件
                 SampleUtils.reCreate(filename);
+                if(fileLines>500) {
+                    LogTool.info(this.getClass(), taskid, Config.appName(), StringUtils.nullToEmpty(task_model.task) + "样本"+fileLines+"条,过滤错误样本耗时较长,请耐心等待....");
+                }
                 Ref<Long> dealCount = new Ref<>(0L);
                 SampleUtils.readline(temp, (line) -> {
                     if (isRun) {
@@ -259,7 +262,7 @@ public class AutoTestProvider {
                             SampleUtils.writeline(filename, line);
                         }
                         dealCount.setData(dealCount.getData()+1);
-                        if(dealCount.getData()%1000==0) {
+                        if(dealCount.getData()%500==0) {
                             LogTool.info(this.getClass(), taskid, Config.appName(), StringUtils.nullToEmpty(task_model.task) + "-过滤错误样本中,已处理"+dealCount.getData()+"条!");
                         }
                     }

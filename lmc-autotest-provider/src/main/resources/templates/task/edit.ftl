@@ -35,6 +35,9 @@ ${Html.s("pagetitle","编辑任务")}
                 <input class="stext" type="text" id="sleep_time_every_thread" name="sleep_time_every_thread" value="${model.sleep_time_every_thread!}" />毫秒${Html.help("压测时每个线程之间启动的时间间隔,逐步启动,避免突然间并发导致程序无法响应,为0则表示采用系统自动算法均衡(一般为200-700ms)")}
             </li>
             <li>
+                ${Html.help("脚本编写帮助文档")}<a target="_blank" href="/content/readme.html">脚本不会编写?点击学习文档,成为编写高手！</a>
+            </li>
+            <li>
                 <div id="tabs">
                     <ul>
                         <li><a href="#tabs-1">采集样本筛选脚本${Html.help("从样本库中筛选出需要压测的样本")}</a></li>
@@ -44,21 +47,22 @@ ${Html.s("pagetitle","编辑任务")}
                         <li><a href="#tabs-5">任务终止判断脚本${Html.help("任务终止的定时(一般单个心跳时间,默认5s)判断脚本,达到条件则终止压测任务")}</a></li>
                     </ul>
                     <div id="tabs-1">
-                        <textarea id="filter_script" rows="20" cols="20" style="width: 90%;">${model.filter_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                        <textarea id="filter_script" rows="20" cols="20" style="width: 90%;">${model.filter_script!}</textarea>
                     </div>
                     <div id="tabs-2">
-                        <textarea id="first_filter_error_script" rows="20" cols="20" style="width: 90%;">${model.first_filter_error_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                        <textarea id="first_filter_error_script" rows="20" cols="20" style="width: 90%;">${model.first_filter_error_script!}</textarea>
                     </div>
                     <div id="tabs-3">
-                        <textarea id="http_begin_script" rows="20" cols="20" style="width: 90%;">${model.http_begin_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                        <textarea id="http_begin_script" rows="20" cols="20" style="width: 90%;">${model.http_begin_script!}</textarea>
                     </div>
                     <div id="tabs-4">
-                        <textarea id="http_end_script" rows="20" cols="20" style="width: 90%;">${model.http_end_script!}</textarea><a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                        <textarea id="http_end_script" rows="20" cols="20" style="width: 90%;">${model.http_end_script!}</textarea>
                     </div>
                     <div id="tabs-5">
-                        <textarea id="check_stop_script" rows="20" cols="20" style="width: 90%;">${model.check_stop_script!}</textarea> <a target="_blank" href="/content/readme.html">${Html.help("文档")}</a>
+                        <textarea id="check_stop_script" rows="20" cols="20" style="width: 90%;">${model.check_stop_script!}</textarea>
                     </div>
                 </div>
+
             </li>
 
             <li>
