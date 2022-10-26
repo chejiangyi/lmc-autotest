@@ -33,11 +33,12 @@ public class TaskController extends SpringMvcController {
     public ModelAndView index(String task, String create_user, Integer pageindex, Integer pagesize) {
         val pageIndex2 = (pageindex == null ? 1 : pageindex);
         val pageSize2 = (pagesize == null ? 10 : pagesize);
-        html.s2("task", StringUtils.nullToEmpty(task)).s2("create_user", StringUtils.nullToEmpty(create_user)).s2("pageindex", pageindex).s2("pagesize", pagesize);
+        val create_user2 = create_user==null?User.getCurrent().getUsername():create_user;
+        html.s2("task", StringUtils.nullToEmpty(task)).s2("create_user", create_user2).s2("pageindex", pageindex).s2("pagesize", pagesize);
         return pageVisit((m) -> {
                     Ref<Integer> totalSize = new Ref<>(0);
                     val list = DbHelper.get(Config.mysqlDataSource(), c -> {
-                        return new tb_task_dal().searchPage(c, task, create_user, pageIndex2, pageSize2, totalSize);
+                        return new tb_task_dal().searchPage(c, task, create_user2, pageIndex2, pageSize2, totalSize);
                     });
                     new Pager1(pageIndex2, totalSize.getData()).setPageSize(pageSize2).out();
                     request.setAttribute("model", list);
