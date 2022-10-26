@@ -87,7 +87,7 @@ ${Html.s("_html",html)}
     </head>
     <body>
     <div class="header">
-        <span style="color: white; font-size: 25px; margin-left: 25px; font-weight: bold; font-family: 微软雅黑;">全链路自动化测试平台</span>
+        <span style="color: white; font-size: 25px; margin-left: 25px; font-weight: bold; font-family: 微软雅黑;">BSF全链路自动化测试平台</span>
         <div class="fr mr10">
             <#if user??>
                 <span id="toptips" class="remind fl" title="${user.roleName()}"><span id="toptips1">${user.username!}</span></span>
