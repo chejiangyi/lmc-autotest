@@ -1,7 +1,7 @@
 # 计划任务编写脚本示例
 计划任务编写脚本示例
 
-#### 1. 普通启动任务模板
+#### 1. 普通计划启动任务模板
 ```
 var taskid=5;/*此为任务id*/
 if(api.isTaskExist(taskid)&&!api.isTaskRunning(taskid))
