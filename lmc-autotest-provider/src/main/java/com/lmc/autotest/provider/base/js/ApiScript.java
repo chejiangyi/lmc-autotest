@@ -38,17 +38,17 @@ public class ApiScript {
 
     //普通日志
     public void log(Object info){
-        LogTool.info(ApiScript.class,0,Config.nodeName(),"定时计划脚本普通日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
+        LogTool.info(ApiScript.class,0,Config.nodeName(),"计划任务脚本普通日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
         //DebugUtil.webDebug(info);
     }
     //错误日志
     public void error(Object info){
-        LogTool.error(ApiScript.class,0,Config.nodeName(),"定时计划脚本错误日志:"+scriptInfo+"=>"+JsonUtils.serialize(info),null);
+        LogTool.error(ApiScript.class,0,Config.nodeName(),"计划任务脚本错误日志:"+scriptInfo+"=>"+JsonUtils.serialize(info),null);
         //DebugUtil.webDebug(info);
     }
     //调试日志,仅在节点日志中查看到,不展示到web站点
     public void debug(Object info){
-        LogUtils.info(ApiScript.class,Config.nodeName(),"定时计划脚本【调试】日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
+        LogUtils.info(ApiScript.class,Config.nodeName(),"计划任务脚本【调试】日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
     }
     //转json
     public String toJson(Object json){

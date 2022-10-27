@@ -33,7 +33,7 @@ public class DynamicScript {
             bind.put("api",api);
             return api.toJavaObject(compile.eval(bind));
         }catch (Exception e){
-            LogTool.error(DynamicScript.class,0, Config.appName(),"定时计划解析脚本出错,scriptInfo:"+scriptInfo,e);
+            LogTool.error(DynamicScript.class,0, Config.appName(),"计划任务解析脚本出错,scriptInfo:"+scriptInfo,e);
            // DebugUtil.webDebug(ExceptionUtils.getDetailMessage(e));
             throw new BsfException(e);
         }
