@@ -16,12 +16,14 @@ import org.apache.commons.compress.utils.Lists;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class TaskService {
     //任务操作锁,未来多节点换成分布式锁
     private static Object TASK_OPERATOR_LOCK = new Object();
-    public void operatorTask(DbConn c,Integer id,String todo,Integer userid){
+    public void operatorTask(DbConn c, Integer id, String todo, Integer userid, Map<String,Object> params){
         synchronized (TASK_OPERATOR_LOCK) {
             tb_task_model model = new tb_task_dal().get(c, id);
             var nodes = new tb_node_dal().getOnlineNodes(c);
@@ -43,7 +45,7 @@ public class TaskService {
                 new tb_task_dal().setRunNodes(c,id,String.join(",",nodes.stream().map(n->n.node).collect(Collectors.toList())));
             }
             if ("".equals(api)) {
-                throw new BsfException("重复操作");
+                throw new BsfException("重复操作,任务已开启或已关闭");
             }
 
             //并行操作锁
@@ -57,7 +59,8 @@ public class TaskService {
                 val index = nodes2.indexOf(n);
                 val rs = HttpClientUtils.system().post("http://" + n.ip + ":" + n.port + "/" + api2 + "/",
                         HttpClient.Params.custom().add("taskId", id).add("userid",userid)
-                                .add("tranId", tranId).add("index",index).build());
+                                .add("tranId", tranId).add("index",index)
+                                .add("params",JsonUtils.serialize(params)).build());
                 ApiResponseEntity es = JsonUtils.deserialize(rs, ApiResponseEntity.class);
                 synchronized (lock) {
                     if (es.getCode() < 0) {

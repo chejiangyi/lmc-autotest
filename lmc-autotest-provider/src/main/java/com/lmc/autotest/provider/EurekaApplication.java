@@ -6,7 +6,10 @@ import com.free.bsf.core.util.DateUtils;
 import com.free.bsf.core.util.LogUtils;
 import com.free.bsf.core.util.ThreadUtils;
 import com.lmc.autotest.core.Config;
+import com.lmc.autotest.dao.tb_job_dal;
 import com.lmc.autotest.dao.tb_node_dal;
+import com.lmc.autotest.provider.base.JobUtils;
+import com.lmc.autotest.provider.base.QuartzManager;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -37,6 +40,7 @@ public class EurekaApplication {
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(EurekaApplication.class, args);
         clearOffLineNodes();
+        startJobs();
     }
      private static void clearOffLineNodes(){
         ThreadUtils.system().submit("清理离线节点",()->{
@@ -57,5 +61,20 @@ public class EurekaApplication {
             }
 
         });
+    }
+
+    private static void startJobs(){
+        try {
+            val jobs = DbHelper.get(Config.mysqlDataSource(), (c) -> {
+                return new tb_job_dal().list(c);
+            });
+            for(val n:jobs){
+                if("运行".equals(n.state)){
+                    JobUtils.operatorJob(n.id,"运行");
+                }
+            }
+        }catch (Exception e){
+            LogUtils.error(EurekaApplication.class,Config.appName(),"初始化定时任务出错",e);
+        }
     }
 }

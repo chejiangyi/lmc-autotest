@@ -40,12 +40,18 @@ public class AutoTestProvider {
     private Integer index=-1;
     private ScheduledExecutorService checkStopThreadPool = Executors.newScheduledThreadPool(1);
     private Integer userid=0;
-    public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider,Integer index,Integer userid){
+    private Map params;
+    public AutoTestProvider(Integer taskid,String tranId,NodeProvider nodeProvider,Integer index,Integer userid,Map<String,Object> params){
         this.taskid=taskid;
         this.tranId = tranId;
         this.nodeProvider = nodeProvider;
         this.index=index;
         this.userid=userid;
+        if(params==null){
+            this.params = new HashMap<String,Object>();
+        }else {
+            this.params = params;
+        }
     }
 
     public AutoTestProvider init(){
@@ -305,6 +311,7 @@ public class AutoTestProvider {
         map.put("autotest",this);
         map.put("tranId",tranId);
         map.put("index",index);
+        map.put("params",params);
         return map;
     }
 

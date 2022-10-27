@@ -138,6 +138,12 @@
     <b>通用参数: index</b>
     <p>index对象:表示动态启动节点时,节点所分配的节点集合启动位置;从0开始,最大不超过当前节点数-1;
     </p>
+    <b>通用参数: params</b>
+    <p>params对象:任务动态传入的参数,一般用于定时计划,动态传参!
+        <script type="text/javascript">
+            document.write(showJson({"aaa":"test","param2":"参数2"}));
+        </script>
+    </p>
     <b>第一次过滤错误样本脚本: 通用参数,request,response,返回是否继续执行(true/false)</b>
     <p>request对象:
         <script type="text/javascript">

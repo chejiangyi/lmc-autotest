@@ -24,6 +24,9 @@
                         <li><a href="/report/index/">压测报告</a></li>
                     </ul>
                     <ul class="level2">
+                        <li><a href="/job/index/">定时计划</a></li>
+                    </ul>
+                    <ul class="level2">
                         <li><a href="/node/index/">节点状态</a></li>
                     </ul>
                     <ul class="level2">

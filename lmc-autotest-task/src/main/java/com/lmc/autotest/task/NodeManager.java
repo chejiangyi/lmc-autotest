@@ -8,6 +8,7 @@ import com.lmc.autotest.task.base.provider.NodeProvider;
 import lombok.Getter;
 import lombok.val;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NodeManager {
@@ -27,7 +28,7 @@ public class NodeManager {
             throw e;
         }
     }
-    public synchronized void open(Integer taskId,String tranId,Integer index,Integer userid){
+    public synchronized void open(Integer taskId, String tranId, Integer index, Integer userid, Map<String,Object> params){
         if(autoTestProvider !=null){
             throw new BsfException("任务已经在运行中");
         }
@@ -35,7 +36,7 @@ public class NodeManager {
             throw new BsfException("节点正在运行任务");
         }
         this.nodeProvider.updateState(true);
-        AutoTestProvider t = new AutoTestProvider(taskId,tranId,nodeProvider,index, userid);
+        AutoTestProvider t = new AutoTestProvider(taskId,tranId,nodeProvider,index, userid,params);
         t.init();
         autoTestProvider=t;
         t.run();

@@ -33,9 +33,9 @@ public class TaskController extends SpringMvcController {
     public ModelAndView index(String task, String create_user, Integer pageindex, Integer pagesize) {
         val pageIndex2 = (pageindex == null ? 1 : pageindex);
         val pageSize2 = (pagesize == null ? 10 : pagesize);
-        val create_user2 = create_user==null?User.getCurrent().getUsername():create_user;
-        html.s2("task", StringUtils.nullToEmpty(task)).s2("create_user", create_user2).s2("pageindex", pageindex).s2("pagesize", pagesize);
         return pageVisit((m) -> {
+                    val create_user2 = create_user==null?User.getCurrent().getUsername():create_user;
+                    html.s2("task", StringUtils.nullToEmpty(task)).s2("create_user", create_user2).s2("pageindex", pageindex).s2("pagesize", pagesize);
                     Ref<Integer> totalSize = new Ref<>(0);
                     val list = DbHelper.get(Config.mysqlDataSource(), c -> {
                         return new tb_task_dal().searchPage(c, task, create_user2, pageIndex2, pageSize2, totalSize);
@@ -111,7 +111,7 @@ public class TaskController extends SpringMvcController {
                 val user = new tb_user_dal().get(c,User.getCurrent().getUserid());
                 if(model.node_count> user.limit_node_count)
                     throw new BsfException(String.format("当前任务所需节点数为%s,超过当前用户最大可调用的压测节点数%s,请调整任务可用节点数或联系管理员取消限制",model.node_count,user.limit_node_count));
-                new TaskService().operatorTask(c,id,todo,user.id);
+                new TaskService().operatorTask(c,id,todo,user.id,null);
             });
             return true;
         });

@@ -36,6 +36,8 @@ ${Html.s("pagetitle","编辑任务")}
             </li>
             <li>
                 ${Html.help("脚本编写帮助文档")}<a target="_blank" href="/content/readme.html">脚本不会编写?点击学习文档,成为编写高手！</a>
+                ${Html.help("基础案例篇文档")}<a target="_blank" href="https://gitee.com/chejiangyi/lmc-autotest/blob/master/README-Demo.md">基础案例篇</a>
+                ${Html.help("高级案例篇文档")}<a target="_blank" href="https://gitee.com/chejiangyi/lmc-autotest/blob/master/README-Demo2.md">高手进阶篇</a>
             </li>
             <li>
                 <div id="tabs">

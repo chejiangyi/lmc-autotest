@@ -35,10 +35,6 @@
 			<groupId>com.free.bsf</groupId>
 			<artifactId>free-bsf-autotest</artifactId>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.quartz-scheduler</groupId>-->
-<!--			<artifactId>quartz</artifactId>-->
-<!--		</dependency>-->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>

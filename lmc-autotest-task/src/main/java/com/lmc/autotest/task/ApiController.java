@@ -1,5 +1,6 @@
 package com.lmc.autotest.task;
 import com.free.bsf.core.util.ExceptionUtils;
+import com.free.bsf.core.util.JsonUtils;
 import com.lmc.autotest.core.ApiResponseEntity;
 import com.lmc.autotest.task.base.IOUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Slf4j
@@ -18,7 +20,7 @@ public class ApiController  {
 
 
 	@PostMapping("/opentask/")
-	public ApiResponseEntity<Integer> openTask(Integer taskId,String tranId,Integer index,Integer userid) {
+	public ApiResponseEntity<Integer> openTask(Integer taskId,String tranId,Integer index,Integer userid,String params) {
 		try {
 			if(tranId==null)
 			{
@@ -27,7 +29,7 @@ public class ApiController  {
 			if(index==null){
 				index=0;
 			}
-			NodeManager.Default.open(taskId,tranId,index,userid);
+			NodeManager.Default.open(taskId,tranId,index,userid, JsonUtils.deserialize(params,new HashMap<String,Object>().getClass()));
 			return ApiResponseEntity.success(1);
 		}catch (Exception e){
 			return ApiResponseEntity.fail(ExceptionUtils.getDetailMessage(e));
