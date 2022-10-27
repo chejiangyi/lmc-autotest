@@ -55,7 +55,7 @@ public class JobController extends SpringMvcController {
             val model = DbHelper.get(Config.mysqlDataSource(), c -> {
                 return new tb_job_dal().get(c, id);
             });
-            val temp = new tb_job_model();temp.state="停止";
+            val temp = new tb_job_model();temp.state="停止";temp.create_user_id=this.getUser().getUserid();
             request.setAttribute("model", model==null?temp:model);
         });
     }

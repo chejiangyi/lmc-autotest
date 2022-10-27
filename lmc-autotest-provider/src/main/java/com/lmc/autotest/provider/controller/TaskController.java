@@ -53,7 +53,7 @@ public class TaskController extends SpringMvcController {
             val model = DbHelper.get(Config.mysqlDataSource(), c -> {
                 return new tb_task_dal().get(c, id);
             });
-            val temp = new tb_task_model();
+            val temp = new tb_task_model();temp.create_user_id=this.getUser().getUserid();
             request.setAttribute("model", model==null?temp:model);
         });
     }
