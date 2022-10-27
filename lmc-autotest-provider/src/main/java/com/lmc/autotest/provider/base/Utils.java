@@ -31,6 +31,10 @@ public class Utils {
         return "停止";
     }
 
+    public String printJobState(Integer jobid){
+        return QuartzManager.isJobRunning(jobid+"")?"执行中":"";
+    }
+
     public boolean isOnline(Date heartbeatDate){
         return AutoTestTool.isOnLine(heartbeatDate);
     }

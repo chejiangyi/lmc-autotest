@@ -8,6 +8,9 @@ ${Html.s("pagetitle","定时计划列表")}
         .run{
             color: #0ABD0A;
         }
+        .run2{
+            color: #0070a9;
+        }
         .stop{
             color: red;
         }
@@ -50,7 +53,7 @@ ${Html.s("pagetitle","定时计划列表")}
             <td>${item.id}</td>
             <td>${item.title!}</td>
             <td>${item.corn!}</td>
-            <td>${Html.w(item.state=="运行","<b class='run'>运行</b>","<b class='stop'>停止")!}</td>
+            <td>${Html.w(item.state=="运行","<b class='run'>运行</b>","<b class='stop'>停止")!}${Html.w(Utils.printJobState(item.id)=="","","(<b class='run2'>执行中</b>)")}</td>
             <td>${item.create_user}<br/>${Html.p(item.create_time)}</td>
             <td>
                  <#if user.isAdminOrIsUser(item.create_user_id)>

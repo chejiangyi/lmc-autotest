@@ -14,13 +14,15 @@ public class JobUtils {
             tb_job_model model = new tb_job_dal().get(c, id);
             val ps = new HashMap<String,Object>();ps.put("jobid",id);
             if("运行".equals(todo)) {
-                QuartzManager.addJob("定时计划-" + model.id, QuartzJob.class, model.corn, ps);
+                QuartzManager.addJob("" + model.id, QuartzJob.class, model.corn, ps);
                 model.state="运行";
             }else{
-                QuartzManager.removeJob("定时计划-" + model.id);
+                QuartzManager.removeJob("" + model.id);
                 model.state="停止";
             }
             new tb_job_dal().edit(c,model);
         });
     }
+
+
 }

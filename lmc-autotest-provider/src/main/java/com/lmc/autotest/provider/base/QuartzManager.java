@@ -3,6 +3,7 @@ package com.lmc.autotest.provider.base;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -179,6 +180,38 @@ public class QuartzManager {
             sched.pauseTrigger(triggerKey);	// 停止触发器
             sched.unscheduleJob(triggerKey);// 移除触发器
             sched.deleteJob(jobKey);		// 删除任务
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**是否包含一个任务(使用默认的任务组名，触发器名，触发器组名)
+     * @param jobName	任务名称
+     */
+    public static boolean containJob(String jobName) {
+        try {
+            Scheduler sched = gSchedulerFactory.getScheduler();
+            //TriggerKey triggerKey = TriggerKey.triggerKey(jobName,TRIGGER_GROUP_NAME); 	//通过触发器名和组名获取TriggerKey
+            JobKey jobKey = JobKey.jobKey(jobName, JOB_GROUP_NAME);						//通过任务名和组名获取JobKey
+            return sched.checkExists(jobKey);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**一个任务是否再运行(使用默认的任务组名，触发器名，触发器组名)
+     * @param jobName	任务名称
+     */
+    public static boolean isJobRunning(String jobName) {
+        try {
+            List<JobExecutionContext> currentJobs =  gSchedulerFactory.getScheduler().getCurrentlyExecutingJobs();
+            for (JobExecutionContext jobCtx : currentJobs) {
+                String thisJobName = jobCtx.getJobDetail().getKey().getName();
+                String thisGroupName = jobCtx.getJobDetail().getKey().getGroup();
+                if (jobName.equalsIgnoreCase(thisJobName) && JOB_GROUP_NAME.equalsIgnoreCase(thisGroupName)) {
+                    return true;
+                }
+            }
+            return false;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

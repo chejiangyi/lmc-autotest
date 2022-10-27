@@ -20,7 +20,7 @@ ${Html.s("pagetitle","编辑定时计划")}
             </li>
             <li>
                 <label>cron表达式</label>
-                <input class="mtext" type="text" id="corn" name="corn" value="${model.corn!}" />
+                <input class="mtext" type="text" id="corn" name="corn" value="${model.corn!}" />${Html.help("同一个任务同时触发,仅保留一个在运行,不会重复运行,其他会跳过执行!")}
             </li>
             <li>
                 ${Html.help("cron表达式在线工具")}<a target="_blank" href="https://cron.qqe2.com/">cron表达式在线工具</a>
