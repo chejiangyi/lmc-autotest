@@ -185,6 +185,19 @@ public class QuartzManager {
         }
     }
 
+    /**终止一个任务(使用默认的任务组名，触发器名，触发器组名)
+     * @param jobName	任务名称
+     */
+    public static void interruptJob(String jobName) {
+        try {
+            Scheduler sched = gSchedulerFactory.getScheduler();
+            JobKey jobKey = JobKey.jobKey(jobName, JOB_GROUP_NAME);						//通过任务名和组名获取JobKey
+            sched.interrupt(jobKey);		// 终止任务
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**是否包含一个任务(使用默认的任务组名，触发器名，触发器组名)
      * @param jobName	任务名称
      */

@@ -98,6 +98,9 @@ public class JobController extends SpringMvcController {
     @RequestMapping("/setState/")
     public ModelAndView setState(Integer id,String todo) {
         return jsonVisit((m) -> {
+            if("停止".equals(todo)&&QuartzManager.isJobRunning(id+"")){
+                throw new BsfException("当前计划正在执行中,请进行'强杀'终止");
+            }
             JobUtils.operatorJob(id,todo);
             return true;
         });
@@ -114,6 +117,16 @@ public class JobController extends SpringMvcController {
                 if(model!=null) {
                     new tb_job_dal().delete(c, id);
                 }
+            });
+            return true;
+        });
+    }
+
+    @RequestMapping("/interrupt/")
+    public ModelAndView interrupt(Integer id) {
+        return jsonVisit((m) -> {
+            DbHelper.call(Config.mysqlDataSource(), c -> {
+                JobUtils.operatorJob(id,"停止");
             });
             return true;
         });

@@ -38,16 +38,19 @@ public class ApiScript {
 
     //普通日志
     public void log(Object info){
+        checkJobState();
         LogTool.info(ApiScript.class,0,Config.nodeName(),"计划任务脚本普通日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
         //DebugUtil.webDebug(info);
     }
     //错误日志
     public void error(Object info){
+        checkJobState();
         LogTool.error(ApiScript.class,0,Config.nodeName(),"计划任务脚本错误日志:"+scriptInfo+"=>"+JsonUtils.serialize(info),null);
         //DebugUtil.webDebug(info);
     }
     //调试日志,仅在节点日志中查看到,不展示到web站点
     public void debug(Object info){
+        checkJobState();
         LogUtils.info(ApiScript.class,Config.nodeName(),"计划任务脚本【调试】日志:"+scriptInfo+"=>"+JsonUtils.serialize(info));
     }
     //转json
@@ -95,11 +98,18 @@ public class ApiScript {
 
     //线程睡眠
     public void sleep(Integer time){
-        ThreadUtils.sleep(time);
+        int timeSpan = 1000;
+        val count = time/timeSpan;
+        for(var i=0;i<count;i++){
+            checkJobState();
+            ThreadUtils.sleep(timeSpan);
+        }
+        ThreadUtils.sleep(time%timeSpan);
     }
 
     //http请求
     public Object httpPost(String url,Object json){
+        checkJobState();
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeader("Content-Type", "application/json");
         httpPost.setEntity(EntityBuilder.create().setContentType(ContentType.APPLICATION_JSON).setContentEncoding("utf-8").setText(toJson(json)).build());
@@ -113,6 +123,7 @@ public class ApiScript {
 
     //http请求 form请求支持
     public Object httpPostForm(String url,Object form){
+        checkJobState();
         HttpClient.Params params = HttpClient.Params
                 .custom()
                 .setContentType(ContentType.APPLICATION_FORM_URLENCODED)
@@ -121,11 +132,13 @@ public class ApiScript {
     }
     //http请求 get
     public Object httpGet(String url){
+        checkJobState();
         return HttpClientUtils.system().get(url);
     }
 
     //执行sql
     public Object querySql(String sql,Object[] ps){
+        checkJobState();
         try{
         val r = DbHelper.get(ContextUtils.getBean(DataSource.class,false),(c)->{
             return c.executeList(sql,ps);
@@ -148,6 +161,7 @@ public class ApiScript {
     }
 
     public void openTask(Integer taskid){
+        checkJobState();
         DbHelper.call(ContextUtils.getBean(DataSource.class, false), (c) -> {
             val job = new tb_job_dal().get(c, getJobId());
             tb_task_model model = new tb_task_dal().get(c, taskid);
@@ -159,6 +173,7 @@ public class ApiScript {
     }
 
     public void openTask2(Integer taskid,Object params){
+        checkJobState();
         DbHelper.call(ContextUtils.getBean(DataSource.class, false), (c) -> {
             val job = new tb_job_dal().get(c, getJobId());
             tb_task_model model = new tb_task_dal().get(c, taskid);
@@ -170,6 +185,7 @@ public class ApiScript {
     }
 
     public boolean isTaskRunning(Integer taskid){
+        checkJobState();
         return DbHelper.get(ContextUtils.getBean(DataSource.class, false), (c) -> {
             val task = new tb_task_dal().get(c, taskid);
             if(task==null)
@@ -179,6 +195,7 @@ public class ApiScript {
     }
 
     public boolean isTaskExist(Integer taskid){
+        checkJobState();
         return DbHelper.get(ContextUtils.getBean(DataSource.class, false), (c) -> {
             val task = new tb_task_dal().get(c, taskid);
             if(task==null)
@@ -197,6 +214,7 @@ public class ApiScript {
     }
 
     public void closeTask(Integer taskid){
+        checkJobState();
         DbHelper.call(ContextUtils.getBean(DataSource.class, false), (c) -> {
             val job = new tb_job_dal().get(c, getJobId());
             tb_task_model model = new tb_task_dal().get(c, taskid);
@@ -210,6 +228,15 @@ public class ApiScript {
             return ((tb_job_model)job).id;
         }
         return 0;
+    }
+
+    private void checkJobState(){
+        DbHelper.call(ContextUtils.getBean(DataSource.class, false), (c) -> {
+            val job = new tb_job_dal().get(c, getJobId());
+            if("停止".equals(job.state)){
+                throw new BsfException("检测到定时计划状态已停止,强制停止当前运行时!");
+            }
+        });
     }
 
 

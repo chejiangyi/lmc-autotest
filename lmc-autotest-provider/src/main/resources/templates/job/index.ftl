@@ -64,6 +64,9 @@ ${Html.s("pagetitle","定时计划列表")}
                 <#if item.state=="停止" && user.isAdminOrIsUser(item.create_user_id)>
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>
+                <#if Utils.printJobState(item.id)!="">
+                    <a href="javascript:interrupt(${item.id})" class="del">强杀</a>
+                </#if>
                 <a href="javascript:copy(${item.id})" class="del">复制</a>
             </td>
         </tr>
@@ -100,6 +103,27 @@ ${Html.s("pagetitle","定时计划列表")}
             }
             $.ajax({
                 url: '/job/del/',
+                type: "post",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.code > 0) {
+                        window.location.reload();
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                }
+            });
+        }
+        function interrupt(id) {
+            if(!confirm("请确定强制终止任务？"))
+            {
+                return;
+            }
+            $.ajax({
+                url: '/job/interrupt/',
                 type: "post",
                 data: {
                     id: id
