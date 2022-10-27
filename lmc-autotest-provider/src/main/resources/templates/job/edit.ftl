@@ -28,7 +28,14 @@ ${Html.s("pagetitle","编辑定时计划")}
                 ${Html.help("计划脚本速成篇")}<a target="_blank" href="https://gitee.com/chejiangyi/lmc-autotest/blob/master/README-Job.md">计划脚本速成篇</a>
             </li>
             <li>
-                <textarea id="jscript" name="jscript" rows="20" cols="20" style="width: 90%;">${model.jscript!}</textarea>
+                <div id="tabs">
+                    <ul>
+                        <li><a href="#tabs-1">计划脚本${Html.help("定时计划需要执行的脚本,请看文档进行编写!")}</a></li>
+                    </ul>
+                    <div id="tabs-1">
+                        <textarea id="jscript" name="jscript" rows="20" cols="20" style="width: 90%;">${model.jscript!}</textarea>
+                    </div>
+                </div>
             </li>
             <li>
                <#if model.state=="停止" && user.isAdminOrIsUser(model.create_user_id)  >
@@ -38,6 +45,9 @@ ${Html.s("pagetitle","编辑定时计划")}
         </ul>
     </div>
     <script type="text/javascript">
+        $( function() {
+            $( "#tabs").tabs();
+        } );
         function save()
         {
             $.post("/job/save",

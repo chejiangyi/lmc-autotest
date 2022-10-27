@@ -21,8 +21,8 @@ public class QuartzJob implements Job {
     public void execute(JobExecutionContext c2) throws JobExecutionException{
         Integer jobid = 0;
         try {
-            LogTool.info(QuartzJob.class,0,CoreProperties.Project,"计划任务id:"+jobid+"开始执行....");
             val params = ConvertUtils.convert(c2.getMergedJobDataMap().get("parameterList"), Map.class);
+            LogTool.info(QuartzJob.class,0,CoreProperties.Project,"计划任务id:"+jobid+"开始执行....");
             jobid = ConvertUtils.convert(params.get("jobid"),Integer.class);
             val jobid2 = jobid;
             DbHelper.call(Config.mysqlDataSource(), c -> {
