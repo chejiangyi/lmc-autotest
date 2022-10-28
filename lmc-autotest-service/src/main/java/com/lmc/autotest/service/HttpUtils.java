@@ -1,26 +1,20 @@
-package com.lmc.autotest.task.base;
+package com.lmc.autotest.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.free.bsf.autotest.AutoTestProperties;
 import com.free.bsf.autotest.base.AutoTestIOUtils;
-import com.free.bsf.core.base.BsfException;
-import com.free.bsf.core.http.HttpClient;
-import com.free.bsf.core.util.HttpClientUtils;
 import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.LogUtils;
 import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.core.Config;
-import com.lmc.autotest.dao.model.auto.tb_report_model;
 import com.lmc.autotest.dao.model.auto.tb_sample_example_model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.val;
-import org.apache.http.entity.ContentType;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
-import java.lang.reflect.MalformedParameterizedTypeException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;

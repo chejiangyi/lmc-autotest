@@ -8,6 +8,7 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.DateUtils;
+import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.StringUtils;
 import com.free.bsf.core.util.WebUtils;
 import com.lmc.autotest.core.AutoTestTool;
@@ -18,6 +19,7 @@ import com.lmc.autotest.dao.tb_sample_dal;
 import com.lmc.autotest.provider.SpringMvcController;
 import com.lmc.autotest.provider.base.User;
 import com.lmc.autotest.provider.pager.Pager1;
+import com.lmc.autotest.service.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import lombok.var;
@@ -169,6 +171,21 @@ public class SampleController extends SpringMvcController {
                 }
             }
             return true;
+        });
+    }
+
+    @RequestMapping("/check/")
+    public ModelAndView check(Long id) {
+        return jsonVisit((m) -> {
+            val sample = DbHelper.get(Config.mysqlDataSource(), c -> {
+                return new tb_sample_dal().get(c,id);
+            });
+            val response = HttpUtils.request(sample,false,false);
+            if(response.getCode()==200) {
+                return JsonUtils.serialize(response.getBody());
+            }else{
+                throw new BsfException("状态码:"+response.getCode());
+            }
         });
     }
 }

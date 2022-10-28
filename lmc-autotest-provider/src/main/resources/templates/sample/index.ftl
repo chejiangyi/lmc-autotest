@@ -51,6 +51,7 @@ ${Html.s("pagetitle","采样查询")}
         <th style="width:100px">traceid${Html.help("调用链id,涉及到AutoTest的调用链传递")}</th>
         <th style="width:100px">trace_top${Html.help("堆栈顶部,是否是AutoTest的调用链第一个")}</th>
         <th style="width:50px">operator_type${Html.help("操作类型,自动检测程序是否涉及到update,insert,delete之类的操作")}</th>
+        <th style="width:5%">操作</th>
     </tr>
     <#list model as item>
         <tr data-id="${item.id}">
@@ -60,11 +61,12 @@ ${Html.s("pagetitle","采样查询")}
             <td  style="word-break: break-all">${item.url}</td>
             <td>${item.method}</td>
             <td style="word-break: break-all" title="${item.header?html}">${Html.cutstring(item.header,300)}</td>
-            <td style="word-break: break-all" title="${item.body?html}">${Html.cutstring(item.body,300)}</td>
+            <td style="word-break: break-all" title="${item.body?html}"> ${Html.cutstring(item.body,300)}</td>
             <td>${Html.p(item.create_time)}</td>
             <td style="word-break: break-all">${Html.p(item.traceid)}</td>
             <td>${Html.p(item.trace_top)}</td>
             <td>${Html.p(item.operator_type)}</td>
+            <td><a href="javascript:check(${item.id})" class="btn">模拟请求</a></td>
         </tr>
     </#list>
 </table>
@@ -127,6 +129,24 @@ ${Html.s("pagetitle","采样查询")}
             success: function (data) {
                 if (data.code > 0) {
                     window.location.reload();
+                }
+                else {
+                    alert(data.message);
+                }
+            }
+        });
+    }
+
+    function check(id) {
+        $.ajax({
+            url: '/sample/check/',
+            type: "post",
+            data: {
+                id:id
+            },
+            success: function (data) {
+                if (data.code > 0) {
+                    alert(data.data);
                 }
                 else {
                     alert(data.message);

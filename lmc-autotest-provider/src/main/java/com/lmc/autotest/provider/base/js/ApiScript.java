@@ -165,6 +165,15 @@ public class ApiScript {
        openTask2(taskid,null);
     }
 
+    public boolean tryOpenTask2(Integer taskid,Object params){
+        try {
+            openTask2(taskid,params);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
     public void openTask2(Integer taskid,Object params){
         checkJobState();
         DbHelper.call(ContextUtils.getBean(DataSource.class, false), (c) -> {
@@ -246,7 +255,7 @@ public class ApiScript {
 
     private void checkCondition(int timeout, Callable.Func0<Boolean> condition){
         int waitTime =0;int sleepTime=500;
-        while (waitTime>timeout){
+        while (waitTime<timeout){
             if(condition.invoke()){
                 return;
             }
@@ -259,21 +268,30 @@ public class ApiScript {
 
     public static void main(String[] args) {
         val api = new ApiScript("",new LinkedHashMap());
-        String[] sql = new String[]{"select * from auto_tb_sample_a",
-                "update from auto_tb_sample_a set a=1",
-                "select * from b set a=1",
-                "insert b values(?,?,?,?)",
-                "select * from b where a=1",
-                "1=2"
-        };
-        for(val s:sql) {
+        for(int i=0;i<20;i++) {
+            System.out.println(new Date());
             try {
-                AutoTestTool.checkSampleSelectSql(s);
-            }catch (Exception e){
-                System.err.println(sql);
-                System.err.println(e);
-            }
+                api.checkCondition(5000, () -> {
+                    return false;
+                });
+            }catch (Exception e){}
+            System.out.println(new Date());
         }
+//        String[] sql = new String[]{"select * from auto_tb_sample_a",
+//                "update from auto_tb_sample_a set a=1",
+//                "select * from b set a=1",
+//                "insert b values(?,?,?,?)",
+//                "select * from b where a=1",
+//                "1=2"
+//        };
+//        for(val s:sql) {
+//            try {
+//                AutoTestTool.checkSampleSelectSql(s);
+//            }catch (Exception e){
+//                System.err.println(sql);
+//                System.err.println(e);
+//            }
+//        }
     }
 
 }

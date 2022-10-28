@@ -13,7 +13,7 @@ import com.lmc.autotest.dao.model.auto.tb_report_node_example_model;
 import com.lmc.autotest.dao.model.auto.tb_report_url_example_model;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.task.base.FileUtils;
-import com.lmc.autotest.task.base.HttpUtils;
+import com.lmc.autotest.service.HttpUtils;
 import com.lmc.autotest.task.base.IOUtils;
 import lombok.Getter;
 import lombok.val;

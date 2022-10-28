@@ -24,14 +24,14 @@ public class QuartzJob implements Job {
     private static ConcurrentLinkedQueue<Integer> runningJobs = new ConcurrentLinkedQueue<>();
     public void execute(JobExecutionContext c2) throws JobExecutionException{
         Integer jobid = 0;
+        val params = ConvertUtils.convert(c2.getMergedJobDataMap().get("parameterList"), Map.class);
+        jobid = ConvertUtils.convert(params.get("jobid"),Integer.class);
+        if(runningJobs.contains(jobid))//同一个任务不会有并发
+        {
+            LogTool.info(QuartzJob.class,0,CoreProperties.Project,"计划任务id:"+jobid+"正在运行中,则跳过本次执行!");
+            return;
+        }
         try {
-            val params = ConvertUtils.convert(c2.getMergedJobDataMap().get("parameterList"), Map.class);
-            jobid = ConvertUtils.convert(params.get("jobid"),Integer.class);
-            if(runningJobs.contains(jobid))//同一个任务不会有并发
-            {
-                LogTool.info(QuartzJob.class,0,CoreProperties.Project,"计划任务id:"+jobid+"正在运行中,则跳过本次执行!");
-                return;
-            }
             runningJobs.add(jobid);
             LogTool.info(QuartzJob.class,0,CoreProperties.Project,"计划任务id:"+jobid+"开始执行....");
             val jobid2 = jobid;

@@ -118,7 +118,7 @@ ${Html.s("pagetitle","定时计划列表")}
             });
         }
         function interrupt(id) {
-            if(!confirm("请确定强制终止任务？"))
+            if(!confirm("请确定强制终止计划job？仅终止当前计划job,不会终止计划所触发的压测任务,请自行检查并手工终止!"))
             {
                 return;
             }
