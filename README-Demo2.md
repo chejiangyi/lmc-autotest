@@ -8,6 +8,7 @@ var dataMaps = [
 {"app_name":"test","url":"http://www.baidu.com","method":"GET","header":JSON.stringify({'aaa':'bbb'}),"body":JSON.stringify({})},
 {"app_name":"test","url":"http://www.baidu.com","method":"GET","header":"{}","body":"{}"}
 ];
+/*var dataMaps=api.httpGet("http://远程数据源/");*/
 for(var i=0;i<dataMaps.length;i++){
     api.writeSample(dataMaps[i]);
 }
