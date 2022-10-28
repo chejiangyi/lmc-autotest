@@ -175,14 +175,14 @@ public class SampleController extends SpringMvcController {
     }
 
     @RequestMapping("/check/")
-    public ModelAndView check(Long id) {
+    public ModelAndView check(String table,Long id) {
         return jsonVisit((m) -> {
             val sample = DbHelper.get(Config.mysqlDataSource(), c -> {
-                return new tb_sample_dal().get(c,id);
+                return new tb_sample_dal().get(c,table,id);
             });
             val response = HttpUtils.request(sample,false,false);
             if(response.getCode()==200) {
-                return JsonUtils.serialize(response.getBody());
+                return response.getBody();
             }else{
                 throw new BsfException("状态码:"+response.getCode());
             }

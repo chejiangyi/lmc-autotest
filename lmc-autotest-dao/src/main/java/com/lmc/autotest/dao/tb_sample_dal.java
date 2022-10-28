@@ -17,6 +17,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class tb_sample_dal extends tb_sample_example_base_dal {
+    public tb_sample_example_model get(DbConn conn, String table, Long id) {
+        val par = new Object[]{id};
+        val stringSql = new StringBuilder();
+        stringSql.append("select s.* from "+table+" s where s.id=?");
+        val ds = conn.executeList(stringSql.toString(), par);
+        if (ds != null && ds.size() > 0) {
+            return createModel(ds.get(0));
+        }
+        return null;
+    }
     public List<tb_sample_example_model> searchPage(DbConn db, String table2, String sql2, Integer pageindex, Integer pagesize, Ref<Integer> totalSize){
         val par = new ArrayList<>();
         val rs = new ArrayList<tb_sample_example_model>();

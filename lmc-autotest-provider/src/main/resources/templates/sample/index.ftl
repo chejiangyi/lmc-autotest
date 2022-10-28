@@ -38,6 +38,7 @@ ${Html.s("pagetitle","采样查询")}
 </div>
 </@layout._layout>
 <#macro _list >
+<input type="hidden" name="query_table" id="query_table" value="${table}"/>
 <table class="mytable" width="100%">
     <tr>
         <th style="width:3%">Id</th>
@@ -142,7 +143,8 @@ ${Html.s("pagetitle","采样查询")}
             url: '/sample/check/',
             type: "post",
             data: {
-                id:id
+                id:id,
+                table:$('#query_table').val()
             },
             success: function (data) {
                 if (data.code > 0) {

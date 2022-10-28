@@ -1,7 +1,19 @@
 # 任务编写脚本示例2说明
 特殊写法的脚本沉淀（注意任务的api和定时计划的api是不一样的两种实现）
 
-#### 1. 采集样本筛选脚本-重写http url示范
+#### 采集样本筛选脚本-直接url压测版本
+```
+/*通过直接写url和压测参数，然后写入到本地样本(sample)文件中*/
+var dataMaps = [
+{"app_name":"test","url":"http://www.baidu.com","method":"GET","header":JSON.stringify({'aaa':'bbb'}),"body":JSON.stringify({})},
+{"app_name":"test","url":"http://www.baidu.com","method":"GET","header":"{}","body":"{}"}
+];
+for(var i=0;i<dataMaps.length;i++){
+    api.writeSample(dataMaps[i]);
+}
+   ```
+
+#### 采集样本筛选脚本-重写http url示范
 ```
 /*通过sql流处理分批获取样本数据，然后写入到本地样本(sample)文件中*/
 api.streamSql2("select * from auto_tb_sample_"+api.nowFormat("yyyy_MM_dd")+" where url like '%get%' order by id desc limit 5000",[],function (dataMap){
@@ -25,7 +37,7 @@ api.streamSql2("select * from auto_tb_sample_"+api.nowFormat("yyyy_MM_dd")+" whe
 })
    ```
 
-#### 2. 采集样本筛选脚本-样本筛选根据url分组,每个url使用最新的n条样本
+#### 采集样本筛选脚本-样本筛选根据url分组,每个url使用最新的n条样本
 ```
 /*通过sql流处理分批获取样本数据，然后写入到本地样本(sample)文件中*/
 /*这里根据create_time倒排,使用每个url最后5条样本*/
