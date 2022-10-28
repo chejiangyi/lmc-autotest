@@ -1,6 +1,7 @@
 package com.lmc.autotest.provider.base.js;
 
 import com.free.bsf.core.base.BsfException;
+import com.free.bsf.core.base.Callable;
 import com.free.bsf.core.base.Ref;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.http.HttpClient;
@@ -161,15 +162,7 @@ public class ApiScript {
     }
 
     public void openTask(Integer taskid){
-        checkJobState();
-        DbHelper.call(ContextUtils.getBean(DataSource.class, false), (c) -> {
-            val job = new tb_job_dal().get(c, getJobId());
-            tb_task_model model = new tb_task_dal().get(c, taskid);
-            if(model ==null){
-                throw new BsfException("任务id不存在:"+taskid);
-            }
-            new TaskService().operatorTask(c, taskid, "运行", job.create_user_id,null);
-        });
+       openTask2(taskid,null);
     }
 
     public void openTask2(Integer taskid,Object params){
@@ -181,6 +174,12 @@ public class ApiScript {
                 throw new BsfException("任务id不存在:"+taskid);
             }
             new TaskService().operatorTask(c, taskid, "运行", job.create_user_id,JsonUtils.deserialize(JsonUtils.serialize(params),new HashMap<String,Object>().getClass()));
+        });
+        checkCondition(5000,()->{
+            return DbHelper.get(ContextUtils.getBean(DataSource.class, false), (c) -> {
+                tb_task_model model = new tb_task_dal().get(c, taskid);
+                return new Utils().isOnline(model.run_heart_time);
+            });
         });
     }
 
@@ -220,6 +219,12 @@ public class ApiScript {
             tb_task_model model = new tb_task_dal().get(c, taskid);
             new TaskService().operatorTask(c, taskid, "停止", job.create_user_id,null);
         });
+        checkCondition(5000,()->{
+            return DbHelper.get(ContextUtils.getBean(DataSource.class, false), (c) -> {
+                tb_task_model model = new tb_task_dal().get(c, taskid);
+                return !new Utils().isOnline(model.run_heart_time);
+            });
+        });
     }
 
     private Integer getJobId(){
@@ -237,6 +242,18 @@ public class ApiScript {
                 throw new BsfException("检测到定时计划状态已停止,强制停止当前运行时!");
             }
         });
+    }
+
+    private void checkCondition(int timeout, Callable.Func0<Boolean> condition){
+        int waitTime =0;int sleepTime=500;
+        while (waitTime>timeout){
+            if(condition.invoke()){
+                return;
+            }
+            waitTime+=sleepTime;
+            ThreadUtils.sleep(sleepTime);
+        }
+        throw new BsfException("执行超时");
     }
 
 
