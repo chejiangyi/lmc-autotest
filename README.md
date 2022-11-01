@@ -36,6 +36,7 @@ mvn install
 * [样本导入案例](/README-Sample.md)
 * [自动录制样本流量](/README-Code.md)
 * [快速安装](/README-Install.md)
+* [OPEN API](/README-OpenApi.md)
 
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。

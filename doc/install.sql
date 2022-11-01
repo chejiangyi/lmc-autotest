@@ -101,6 +101,7 @@ CREATE TABLE `tb_report_url_example`  (
                                           `network_write` decimal(10, 2) NULL DEFAULT NULL COMMENT '网络写/s',
                                           `network_read` decimal(10, 2) NULL DEFAULT NULL COMMENT '网络读/s',
                                           `create_time` datetime(0) NULL DEFAULT NULL,
+                                          `attribute` json NULL COMMENT '属性',
                                           PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 792 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
@@ -120,6 +121,7 @@ CREATE TABLE `tb_sample_example`  (
                                       `trace_top` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '是否是顶部trace',
                                       `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
                                       `operator_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '枚举:未知,操作,仅查询',
+                                      `attribute` json NULL COMMENT '属性',
                                       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 427 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 

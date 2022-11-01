@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_sample_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-21 11:42:26
+ * @since 2022-11-01 12:26:10
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_sample_example_base_dal {
@@ -44,10 +44,12 @@ public class tb_sample_example_base_dal {
                 /***/
                 model.method,
                 /**枚举:未知,操作,仅查询*/
-                model.operator_type
+                model.operator_type,
+                /**属性*/
+                model.attribute
         };
-        int rev = conn.executeSql("insert into tb_sample_example(url,app_name,header,body,create_time,fromip,traceid,trace_top,method,operator_type)" +
-                "values(?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_sample_example(url,app_name,header,body,create_time,fromip,traceid,trace_top,method,operator_type,attribute)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -73,9 +75,11 @@ public class tb_sample_example_base_dal {
                 model.method,
                 /**枚举:未知,操作,仅查询*/
                 model.operator_type,
+                /**属性*/
+                model.attribute,
                 model.id
         };
-        int rev = conn.executeSql("update tb_sample_example set url=?,app_name=?,header=?,body=?,create_time=?,fromip=?,traceid=?,trace_top=?,method=?,operator_type=? where id=?", par);
+        int rev = conn.executeSql("update tb_sample_example set url=?,app_name=?,header=?,body=?,create_time=?,fromip=?,traceid=?,trace_top=?,method=?,operator_type=?,attribute=? where id=?", par);
         return rev == 1;
 
     }
@@ -156,6 +160,10 @@ public class tb_sample_example_base_dal {
         /**枚举:未知,操作,仅查询*/
         if (dr.containsKey("operator_type")) {
             o.operator_type = ConvertUtils.convert(dr.get("operator_type"), String.class);
+        }
+        /**属性*/
+        if (dr.containsKey("attribute")) {
+            o.attribute = ConvertUtils.convert(dr.get("attribute"), String.class);
         }
         return o;
     }

@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report_url_example 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-21 11:42:26
+ * @since 2022-11-01 12:26:09
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_url_example_base_dal {
@@ -42,10 +42,12 @@ public class tb_report_url_example_base_dal {
                 /**网络读/s*/
                 model.network_read,
                 /***/
-                model.create_time
+                model.create_time,
+                /**属性*/
+                model.attribute
         };
-        int rev = conn.executeSql("insert into tb_report_url_example(url,node,visit_num,throughput,error,visit_time,network_write,network_read,create_time)" +
-                "values(?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_report_url_example(url,node,visit_num,throughput,error,visit_time,network_write,network_read,create_time,attribute)" +
+                "values(?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -69,9 +71,11 @@ public class tb_report_url_example_base_dal {
                 model.network_read,
                 /***/
                 model.create_time,
+                /**属性*/
+                model.attribute,
                 model.id
         };
-        int rev = conn.executeSql("update tb_report_url_example set url=?,node=?,visit_num=?,throughput=?,error=?,visit_time=?,network_write=?,network_read=?,create_time=? where id=?", par);
+        int rev = conn.executeSql("update tb_report_url_example set url=?,node=?,visit_num=?,throughput=?,error=?,visit_time=?,network_write=?,network_read=?,create_time=?,attribute=? where id=?", par);
         return rev == 1;
 
     }
@@ -148,6 +152,10 @@ public class tb_report_url_example_base_dal {
         /***/
         if (dr.containsKey("create_time")) {
             o.create_time = ConvertUtils.convert(dr.get("create_time"), Date.class);
+        }
+        /**属性*/
+        if (dr.containsKey("attribute")) {
+            o.attribute = ConvertUtils.convert(dr.get("attribute"), String.class);
         }
         return o;
     }

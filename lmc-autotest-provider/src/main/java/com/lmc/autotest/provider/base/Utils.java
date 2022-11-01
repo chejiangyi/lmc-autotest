@@ -1,13 +1,21 @@
 package com.lmc.autotest.provider.base;
 
+import com.free.bsf.core.base.BsfException;
+import com.free.bsf.core.base.Callable;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.StringUtils;
+import com.free.bsf.core.util.ThreadUtils;
 import com.lmc.autotest.core.AutoTestTool;
 import com.lmc.autotest.core.Config;
+import com.lmc.autotest.dao.model.auto.tb_user_model;
 import com.lmc.autotest.dao.tb_node_dal;
 import com.lmc.autotest.dao.tb_task_dal;
 import lombok.val;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.tomcat.util.security.MD5Encoder;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.*;
 
 public class Utils {
@@ -95,6 +103,26 @@ public class Utils {
 
     public double heartBeat(){
         return Config.heartbeat();
+    }
+
+    public static String token(tb_user_model model){
+        try {
+            return DigestUtils.md5Hex(model.name+"&"+model.pwd);
+        }catch (Exception e){
+            throw new BsfException(e);
+        }
+    }
+
+    public void checkCondition(int timeout, Callable.Func0<Boolean> condition){
+        int waitTime =0;int sleepTime=500;
+        while (waitTime<timeout){
+            if(condition.invoke()){
+                return;
+            }
+            waitTime+=sleepTime;
+            ThreadUtils.sleep(sleepTime);
+        }
+        throw new BsfException("执行超时");
     }
 
 }

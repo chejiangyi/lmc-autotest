@@ -52,6 +52,7 @@ ${Html.s("pagetitle","采样查询")}
         <th style="width:100px">traceid${Html.help("调用链id,涉及到AutoTest的调用链传递")}</th>
         <th style="width:100px">trace_top${Html.help("堆栈顶部,是否是AutoTest的调用链第一个")}</th>
         <th style="width:50px">operator_type${Html.help("操作类型,自动检测程序是否涉及到update,insert,delete之类的操作")}</th>
+        <th style="width:50px">attribute${Html.help("属性信息展示,通常需要在业务代码中,controller api方法上面注解AutoTestAttribute")}</th>
         <th style="width:5%">操作</th>
     </tr>
     <#list model as item>
@@ -67,6 +68,7 @@ ${Html.s("pagetitle","采样查询")}
             <td style="word-break: break-all">${Html.p(item.traceid)}</td>
             <td>${Html.p(item.trace_top)}</td>
             <td>${Html.p(item.operator_type)}</td>
+            <td title="${item.attribute!?html}">${item.attribute!}</td>
             <td><a href="javascript:check(${item.id})" class="btn">模拟请求</a></td>
         </tr>
     </#list>

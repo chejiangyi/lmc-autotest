@@ -12,6 +12,7 @@ import com.lmc.autotest.dao.tb_task_dal;
 import com.lmc.autotest.dao.tb_user_dal;
 import com.lmc.autotest.provider.SpringMvcController;
 import com.lmc.autotest.provider.base.User;
+import com.lmc.autotest.provider.base.Utils;
 import com.lmc.autotest.provider.pager.Pager1;
 import com.lmc.autotest.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
@@ -116,6 +117,18 @@ public class UserController extends SpringMvcController {
 
             });
             return true;
+        });
+    }
+
+    @RequestMapping("/token")
+    public ModelAndView token(Integer id
+    ) {
+        return jsonVisit((m) -> {
+            User.getCurrent().checkAdmin();
+            return DbHelper.get(Config.mysqlDataSource(), c -> {
+                tb_user_model model = new tb_user_dal().get(c, id);
+                return Utils.token(model);
+            });
         });
     }
 }

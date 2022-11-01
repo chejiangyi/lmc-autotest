@@ -51,6 +51,12 @@ ${Html.s("pagetitle","压测报告")}
          .line98{
              color: #0489C7;
          }
+         .author{
+             color: #007bff;
+         }
+         .level{
+             color: darkred;
+         }
     </style>
     <div class="head">
         <div class="title">
@@ -188,6 +194,12 @@ ${Html.s("pagetitle","压测报告")}
                         <option value="${key}">${orderMap[key]}</option>
                     </#list>
                 </select>
+                属性:
+                <input datatype="attribute" id="author" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="author">作者</p>
+                <input datatype="attribute" id="level" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="level">重要级别</p>
+                <input datatype="attribute" id="test" type="checkbox" onchange="loadUrlReportChart()"/><p class="test">是否压测</p>
+                <input datatype="attribute" id="apiType" type="checkbox" onchange="loadUrlReportChart()"/><p class="apiType">接口类别</p>
+                统计:
                 <input id="current" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="current">现在值</p>
                 <input id="avg" type="checkbox" onchange="loadUrlReportChart()"/><p class="avg">平均值</p>
                 <input id="min" type="checkbox"  onchange="loadUrlReportChart()"/><p class="min">最小值</p>
@@ -199,6 +211,7 @@ ${Html.s("pagetitle","压测报告")}
                     <table id="urlReport">
                         <tr>
                             <th style="width:15%">接口api</th>
+                            <th style="width:3%">属性${Html.help("url 在代码实现时候使用AutoTestAttribute注解的信息")}</th>
                             <th style="width:5%">信息${Html.help("(心跳周期)每隔"+heartbeart+"秒内,[占比]:累计的压测次数/所有压测请求次数,[时间]:现在值的更新时间")}</th>
                             <th style="width:5%">压测次数${Html.help("(心跳周期)每隔"+heartbeart+"秒内,累计的压测次数")}</th>
                             <th style="width:5%">吞吐量/s${Html.help("(心跳周期)每隔"+heartbeart+"秒内,平均的每秒吞吐量次数")}</th>
@@ -216,6 +229,12 @@ ${Html.s("pagetitle","压测报告")}
                     <table style="display: none" id="urltemplate">
                         <tr data="">
                             <td style="word-break: break-all" title="{url}">{url}</td>
+                            <td>
+                                <div class="author">作:{author}</div>
+                                <div class="level">级:{level}</div>
+                                <div class="test">测:{test}</div>
+                                <div class="apiType">类:{apiType}</div>
+                            </td>
                             <td><div class="zhanbi">占:{sum_visit_num_per}</div>
                                 <div class="createtime">时:{create_time}</div>
                             </td>
@@ -429,12 +448,19 @@ ${Html.s("pagetitle","压测报告")}
                         alert(data.message);
                     } else {
                         for(var r of data.data.report){
-                            console.log("aaa2",r);
+                            //console.log("aaa2",r);
                             var html = $("#urltemplate").html();
 
                             for(let key of Object.keys(r)){
                                 //console.log("pp",key);
                                 html =html.replaceAll("{"+key+"}",toNumber(key,r[key]));
+                            }
+
+                            if(r["attribute"]!=null) {
+                                var attribute = JSON.parse(r["attribute"]);
+                                for (let key of Object.keys(attribute)) {
+                                    html = html.replaceAll("{" + key + "}", attribute[key]);
+                                }
                             }
                             html = html.replaceAll("{error_per}", toNumber("error_per",errorPer( r["throughput"],r["error"])));
                             html = html.replaceAll("{sum_error_per}", toNumber("sum_error_per",errorPer( r["sum_throughput"],r["sum_error"])));
@@ -456,13 +482,25 @@ ${Html.s("pagetitle","压测报告")}
                             $(this).html("总:"+$(this).html());$(this).attr("title","总和值");if(!$("#sum").is(':checked')){$(this).hide();}
                         })
                         $("#urlReport .line90").each(function (){
-                            $(this).html("90L:"+$(this).html());$(this).attr("title","90百分位,90line");if(!$("#sum").is(':checked')){$(this).hide();}
+                            $(this).html("90L:"+$(this).html());$(this).attr("title","90百分位,90line");
                         })
                         $("#urlReport .line95").each(function (){
-                            $(this).html("95L:"+$(this).html());$(this).attr("title","95百分位,95line");if(!$("#sum").is(':checked')){$(this).hide();}
+                            $(this).html("95L:"+$(this).html());$(this).attr("title","95百分位,95line");
                         })
                         $("#urlReport .line98").each(function (){
-                            $(this).html("98L:"+$(this).html());$(this).attr("title","98百分位,98line");if(!$("#sum").is(':checked')){$(this).hide();}
+                            $(this).html("98L:"+$(this).html());$(this).attr("title","98百分位,98line");
+                        })
+                        $("#urlReport .author").each(function (){
+                            $(this).attr("title","作者:开发人员");if(!$("#author").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .level").each(function (){
+                            $(this).attr("title","重要级别:核心,重要,普通,次要,报表");if(!$("#level").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .apiType").each(function (){
+                            $(this).attr("title","接口类型:无,查询,操作等");if(!$("#apiType").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .test").each(function (){
+                            $(this).attr("title","是否压测:无,需要,跳过");if(!$("#test").is(':checked')){$(this).hide();}
                         })
                         $('#urlReport tr[data]').show();
                     }
@@ -608,14 +646,14 @@ ${Html.s("pagetitle","压测报告")}
             }
             return '<span class="time1" title="'+myDate.format("yyyy-MM-dd hh:mm:ss")+'">'+myTime+'</span>';
         }
-        // function showStr(str){
-        //     if(str==null||str==""){
-        //         return str;
+        // function showAttribute(json){
+        //     var j = JSON.parse(json);
+        //     var map={"test":"测试","author":"作者","level":"级别","apiType":"类型"};
+        //     var info="";
+        //     for(var key of j){
+        //         info =info+"<div>"++"</div>";
         //     }
-        //     if(str.length()>100) {
-        //         return str.substr(0, 100)+"...";
-        //     }
-        //     return str;
+        //     j["test"]="";
         // }
     </script>
 </@layout._layout>

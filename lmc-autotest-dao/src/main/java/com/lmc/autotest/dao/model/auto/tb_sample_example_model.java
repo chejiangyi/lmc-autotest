@@ -10,7 +10,7 @@ import lombok.*;
  * tb_sample_example 表自动实体映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-21 11:42:26
+ * @since 2022-11-01 12:26:10
  * 自动生成:https://gitee.com/makejava/EasyCode/wikis/
  */
 @Data
@@ -43,4 +43,8 @@ public class tb_sample_example_model implements Serializable {
      * 枚举:未知,操作,仅查询
      */
     public String operator_type;
+    /**
+     * 属性
+     */
+    public String attribute;
 }

@@ -93,7 +93,7 @@ public class ReportProvider {
 
         val reportUrl=reportUrlMap;
         if(reportUrl!=null) {
-            reportUrl.put(response.getRequest().getAppName() + ":" + response.getRequest().getHttpUrl(),
+            reportUrl.put(response.getRequest().getAppName() + ":" + response.getRequest().getHttpUrl(),response.getRequest().getAttribute(),
                     response.getRequestSize(), response.getResponseSize(), response.isSuccess(), response.getTimeMs());
         }
         return reportNode;
@@ -168,7 +168,7 @@ public class ReportProvider {
     private static class ReportUrlMap{
         ConcurrentHashMap<String,ReportUrlInfo> map = new ConcurrentHashMap();
         Object lock = new Object();
-        public void put(String url,double reqSize,double rpsSize,boolean isSuccess,double time){
+        public void put(String url,String attribute,double reqSize,double rpsSize,boolean isSuccess,double time){
             var info = map.get(url);
             if(info==null){
                 synchronized (lock){
@@ -190,12 +190,14 @@ public class ReportProvider {
             info.all_visit_time.addAndGet(time);
             info.all_network_read.addAndGet(rpsSize);
             info.all_network_write.addAndGet(reqSize);
+            info.attribute=attribute;
         }
     }
 
     private static class ReportUrlInfo{
         public String node=Config.nodeName();
         public String url;
+        public String attribute;
         public AtomicLong all_visit_num=new AtomicLong(0);
         public AtomicLong all_throughput=new AtomicLong(0);
         public AtomicLong all_error=new AtomicLong(0);
@@ -213,6 +215,7 @@ public class ReportProvider {
             val o = this;
             tb_report_url_example_model model = new tb_report_url_example_model();
             model.url = o.url;
+            model.attribute = o.attribute;
             model.create_time=new Date();
             model.network_write=IOUtils.dataCheck("network_write",o.all_network_write.get()/o.getTimeSpan());
             model.error=IOUtils.dataCheck("error",o.all_error.get()/o.getTimeSpan());

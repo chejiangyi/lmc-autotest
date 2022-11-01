@@ -1,6 +1,7 @@
 package com.lmc.autotest.provider.template;
 
 import com.free.bsf.core.util.JsonUtils;
+import com.lmc.autotest.provider.base.JsonUtil;
 import lombok.val;
 
 import java.lang.reflect.Array;
@@ -161,5 +162,9 @@ public class HtmlHelper extends SimpleTemplateProvider {
 
     public String toHtml(String text){
         return text.replace("\r\n","<br/>");
+    }
+
+    public String printJson(Object o){
+        return JsonUtil.prettyPrintJSON(JsonUtils.serialize(o));
     }
 }

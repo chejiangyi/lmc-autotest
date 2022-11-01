@@ -41,7 +41,7 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
     public boolean addHeartBeatList(DbConn conn,String table, List<tb_report_url_example_model> models) {
         val pars = new ArrayList<Object>();
         StringBuilder sql = new StringBuilder();
-        sql.append("insert into "+table+"(url,node,visit_num,throughput,error,visit_time,network_read,create_time,network_write) values");
+        sql.append("insert into "+table+"(url,node,visit_num,throughput,error,visit_time,network_read,create_time,network_write,attribute) values");
         for(val model: models){
             val par = new Object[]{
                 /***/
@@ -61,12 +61,13 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
                 /***/
                 //model.create_time,
                 /**网络写/s*/
-                model.network_write
+                model.network_write,
+                model.attribute,
             };
             for(val o:par) {
                 pars.add(o);
             }
-            sql.append("(?,?,?,?,?,?,?,now(),?),");
+            sql.append("(?,?,?,?,?,?,?,now(),?,?),");
         }
         int rev = conn.executeSql(StringUtils.trimRight(sql.toString(),',')+";", pars.toArray());
         return rev == 1;
@@ -100,18 +101,20 @@ public class tb_report_url_dal extends tb_report_url_example_base_dal {
                 "max(error) as max_error,min(error) as min_error,avg(error) as avg_error,sum(error) as sum_error,\n" +
                 "max(visit_time) as max_visit_time,min(visit_time) as min_visit_time,avg(visit_time) as avg_visit_time,sum(visit_time) as sum_visit_time,\n" +
                 "max(network_read) as max_network_read,min(network_read) as min_network_read,avg(network_read) as avg_network_read,sum(network_read) as sum_network_read,\n" +
-                "max(network_write) as max_network_write,min(network_write) as min_network_write,avg(network_write) as avg_network_write,sum(network_write) as sum_network_write\n" +
+                "max(network_write) as max_network_write,min(network_write) as min_network_write,avg(network_write) as avg_network_write,sum(network_write) as sum_network_write,\n" +
+                "max(attribute) as attribute\n" +
                 "from {table} {where} group by url) as t, {table} a where t.max_id=a.id order by "+order+" desc");
         if(!StringUtils.isEmpty(node)){
             where.append(" where node='{node}'");
         }
-        val ds = conn.executeList(stringSql.toString()
-                        .replace("{90line}",lineSql.replace("{per}","0.9").replace("{num}","1"))
-                        .replace("{95line}",lineSql.replace("{per}","0.95").replace("{num}","2"))
-                        .replace("{98line}",lineSql.replace("{per}","0.98").replace("{num}","3"))
-                        .replace("{where}",where.toString())
-                        .replace("{table}",tableName)
-                        .replace("{node}",StringUtils.nullToEmpty(node))
+        val sql = stringSql.toString()
+                .replace("{90line}",lineSql.replace("{per}","0.9").replace("{num}","1"))
+                .replace("{95line}",lineSql.replace("{per}","0.95").replace("{num}","2"))
+                .replace("{98line}",lineSql.replace("{per}","0.98").replace("{num}","3"))
+                .replace("{where}",where.toString())
+                .replace("{table}",tableName)
+                .replace("{node}",StringUtils.nullToEmpty(node));
+        val ds = conn.executeList(sql
                 , new Object[]{});
         return ds;
     }

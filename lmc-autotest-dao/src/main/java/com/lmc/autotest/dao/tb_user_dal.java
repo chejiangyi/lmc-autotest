@@ -44,4 +44,15 @@ public class tb_user_dal extends tb_user_base_dal {
         return null;
     }
 
+    public tb_user_model get(DbConn conn, String name) {
+        val par = new Object[]{name};
+        val stringSql = new StringBuilder();
+        stringSql.append("select s.* from tb_user s where s.name=?");
+        val ds = conn.executeList(stringSql.toString(), par);
+        if (ds != null && ds.size() > 0) {
+            return createModel(ds.get(0));
+        }
+        return null;
+    }
+
 }
