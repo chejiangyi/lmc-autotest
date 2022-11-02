@@ -37,7 +37,7 @@ public class HttpUtils {
         r.header = JsonUtils.deserialize(request.header, new TypeReference<HashMap<String,String>>() {});
         r.body = request.getBody();
         r.appName = StringUtils.nullToEmpty(request.app_name);
-        r.attribute = StringUtils.nullToEmpty(request.getAttribute());
+        r.attribute = (StringUtils.isEmpty(request.getAttribute())?"{}": request.getAttribute());
         //LogUtils.info(HttpUtils.class, Config.nodeName(),"访问:"+r.httpUrl);
         val rs = httpRequest(r,keepAlivePool);
         if(printLog){

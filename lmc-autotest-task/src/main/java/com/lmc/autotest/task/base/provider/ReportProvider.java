@@ -4,6 +4,7 @@ import com.free.bsf.core.base.BsfException;
 import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.DateUtils;
 import com.free.bsf.core.util.JsonUtils;
+import com.free.bsf.core.util.StringUtils;
 import com.google.common.util.concurrent.AtomicDouble;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.core.NodeInfo;
@@ -215,7 +216,7 @@ public class ReportProvider {
             val o = this;
             tb_report_url_example_model model = new tb_report_url_example_model();
             model.url = o.url;
-            model.attribute = o.attribute;
+            model.attribute = (StringUtils.isEmpty(o.attribute)?"{}": o.attribute);
             model.create_time=new Date();
             model.network_write=IOUtils.dataCheck("network_write",o.all_network_write.get()/o.getTimeSpan());
             model.error=IOUtils.dataCheck("error",o.all_error.get()/o.getTimeSpan());

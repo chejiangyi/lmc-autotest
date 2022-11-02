@@ -461,6 +461,7 @@ ${Html.s("pagetitle","压测报告")}
                                 for (let key of Object.keys(attribute)) {
                                     html = html.replaceAll("{" + key + "}", attribute[key]);
                                 }
+                                html = html.replaceAll("{author}", '未知').replaceAll("{level}", '未知').replaceAll("{test}", '未知').replaceAll("{apiType}", '未知');
                             }
                             html = html.replaceAll("{error_per}", toNumber("error_per",errorPer( r["throughput"],r["error"])));
                             html = html.replaceAll("{sum_error_per}", toNumber("sum_error_per",errorPer( r["sum_throughput"],r["sum_error"])));
