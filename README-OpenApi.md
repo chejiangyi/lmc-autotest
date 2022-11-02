@@ -23,7 +23,7 @@
 http://{web端}/api/samples/
 参数: String requests, String username, String token
 + requests:
-  示例: 格式类似如[{"app_name":"test","url":"http://www.baidu.com","header":"{}","body":"{}"}] 数组转json字符串,其他扩展字段详见web管理中的样本信息。
+  示例: 格式类似如[{"app_name":"test","url":"http://www.baidu.com","header":"{}","body":"{}","method":"GET"}] 数组转json字符串,其他扩展字段详见web管理中的样本信息。
 + username:
   示例: admin,用户名
 + token:
