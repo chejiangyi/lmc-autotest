@@ -19,7 +19,7 @@
 
 #### 接口如下
 ```
-#简化版样本上传接口,无需java sdk支持,第三方也可以支持同步上传样本
+#简化版样本上传接口,无需java sdk支持,第三方语言也可以支持同步上传样本(不建议大量使用,性能有限)
 http://{web端}/api/samples/
 参数: String requests, String username, String token
 + requests:
