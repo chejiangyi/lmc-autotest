@@ -42,8 +42,8 @@ mvn install
 ## 开发文档
 * [OPEN API](/README-OpenApi.md)
 * [java完整版自动录制样本流量sdk集成](/README-Code.md)
-* [C#版本流量录制simple sdk](/README-OpenApi.md)
-* [java版本流量录制simple sdk](/README-OpenApi.md)
+* [C#版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.cs)
+* [java版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.java)
 
 ## 兼容性
 建议使用chrome浏览器
