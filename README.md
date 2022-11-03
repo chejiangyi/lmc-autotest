@@ -29,6 +29,7 @@ mvn install
 
 ## 安装文档
 * [快速安装](/README-Install.md)
+* [release](https://gitee.com/chejiangyi/lmc-autotest/releases/)
 
 ## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)
@@ -40,9 +41,10 @@ mvn install
 
 ## 开发文档
 * [OPEN API](/README-OpenApi.md)
-* [java完整自动录制样本流量](/README-Code.md)
+* [java完整版自动录制样本流量sdk集成](/README-Code.md)
 * [C#版本流量录制simple sdk](/README-OpenApi.md)
 * [java版本流量录制simple sdk](/README-OpenApi.md)
+
 
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。
