@@ -187,4 +187,8 @@ CREATE TABLE `tb_user`  (
 -- 添加管理员账户
 INSERT INTO `tb_user`( `name`, `pwd`, `create_time`,`role`,`limit_node_count`) VALUES ('admin', 'admin', now(),1,200);
 
+-- 添加任务简单模板
+INSERT INTO `tb_task`(`task`, `filter_store`, `run_heart_time`, `create_user`, `create_time`, `update_time`, `update_user`, `exec_result`, `filter_script`, `first_filter_error_script`, `run_threads_count`, `http_begin_script`, `http_end_script`, `check_stop_script`, `sleep_time_every_thread`, `node_count`, `run_nodes`, `use_http_keepalive`, `create_user_id`)
+VALUES ('简单模板', 'mysql', '1900-01-01 00:00:00', 'admin', '2022-11-03 18:10:50', '2022-11-03 19:21:14', 'admin', '\r\nLAPTOP-7V5D9SQE:用户执行关闭', '/*通过直接写url和压测参数，然后写入到本地样本(sample)文件中*/\nvar dataMaps = [\n{\"app_name\":\"test\",\"url\":\"http://www.baidu.com\",\"method\":\"GET\",\"header\":JSON.stringify({\'aaa\':\'bbb\'}),\"body\":JSON.stringify({})},\n{\"app_name\":\"test\",\"url\":\"http://www.baidu.com\",\"method\":\"GET\",\"header\":\"{}\",\"body\":\"{}\"}\n];\n/*var dataMaps=api.httpGet(\"http://远程数据源/\");*/\nfor(var i=0;i<dataMaps.length;i++){\n    api.writeSample(dataMaps[i]);\n}', '   /*在样本筛选的基础上,对本地样本文件中的部分请求进行过滤，比如特定业务请求或者错误请求或者无法访问的请求等*/\n   var r = api.ps.response;\n   if(r==null||r.code!=200)\n   {\n        /*api.error([\"过滤错误请求\",r]);*/\n       return false;\n   }', 1, '', '', '   /*压测时,定期心跳检测当前任务是否符合退出条件，进行任务退出关闭动作，一般会根据压测报告结果或者运行时间进行判断*/\n   /*此处举例吞吐量超过5000,运行时间超过10分钟则终止任务,特别注意nodeReport在任务刚启动的时候可能为null*/\n   if(api.ps.nodeReport!=null&&(api.ps.nodeReport.throughput>5000||api.ps.runtime>10*60)){\n      api.log([\"结束\",api.ps.nodeReport,api.ps.runtime]);\n      return false;\n   }', 100, 1, 'LAPTOP-7V5D9SQE', b'0', 3);
+
 SET FOREIGN_KEY_CHECKS = 1;
