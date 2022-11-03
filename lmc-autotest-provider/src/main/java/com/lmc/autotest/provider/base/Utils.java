@@ -107,6 +107,8 @@ public class Utils {
 
     public static String token(tb_user_model model){
         try {
+            if(model==null)
+                return "";
             return DigestUtils.md5Hex(model.name+"&"+model.pwd);
         }catch (Exception e){
             throw new BsfException(e);

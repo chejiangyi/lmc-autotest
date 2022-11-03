@@ -9,6 +9,7 @@ import com.free.bsf.core.db.DbHelper;
 import com.free.bsf.core.util.ContextUtils;
 import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.ReflectionUtils;
+import com.free.bsf.core.util.StringUtils;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.dao.model.auto.tb_task_model;
 import com.lmc.autotest.dao.tb_job_dal;
@@ -110,7 +111,7 @@ public class ApiController extends SpringMvcController {
         DbHelper.call(ContextUtils.getBean(DataSource.class, false), (c) -> {
             val user =  new tb_user_dal().get(c,username);
             val token1 = Utils.token(user);
-            if(!token1.equals(token)){
+            if(!token1.equals(token)|| StringUtils.isEmpty(token1)){
                 throw new BsfException("token 无效或不正确,请联系管理员");
             }
         });
