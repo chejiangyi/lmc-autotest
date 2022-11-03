@@ -45,6 +45,8 @@ mvn install
 * [C#版本流量录制simple sdk](/README-OpenApi.md)
 * [java版本流量录制simple sdk](/README-OpenApi.md)
 
+## 兼容性
+建议使用chrome浏览器
 
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。

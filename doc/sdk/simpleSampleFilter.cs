@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace autotest_simple_sdk
 {
 	/**
-	 * C# simple-sdk
+	 * C# simple-sdk (.net core)
 	 * autotest 应用使用/api/samples 拦截样本上传
 	 * 注:未测试,simple版本不建议使用在大流量录制场景。
 	 * by 车江毅
