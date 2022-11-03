@@ -108,6 +108,11 @@ public class ApiScript {
         ThreadUtils.sleep(time%timeSpan);
     }
 
+    //当前时间格式化
+    public String nowFormat(String format){
+        return org.apache.http.client.utils.DateUtils.formatDate(new Date(),format);
+    }
+
     //http请求
     public Object httpPost(String url,Object json){
         checkJobState();
