@@ -58,16 +58,16 @@ ${Html.s("pagetitle","采样查询")}
     <#list model as item>
         <tr data-id="${item.id}">
             <td>${item.id}</td>
-            <td>${item.app_name}</td>
-            <td>${item.fromip}</td>
-            <td  style="word-break: break-all">${item.url}</td>
-            <td>${item.method}</td>
+            <td>${item.app_name!}</td>
+            <td>${item.fromip!}</td>
+            <td  style="word-break: break-all">${item.url!}</td>
+            <td>${item.method!}</td>
             <td style="word-break: break-all" title="${item.header?html}">${Html.cutstring(item.header,300)}</td>
             <td style="word-break: break-all" title="${item.body?html}"> ${Html.cutstring(item.body,300)}</td>
-            <td>${Html.p(item.create_time)}</td>
-            <td style="word-break: break-all">${Html.p(item.traceid)}</td>
-            <td>${Html.p(item.trace_top)}</td>
-            <td>${Html.p(item.operator_type)}</td>
+            <td>${Html.p(item.create_time!)}</td>
+            <td style="word-break: break-all">${Html.p(item.traceid)!}</td>
+            <td>${Html.p(item.trace_top!)}</td>
+            <td>${Html.p(item.operator_type!)}</td>
             <td title="${item.attribute!?html}">${item.attribute!}</td>
             <td><a href="javascript:check(${item.id})" class="btn">模拟请求</a></td>
         </tr>

@@ -27,6 +27,8 @@ mvn install
 * [全链路压测设计图](/README-Design.md)
 * [压测报告示例图](/doc/demo/test-demo.jpg)
 
+## 安装文档
+* [快速安装](/README-Install.md)
 
 ## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)
@@ -34,9 +36,13 @@ mvn install
 * [任务编写案例2](/README-Demo2.md)
 * [计划任务编写案例](/README-Job.md)
 * [样本导入案例](/README-Sample.md)
-* [自动录制样本流量](/README-Code.md)
-* [快速安装](/README-Install.md)
+
+
+## 开发文档
 * [OPEN API](/README-OpenApi.md)
+* [java完整自动录制样本流量](/README-Code.md)
+* [C#版本流量录制simple sdk](/README-OpenApi.md)
+* [java版本流量录制simple sdk](/README-OpenApi.md)
 
 ## 进阶篇
 1. 暂不支持文件上传类的流量录制。
@@ -45,5 +51,7 @@ mvn install
 
 ## 更新记录
 1. 2022-10-17 增加时钟对齐,增加http连接池能力,固定时间心跳上报压测信息。
+2. 2022-11-01 增加用户权限,计划任务,attribute属性信息等。
+3. 2022-11-03 增加openapi及simple多语言sdk范例。
 
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
