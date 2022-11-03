@@ -63,11 +63,11 @@ ${Html.s("pagetitle","压测报告")}
             压测报告
         </div>
     </div>
-    <div>
+    <div id="reportDetail">
         <ul class="mydetail">
             <li>
                 <label>报告名</label>
-                <p><b>${model.report_name}</b></p>
+                <p><b>${model.report_name}</b></p> <input type="button" id="btnSave" title="保存报告为图片至本地" value="保存">
             </li>
             <li>
                 <label>任务</label>
@@ -647,6 +647,15 @@ ${Html.s("pagetitle","压测报告")}
             }
             return '<span class="time1" title="'+myDate.format("yyyy-MM-dd hh:mm:ss")+'">'+myTime+'</span>';
         }
+
+        $('#btnSave').click(function(event) {
+            html2canvas(document.body).then(function(canvas) {
+                var imgUri = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); // 获取生成的图片的url 　
+                var saveLink = document.createElement( 'a');
+                saveLink.href =imgUri;
+                saveLink.download = "${model.report_name}.jpg"; saveLink.click();
+            });
+        });
         // function showAttribute(json){
         //     var j = JSON.parse(json);
         //     var map={"test":"测试","author":"作者","level":"级别","apiType":"类型"};
@@ -657,4 +666,5 @@ ${Html.s("pagetitle","压测报告")}
         //     j["test"]="";
         // }
     </script>
+    <script src="/content/js/html2canvas.min.js"></script>
 </@layout._layout>
