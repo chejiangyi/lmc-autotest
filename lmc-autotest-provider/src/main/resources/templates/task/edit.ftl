@@ -1,8 +1,9 @@
 <#import "../_layout.ftl" as layout>
 ${Html.s("pagetitle","编辑任务")}
 <@layout._layout>
-    <style>
-    </style>
+    <script src="/content/ace-src-min-noconflict/ace.js"></script>
+    <script src="/content/ace-src-min-noconflict/ext-language_tools.js"></script>
+    <script src="/content/js/myAce.js"></script>
     <div class="head">
         <div class="title">
             编辑任务 ${Html.help("编辑自动化测试任务")}
@@ -49,19 +50,24 @@ ${Html.s("pagetitle","编辑任务")}
                         <li><a href="#tabs-5">任务终止判断脚本${Html.help("任务终止的定时(一般单个心跳时间,默认5s)判断脚本,达到条件则终止压测任务")}</a></li>
                     </ul>
                     <div id="tabs-1">
-                        <textarea id="filter_script" rows="20" cols="20" style="width: 90%;">${model.filter_script!}</textarea>
+                        <textarea id="filter_script" rows="20" cols="20" style="width: 90%;"></textarea>
+                        <input id="hd_filter_script" type="hidden" value="${model.filter_script!?html}">
                     </div>
                     <div id="tabs-2">
                         <textarea id="first_filter_error_script" rows="20" cols="20" style="width: 90%;">${model.first_filter_error_script!}</textarea>
+                        <input id="hd_first_filter_error_script" type="hidden" value="${model.first_filter_error_script!?html}">
                     </div>
                     <div id="tabs-3">
                         <textarea id="http_begin_script" rows="20" cols="20" style="width: 90%;">${model.http_begin_script!}</textarea>
+                        <input id="hd_http_begin_script" type="hidden" value="${model.http_begin_script!?html}">
                     </div>
                     <div id="tabs-4">
                         <textarea id="http_end_script" rows="20" cols="20" style="width: 90%;">${model.http_end_script!}</textarea>
+                        <input id="hd_http_end_script" type="hidden" value="${model.http_end_script!?html}">
                     </div>
                     <div id="tabs-5">
                         <textarea id="check_stop_script" rows="20" cols="20" style="width: 90%;">${model.check_stop_script!}</textarea>
+                        <input id="hd_check_stop_script" type="hidden" value="${model.check_stop_script!?html}">
                     </div>
                 </div>
 
@@ -75,8 +81,20 @@ ${Html.s("pagetitle","编辑任务")}
         </ul>
     </div>
     <script type="text/javascript">
+        var tx_filter_script; var tx_first_filter_error_script; var tx_http_begin_script; var tx_http_end_script;  var tx_check_stop_script;
         $( function() {
             $( "#tabs").tabs();
+            tx_filter_script=bindAce("filter_script",$("#hd_filter_script").val());
+            tx_first_filter_error_script=bindAce("first_filter_error_script",$("#hd_first_filter_error_script").val());
+            tx_http_begin_script=bindAce("http_begin_script",$("#hd_http_begin_script").val());
+            tx_http_end_script=bindAce("http_end_script",$("#hd_http_end_script").val());
+            tx_check_stop_script=bindAce("check_stop_script",$("#hd_check_stop_script").val());
+
+            bindTaskAutocompletion(tx_filter_script);
+            bindTaskAutocompletion(tx_first_filter_error_script);
+            bindTaskAutocompletion(tx_http_begin_script);
+            bindTaskAutocompletion(tx_http_end_script);
+            bindTaskAutocompletion(tx_check_stop_script);
         } );
 
         function save()
@@ -86,15 +104,15 @@ ${Html.s("pagetitle","编辑任务")}
                     "id": ${id!"0"},
                     "task": $("#task").val(),
                     "filter_store": $("#filter_store").val(),
-                    "filter_script": $("#filter_script").val(),
+                    "filter_script": tx_filter_script.getValue(),
                     "filter_table":$("#filter_table").val(),
-                    "first_filter_error_script":$("#first_filter_error_script").val(),
+                    "first_filter_error_script":tx_first_filter_error_script.getValue(),
                     "node_count":$("#node_count").val(),
                     "corn":$("#corn").val(),
                     "run_threads_count":$("#run_threads_count").val(),
-                    "http_begin_script":$("#http_begin_script").val(),
-                    "http_end_script":$("#http_end_script").val(),
-                    "check_stop_script":$("#check_stop_script").val(),
+                    "http_begin_script":tx_http_begin_script.getValue(),
+                    "http_end_script":tx_http_end_script.getValue(),
+                    "check_stop_script":tx_check_stop_script.getValue(),
                     "sleep_time_every_thread":$("#sleep_time_every_thread").val(),
                     "use_http_keepalive":$("#use_http_keepalive").is(':checked')
                 },

@@ -78,7 +78,7 @@ ${Html.s("_html",html)}
         <link href="/content/themes/base/jquery.ui.all.css" rel="stylesheet"/>
         <script src="/scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
         <script src="/scripts/jquery-ui-1.8.24.js" type="text/javascript"></script>
-        <script src="/content/datepicker/WdatePicker.js"></script>
+<#--        <script src="/content/datepicker/WdatePicker.js"></script>-->
         <script src="/content/js/common.js"></script>
         <#--<script src="/scripts/jquery.unobtrusive-ajax.min.js"></script>-->
         <#--<script src="/scripts/jquery.validate.min.js"></script>-->

@@ -1,8 +1,9 @@
 <#import "../_layout.ftl" as layout>
 ${Html.s("pagetitle","编辑定时计划")}
 <@layout._layout>
-    <style>
-    </style>
+    <script src="/content/ace-src-min-noconflict/ace.js"></script>
+    <script src="/content/ace-src-min-noconflict/ext-language_tools.js"></script>
+    <script src="/content/js/myAce.js"></script>
     <div class="head">
         <div class="title">
             编辑定时计划 ${Html.help("编辑定时执行计划")}
@@ -33,7 +34,8 @@ ${Html.s("pagetitle","编辑定时计划")}
                         <li><a href="#tabs-1">计划脚本${Html.help("定时计划需要执行的脚本,请看文档进行编写!")}</a></li>
                     </ul>
                     <div id="tabs-1">
-                        <textarea id="jscript" name="jscript" rows="20" cols="20" style="width: 90%;">${model.jscript!}</textarea>
+                        <textarea id="jscript" name="jscript" rows="20" cols="20" style="width: 90%;"></textarea>
+                        <input id="hd_jscript" type="hidden" value="${model.jscript!?html}">
                     </div>
                 </div>
             </li>
@@ -45,8 +47,11 @@ ${Html.s("pagetitle","编辑定时计划")}
         </ul>
     </div>
     <script type="text/javascript">
+        var tx_jscript;
         $( function() {
             $( "#tabs").tabs();
+            tx_jscript=bindAce("jscript",$("#hd_jscript").val());
+            bindJobAutocompletion(tx_jscript);
         } );
         function save()
         {
@@ -54,7 +59,7 @@ ${Html.s("pagetitle","编辑定时计划")}
                 {
                     "id": ${id!"0"},
                     "title": $("#title").val(),
-                    "jscript": $("#jscript").val(),
+                    "jscript": tx_jscript.getValue(),
                     "corn": $("#corn").val(),
                     "remark":$("#remark").val()
                 },

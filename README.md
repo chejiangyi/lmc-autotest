@@ -28,8 +28,8 @@ mvn install
 * [压测报告示例图](/doc/demo/test-demo.jpg)
 
 ## 安装文档
-* [快速安装](/README-Install.md)
 * [release](https://gitee.com/chejiangyi/lmc-autotest/releases/)
+* [快速安装](/README-Install.md)
 
 ## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)
