@@ -1,6 +1,7 @@
 # lmc-autotest BSF全链路压测工具
  基于<a href='https://gitee.com/chejiangyi/free-bsf-all/tree/1.0-SNAPSHOT/'>BSF基础框架</a>构建全链路压测框架,从框架层面进行[流量录制](https://gitee.com/chejiangyi/free-bsf-all/tree/1.2-SNAPSHOT/free-bsf-autotest ),从工具层面进行流量回放，进行性能压测，自动输出压测报告，自动进行全链路功能验收，从而提升测试效能，指导网站性能优化。
 
+![Image text](/doc/全链路压测设计图.jpg)
 ## 项目结构
 
 ```
