@@ -67,7 +67,7 @@ ${Html.s("pagetitle","压测报告")}
         <ul class="mydetail">
             <li>
                 <label>报告名</label>
-                <p><b>${model.report_name}</b></p> <input type="button" id="btnSave" title="保存报告为图片至本地" value="保存">
+                <p><b>${model.report_name}</b></p> <input type="button" id="btnSave" title="保存报告为图片至本地" value="截屏">
             </li>
             <li>
                 <label>任务</label>
