@@ -30,6 +30,7 @@ mvn install
 ## 安装文档
 * [release](https://gitee.com/chejiangyi/lmc-autotest/releases/)
 * [快速安装](/README-Install.md)
+* [阿里云部署实战笔记](/README-Install-aliyun.md)
 
 ## 使用文档
 * [定制场景录制文档](/README-ModHeader.md)

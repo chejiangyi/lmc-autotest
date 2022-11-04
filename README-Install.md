@@ -75,4 +75,20 @@ lmc-autotest-provider /bin/bash
 java -jar -Xss256k -XX:MinHeapFreeRatio=5 -XX:MaxHeapFreeRatio=10 -Xmx256M lmc-autotest-task.jar
 ```
 
+
+#### 多语言simple-sdk支持配置
+```
+###若要支持simple-sdk或使用openapi中的/api/samples接口
+###在lmc-autotest-provider中配置文件中,配置如下启动bsf样本采集
+#/api/samples/
+#录制流量存储的保存类型,默认mysql,未来支持es,kafka,rocketmq
+autotest.store.type=mysql
+### mysql 存储引擎
+autotest.store.mysql.driver=com.mysql.cj.jdbc.Driver
+#注意开启:rewriteBatchedStatements=true
+autotest.store.mysql.url=jdbc:mysql://{ip}:30007/autotest?useSSL=false&serverTimezone=Asia/Shanghai&autoReconnect=true&rewriteBatchedStatements=true
+autotest.store.mysql.user={user}
+autotest.store.mysql.password={password}
+```
+
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
