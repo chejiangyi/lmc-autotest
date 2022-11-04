@@ -57,5 +57,6 @@ mvn install
 1. 2022-10-17 增加时钟对齐,增加http连接池能力,固定时间心跳上报压测信息。
 2. 2022-11-01 增加用户权限,计划任务,attribute属性信息等。
 3. 2022-11-03 增加openapi及simple多语言sdk范例。
+4. 2022-11-04 增加高亮和智能提示。
 
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
