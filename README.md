@@ -66,5 +66,5 @@ mvn install
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
 
 ## 技术使用交流
-工作微信<p style="font-size: 12px;color:red">注明:全链路压测交流</p><br/>
+工作微信,注明:全链路压测交流<br/>
 <img src="/doc/weixin/weixin.jpg" width="250">
