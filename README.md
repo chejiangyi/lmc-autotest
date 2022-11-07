@@ -40,12 +40,14 @@ mvn install
 * [计划任务编写案例](/README-Job.md)
 * [样本导入案例](/README-Sample.md)
 
-
 ## 开发文档
 * [OPEN API](/README-OpenApi.md)
 * [java完整版自动录制样本流量sdk集成](/README-Code.md)
 * [C#版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.cs)
 * [java版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.java)
+
+## 实践笔记
+* [k8s滚动升级验证](https://www.cnblogs.com/chejiangyi/p/16808139.html)
 
 ## 兼容性
 建议使用chrome浏览器
@@ -62,3 +64,7 @@ mvn install
 4. 2022-11-04 增加高亮和智能提示。
 
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
+
+## 技术使用交流
+工作微信,注明:全链路压测交流
+![图片](/doc/weixin/weixin.jpg)
