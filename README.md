@@ -67,4 +67,4 @@ by [车江毅](https://www.cnblogs.com/chejiangyi/)
 
 ## 技术使用交流
 工作微信,注明:全链路压测交流
-![图片](/doc/weixin/weixin.jpg)
+<img src="/doc/weixin/weixin.jpg"  height="100" width="100">
