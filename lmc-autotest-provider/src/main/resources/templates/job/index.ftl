@@ -59,7 +59,7 @@ ${Html.s("pagetitle","定时计划列表")}
                  <#if user.isAdminOrIsUser(item.create_user_id)>
                     <a href="javascript:setRunState(${item.id},'${Html.w(item.state=="停止","运行","停止")}')" class="btn1"> ${Html.w(item.state=="停止","运行","停止")}</a>
                      <#if item.state=="停止">
-                     <a href="javascript:runOnce(${item.id})" class="btn1">立即测试</a>
+                     <a href="javascript:runOnce(${item.id})" class="btn1">测试</a>
                      </#if>
                  </#if>
                 <a href="/job/edit/?id=${item.id}" class="btn1" target="_blank">${Html.w(user.isAdminOrIsUser(item.create_user_id),"编辑","查看")}</a>
