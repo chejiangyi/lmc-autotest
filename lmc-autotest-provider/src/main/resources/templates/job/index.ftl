@@ -108,6 +108,7 @@ ${Html.s("pagetitle","定时计划列表")}
                 },
                 success: function (data) {
                     if (data.code > 0) {
+                        alert("执行完毕");
                         window.location.reload();
                     }
                     else {
