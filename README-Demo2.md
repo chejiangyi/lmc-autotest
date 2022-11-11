@@ -46,5 +46,12 @@ api.streamSql2("select * from auto_tb_sample_"+api.nowFormat("yyyy_MM_dd")+" whe
       api.writeSample(dataMap);
 })
    ```
+#### 使用远程库
+```
+/*下载自定义js脚本,请慎重使用,每次请求第三方库压力会很大,请用“公共库”替换此方案**/
+var js =api.httpGet("http://gitlab.linkmore.com/linkhub-public/shell/raw/master/autotest.js");
+eval(js);
+/*调用第三方库方法:aaa()*/
+   ```
 
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
