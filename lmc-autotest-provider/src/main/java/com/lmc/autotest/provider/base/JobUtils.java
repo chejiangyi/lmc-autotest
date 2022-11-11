@@ -24,5 +24,24 @@ public class JobUtils {
         });
     }
 
+    public static void runOnce(Integer id){
+        DbHelper.call(Config.mysqlDataSource(), c -> {
+            tb_job_model model = new tb_job_dal().get(c, id);
+            model.state="运行";
+            new tb_job_dal().edit(c,model);
+        });
+        new QuartzJob().executeNow(id);
+        DbHelper.call(Config.mysqlDataSource(), c -> {
+            tb_job_model model = new tb_job_dal().get(c, id);
+            model.state="停止";
+            new tb_job_dal().edit(c,model);
+        });
+    }
 
+    public static boolean isRunning(Integer id){
+        if(QuartzManager.isJobRunning(id+"")||QuartzJob.isRunning(id)){
+            return true;
+        }
+        return false;
+    }
 }

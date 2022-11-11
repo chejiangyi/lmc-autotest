@@ -22,10 +22,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class QuartzJob implements Job {
     //当前正在执行的任务列表
     private static ConcurrentLinkedQueue<Integer> runningJobs = new ConcurrentLinkedQueue<>();
+    public static boolean isRunning(Integer id){
+        return runningJobs.contains(id);
+    }
     public void execute(JobExecutionContext c2) throws JobExecutionException{
         Integer jobid = 0;
         val params = ConvertUtils.convert(c2.getMergedJobDataMap().get("parameterList"), Map.class);
         jobid = ConvertUtils.convert(params.get("jobid"),Integer.class);
+        executeNow(jobid);
+    }
+
+    public void executeNow(Integer jobid){
         if(runningJobs.contains(jobid))//同一个任务不会有并发
         {
             LogTool.info(QuartzJob.class,0,CoreProperties.Project,"计划任务id:"+jobid+"正在运行中,则跳过本次执行!");
@@ -46,7 +53,6 @@ public class QuartzJob implements Job {
         }finally {
             runningJobs.remove(jobid);
         }
-
     }
 
 }

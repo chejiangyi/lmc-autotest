@@ -58,6 +58,9 @@ ${Html.s("pagetitle","定时计划列表")}
             <td>
                  <#if user.isAdminOrIsUser(item.create_user_id)>
                     <a href="javascript:setRunState(${item.id},'${Html.w(item.state=="停止","运行","停止")}')" class="btn1"> ${Html.w(item.state=="停止","运行","停止")}</a>
+                     <#if item.state=="停止">
+                     <a href="javascript:runOnce(${item.id})" class="btn1">立即测试</a>
+                     </#if>
                  </#if>
                 <a href="/job/edit/?id=${item.id}" class="btn1" target="_blank">${Html.w(user.isAdminOrIsUser(item.create_user_id),"编辑","查看")}</a>
                 <a href="/log/index/?message=计划任务" class="btn1">执行日志</a>
@@ -87,6 +90,24 @@ ${Html.s("pagetitle","定时计划列表")}
                 success: function (data) {
                     if (data.code > 0) {
                         console.log(todo);
+                        window.location.reload();
+                    }
+                    else {
+                        alert(data.message);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+        function runOnce(id){
+            $.ajax({
+                url: '/job/runOnce/',
+                type: "post",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.code > 0) {
                         window.location.reload();
                     }
                     else {

@@ -40,7 +40,7 @@ public class Utils {
     }
 
     public String printJobState(Integer jobid){
-        return QuartzManager.isJobRunning(jobid+"")?"执行中":"";
+        return JobUtils.isRunning(jobid)?"执行中":"";
     }
 
     public boolean isOnline(Date heartbeatDate){

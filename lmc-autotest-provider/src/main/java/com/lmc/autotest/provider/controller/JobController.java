@@ -98,10 +98,20 @@ public class JobController extends SpringMvcController {
     @RequestMapping("/setState/")
     public ModelAndView setState(Integer id,String todo) {
         return jsonVisit((m) -> {
-            if("停止".equals(todo)&&QuartzManager.isJobRunning(id+"")){
+            if("停止".equals(todo)&&JobUtils.isRunning(id)){
                 throw new BsfException("当前计划正在执行中,请进行'强杀'终止");
             }
             JobUtils.operatorJob(id,todo);
+            return true;
+        });
+    }
+    @RequestMapping("/runOnce/")
+    public ModelAndView runOnce(Integer id) {
+        return jsonVisit((m) -> {
+            if(JobUtils.isRunning(id)){
+                throw new BsfException("当前计划正在执行中,请进行'强杀'终止");
+            }
+            JobUtils.runOnce(id);
             return true;
         });
     }
