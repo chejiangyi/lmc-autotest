@@ -35,6 +35,9 @@
                     <ul class="level2">
                         <li><a href="/sample/index">采样查询</a></li>
                     </ul>
+                    <ul class="level2">
+                        <li><a href="/publicCode/">公共方法库</a></li>
+                    </ul>
                     <#if user??&&user.isAdmin()>
                     <ul class="level2">
                         <li><a href="/user/index">用户管理</a></li>

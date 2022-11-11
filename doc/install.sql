@@ -184,6 +184,20 @@ CREATE TABLE `tb_user`  (
                             PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4  ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- Table structure for tb_config
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_config`;
+CREATE TABLE `tb_config`  (
+                              `dic_key` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL,
+                              `dic_value` text CHARACTER SET utf8mb4  NULL
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- 添加配置
+-- ----------------------------
+INSERT INTO `tb_config` VALUES ('public_code', 'function demo(){}');
+
 -- 添加管理员账户
 INSERT INTO `tb_user`( `name`, `pwd`, `create_time`,`role`,`limit_node_count`) VALUES ('admin', 'admin', now(),1,200);
 

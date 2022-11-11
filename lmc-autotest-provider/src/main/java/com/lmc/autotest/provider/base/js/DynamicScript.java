@@ -7,6 +7,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.lmc.autotest.core.Config;
 import com.lmc.autotest.service.LogTool;
+import com.lmc.autotest.service.PublicCodeUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import lombok.val;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -42,7 +43,7 @@ public class DynamicScript {
         try {
             //ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
             ScriptEngine engine =  new NashornScriptEngineFactory().getScriptEngine(new String[]{"--language=es6"});//es6 //"--global-per-engine" 性能调优
-            val script2="function dynamicRunScript(){"+script+"}dynamicRunScript()";
+            val script2="function dynamicRunScript(){"+ PublicCodeUtils.getPublic()+"\r\n"+script+"}dynamicRunScript()";
             return ((Compilable) engine).compile(script2);
         }catch (Exception e){
             throw new BsfException("动态编译脚本出错:"+scriptInfo,e);
