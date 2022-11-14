@@ -94,7 +94,7 @@ public class ReportProvider {
 
         val reportUrl=reportUrlMap;
         if(reportUrl!=null) {
-            reportUrl.put(response.getRequest().getAppName() + ":" + response.getRequest().getHttpUrl(),response.getRequest().getAttribute(),
+            reportUrl.put(response.getRequest().getAppName() + ":" + HttpUtils.getUrlPath(response.getRequest().getHttpUrl()),response.getRequest().getAttribute(),
                     response.getRequestSize(), response.getResponseSize(), response.isSuccess(), response.getTimeMs());
         }
         return reportNode;

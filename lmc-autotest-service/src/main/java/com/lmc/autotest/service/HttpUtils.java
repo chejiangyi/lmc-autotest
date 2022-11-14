@@ -165,4 +165,13 @@ public class HttpUtils {
             }
         }
     }
+
+    public static String getUrlPath(String url){
+        try {
+            val u = new URL(url);
+            return u.getPath();
+        }catch (Exception e){
+            return url;
+        }
+    }
 }

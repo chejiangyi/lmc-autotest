@@ -15,6 +15,7 @@ import com.free.bsf.core.config.CoreProperties;
 import com.free.bsf.core.util.JsonUtils;
 import com.free.bsf.core.util.LogUtils;
 import com.free.bsf.core.util.PropertyUtils;
+import com.free.bsf.core.util.StringUtils;
 import lombok.val;
 import lombok.var;
 
@@ -37,10 +38,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
- * java simple-sdk示例
+ * java simple-sdk
  * autotest 应用使用/api/samples 拦截样本上传
- * 注: simple版本不建议使用在大流量录制场景。
- * by 车江毅
+ * by chejiangyi
  */
 @Component
 public class AutoTestSimpleSampleFilter implements Filter {
@@ -68,7 +68,7 @@ public class AutoTestSimpleSampleFilter implements Filter {
             requestInfo.appName = AppName;
             requestInfo.header = mapper.writeValueAsString(getHeaders(req));
             requestInfo.body =  new String(((BufferedRequestWrapper)req).requestBody, StandardCharsets.UTF_8);
-            requestInfo.url = req.getRequestURL().toString();
+            requestInfo.url = getEntireUrl(req);
             requestInfo.createTime=new Date();
         }
 
@@ -84,6 +84,15 @@ public class AutoTestSimpleSampleFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
 
+    }
+
+    //获取完整地址
+    public String getEntireUrl(HttpServletRequest request){
+        String baseUrl = request.getRequestURL().toString();
+        if(!StringUtils.isEmpty(request.getQueryString())){
+            return baseUrl+"?"+StringUtils.nullToEmpty(request.getQueryString());
+        }
+        return baseUrl;
     }
 
     private static ConcurrentLinkedDeque<Request> requests = new ConcurrentLinkedDeque<>();

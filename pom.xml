@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.free.bsf</groupId>
 		<artifactId>free-bsf-dependencies</artifactId>
-		<version>1.2-SNAPSHOT</version>
+		<version>1.5-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
@@ -15,7 +15,7 @@
 	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<properties>
-		<bsf.version>1.2-SNAPSHOT</bsf.version>
+		<bsf.version>1.5-SNAPSHOT</bsf.version>
 	</properties>
 	<modules>
 		<module>lmc-autotest-core</module>
