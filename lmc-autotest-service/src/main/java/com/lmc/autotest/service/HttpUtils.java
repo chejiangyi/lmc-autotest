@@ -174,4 +174,9 @@ public class HttpUtils {
             return url;
         }
     }
+
+    public static void main(String[] args){
+        val path = HttpUtils.getUrlPath("http://www.baidu.com:300/baidu/?aaa=中文&b=11");
+        System.out.println(path);
+    }
 }
