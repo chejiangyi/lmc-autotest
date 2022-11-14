@@ -55,7 +55,7 @@ ${Html.s("pagetitle","节点列表")}
                 活动线程:<b class="thread">${Html.p(item.threads)!}</b>${Html.help("压测时压测任务的正在进行的活跃线程数")}<br/>IP(端口):${Html.p(item.ip)!}(${Html.p(item.port)!})${Html.help("节点所在服务器的ip(节点打开的端口)")}<br/>
             </td>
             <td>
-                <a href="/log/index/?node=${item.node}" class="del">日志</a>
+                <a href="/log/index/?node=${Html.urlEncode(item.node)}" class="del">日志</a>
                 <#if Utils.showRunState(item.heatbeat_time) == "停止">
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>

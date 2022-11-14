@@ -63,7 +63,7 @@ ${Html.s("pagetitle","任务列表")}
                 </#if>
                 <a href="javascript:copy(${item.id})" class="del">复制</a>
                 <br/>
-                <a href="/report/index/?report_name=${item.task}" class="btn1">压测报告</a>
+                <a href="/report/index/?report_name=${Html.urlEncode(item.task)}" class="btn1">压测报告</a>
                 <a href="/log/index/?taskid=${item.id}" class="btn1">日志</a>
             </td>
         </tr>

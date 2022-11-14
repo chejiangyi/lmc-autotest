@@ -63,7 +63,7 @@ ${Html.s("pagetitle","定时计划列表")}
                      </#if>
                  </#if>
                 <a href="/job/edit/?id=${item.id}" class="btn1" target="_blank">${Html.w(user.isAdminOrIsUser(item.create_user_id),"编辑","查看")}</a>
-                <a href="/log/index/?message=计划任务" class="btn1">执行日志</a>
+                <a href="/log/index/?message=${Html.urlEncode("计划任务")}" class="btn1">执行日志</a>
                 <#if item.state=="停止" && user.isAdminOrIsUser(item.create_user_id)>
                     <a href="javascript:del(${item.id})" class="del">删除</a>
                 </#if>

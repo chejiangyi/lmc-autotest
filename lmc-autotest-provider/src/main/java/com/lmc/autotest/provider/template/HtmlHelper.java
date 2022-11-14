@@ -5,6 +5,7 @@ import com.lmc.autotest.provider.base.JsonUtil;
 import lombok.val;
 
 import java.lang.reflect.Array;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -166,5 +167,11 @@ public class HtmlHelper extends SimpleTemplateProvider {
 
     public String printJson(Object o){
         return JsonUtil.prettyPrintJSON(JsonUtils.serialize(o));
+    }
+
+    public String urlEncode(Object o){
+        if(o == null)
+            return "";
+        return URLEncoder.encode(o.toString());
     }
 }
