@@ -63,6 +63,7 @@ mvn install
 3. 2022-11-03 增加openapi及simple多语言sdk范例。
 4. 2022-11-04 增加高亮和智能提示。
 5. 2022-11-11 增加公共方法库。
+6. 2022-11-14 修复get无法请求的bug问题[重要]。
 
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
 
