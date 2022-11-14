@@ -64,6 +64,10 @@
             $("#${formid}").prepend("<input type='hidden' name='pagesize' value='"+'${pagesize!}'+"'/>");
             $("#${formid}").submit();
         }
+        function pageReload(){
+            var pageindex = $('.page_list .current').text();
+            pagerfunction(pageindex);
+        }
     </script>
 </#macro>
 

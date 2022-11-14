@@ -57,9 +57,9 @@ ${Html.s("pagetitle","定时计划列表")}
             <td>${item.create_user}<br/>${Html.p(item.create_time)}</td>
             <td>
                  <#if user.isAdminOrIsUser(item.create_user_id)>
-                    <a href="javascript:setRunState(${item.id},'${Html.w(item.state=="停止","运行","停止")}')" class="btn1"> ${Html.w(item.state=="停止","运行","停止")}</a>
+                    <a href="javascript:setRunState(${item.id},'${Html.w(item.state=="停止","运行","停止")}')" title="启动或停止定时计划" class="btn1"> ${Html.w(item.state=="停止","运行","停止")}</a>
                      <#if item.state=="停止">
-                     <a href="javascript:runOnce(${item.id})" class="btn1">测试</a>
+                     <a href="javascript:runOnce(${item.id})" title="仅执行一次,测试效果" class="btn1">测试</a>
                      </#if>
                  </#if>
                 <a href="/job/edit/?id=${item.id}" class="btn1" target="_blank">${Html.w(user.isAdminOrIsUser(item.create_user_id),"编辑","查看")}</a>
@@ -100,6 +100,7 @@ ${Html.s("pagetitle","定时计划列表")}
             });
         }
         function runOnce(id){
+            setTimeout("pageReload()","2");
             $.ajax({
                 url: '/job/runOnce/',
                 type: "post",
