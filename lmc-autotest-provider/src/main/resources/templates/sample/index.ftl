@@ -60,7 +60,7 @@ ${Html.s("pagetitle","采样查询")}
             <td>${item.id}</td>
             <td>${item.app_name!}</td>
             <td>${item.fromip!}</td>
-            <td  style="word-break: break-all">${item.url!}</td>
+            <td  style="word-break: break-all" title="${item.url!}">${Html.cutstring(item.url,100)!}</td>
             <td>${item.method!}</td>
             <td style="word-break: break-all" title="${item.header?html}">${Html.cutstring(item.header,300)}</td>
             <td style="word-break: break-all" title="${item.body?html}"> ${Html.cutstring(item.body,300)}</td>

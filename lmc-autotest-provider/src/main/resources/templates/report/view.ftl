@@ -210,6 +210,7 @@ ${Html.s("pagetitle","压测报告")}
                 <button type="button" onclick="loadUrlReportChart()">刷新</button>
                     <table id="urlReport">
                         <tr>
+                            <th style="width:1%"></th>
                             <th style="width:15%">接口api</th>
                             <th style="width:3%">属性${Html.help("url 在代码实现时候使用AutoTestAttribute注解的信息")}</th>
                             <th style="width:5%">信息${Html.help("(心跳周期)每隔"+heartbeart+"秒内,[占比]:累计的压测次数/所有压测请求次数,[时间]:现在值的更新时间")}</th>
@@ -228,6 +229,7 @@ ${Html.s("pagetitle","压测报告")}
                     </table>
                     <table style="display: none" id="urltemplate">
                         <tr data="">
+                            <td style="word-break: break-all" title="序号">{index}</td>
                             <td style="word-break: break-all" title="{url}">{url}</td>
                             <td>
                                 <div class="author">作:{author}</div>
@@ -447,7 +449,9 @@ ${Html.s("pagetitle","压测报告")}
                     if (data.code < 0) {
                         alert(data.message);
                     } else {
+                        var index=0;
                         for(var r of data.data.report){
+                            index++;
                             //console.log("aaa2",r);
                             var html = $("#urltemplate").html();
 
@@ -463,6 +467,7 @@ ${Html.s("pagetitle","压测报告")}
                                 }
                                 html = html.replaceAll("{author}", '未知').replaceAll("{level}", '未知').replaceAll("{test}", '未知').replaceAll("{apiType}", '未知');
                             }
+                            html =html.replaceAll("{index}",index);
                             html = html.replaceAll("{error_per}", toNumber("error_per",errorPer( r["throughput"],r["error"])));
                             html = html.replaceAll("{sum_error_per}", toNumber("sum_error_per",errorPer( r["sum_throughput"],r["sum_error"])));
                             $("#urlReport").append(html);
