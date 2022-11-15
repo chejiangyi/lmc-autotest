@@ -62,7 +62,7 @@ public class AutoTestProvider {
                 throw new BsfException(taskid + "任务不存在");
 
             this.reportProvider = new ReportProvider();
-            this.reportProvider.init(task_model,this.tranId,this.userid);
+            this.reportProvider.init(task_model,this.tranId,this.userid,this.params);
             return this;
         } catch (Exception e) {
             LogTool.error(this.getClass(), taskid,Config.appName(), "初始化自动化测试失败", e);

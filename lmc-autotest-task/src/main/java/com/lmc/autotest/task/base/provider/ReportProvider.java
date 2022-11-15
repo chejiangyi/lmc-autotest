@@ -23,6 +23,7 @@ import lombok.var;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class ReportProvider {
     tb_report_model report_model = null;
     volatile ReportNodeInfo reportNodeInfo = null;
     volatile ReportUrlMap reportUrlMap = null;
-    public void init(tb_task_model task_model,String tranId,Integer userid){
+    public void init(tb_task_model task_model, String tranId, Integer userid, Map<String,Object> params){
             report_model = DbHelper.get(Config.mysqlDataSource(), (c) -> {
                 val taskTemp = new tb_task_dal().getWithLock(c,task_model.id);
                 //lock tb_task data
@@ -49,6 +50,10 @@ public class ReportProvider {
                     ni.memory=n.local_memory;
                     ni.threads=task_model.run_threads_count;
                     nodeInfos.add(ni);
+                }
+                String remark="";
+                if(params!=null){
+                    remark+="任务参数:"+JsonUtils.serialize(params);
                 }
                 var report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);
                 if(report==null) {
@@ -70,6 +75,7 @@ public class ReportProvider {
                     model.setFilter_table_lines(0);
                     model.create_user=user.name;
                     model.create_user_id=user.id;
+                    model.remark=remark;
                     new tb_report_dal().tryAdd(c,model);
                 }
                 report = new tb_report_dal().getByTaskIdWithLock(c,task_model.id,tranId);

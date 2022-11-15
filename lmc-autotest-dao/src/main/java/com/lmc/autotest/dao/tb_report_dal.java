@@ -51,10 +51,12 @@ public class tb_report_dal extends tb_report_base_dal {
                 /**用户*/
                 model.create_user,
                 /**用户id*/
-                model.create_user_id
+                model.create_user_id,
+                /**备注信息*/
+                model.remark
         };
-        int rev = conn.executeSql("insert IGNORE into tb_report(report_name,tran_id,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines,create_user,create_user_id)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert IGNORE into tb_report(report_name,tran_id,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines,create_user,create_user_id,remark)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
     public List<tb_report_model> searchPage(DbConn db,String report_name, String task_name, String create_time_from,String create_time_to, Integer pageindex, Integer pagesize, Ref<Integer> totalSize){

@@ -18,7 +18,7 @@ import com.lmc.autotest.dao.model.auto.*;
  * tb_report 表自动dal映射,不要手工修改
  *
  * @author 车江毅
- * @since 2022-10-21 11:42:26
+ * @since 2022-11-15 18:14:44
  * 自动生成: https://gitee.com/makejava/EasyCode/wikis/
  */
 public class tb_report_base_dal {
@@ -58,10 +58,12 @@ public class tb_report_base_dal {
                 /**用户*/
                 model.create_user,
                 /**用户id*/
-                model.create_user_id
+                model.create_user_id,
+                /**备注信息*/
+                model.remark
         };
-        int rev = conn.executeSql("insert into tb_report(report_name,tran_id,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines,create_user,create_user_id)" +
-                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
+        int rev = conn.executeSql("insert into tb_report(report_name,tran_id,task_id,nodes,nodes_info,filter_table,filter_store,begin_time,end_time,create_time,report_node_table,report_url_table,task_name,filter_table_lines,filter_table_error_lines,create_user,create_user_id,remark)" +
+                "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", par);
         return rev == 1;
     }
 
@@ -101,9 +103,11 @@ public class tb_report_base_dal {
                 model.create_user,
                 /**用户id*/
                 model.create_user_id,
+                /**备注信息*/
+                model.remark,
                 model.id
         };
-        int rev = conn.executeSql("update tb_report set report_name=?,tran_id=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=?,task_name=?,filter_table_lines=?,filter_table_error_lines=?,create_user=?,create_user_id=? where id=?", par);
+        int rev = conn.executeSql("update tb_report set report_name=?,tran_id=?,task_id=?,nodes=?,nodes_info=?,filter_table=?,filter_store=?,begin_time=?,end_time=?,create_time=?,report_node_table=?,report_url_table=?,task_name=?,filter_table_lines=?,filter_table_error_lines=?,create_user=?,create_user_id=?,remark=? where id=?", par);
         return rev == 1;
 
     }
@@ -212,6 +216,10 @@ public class tb_report_base_dal {
         /**用户id*/
         if (dr.containsKey("create_user_id")) {
             o.create_user_id = ConvertUtils.convert(dr.get("create_user_id"), Integer.class);
+        }
+        /**备注信息*/
+        if (dr.containsKey("remark")) {
+            o.remark = ConvertUtils.convert(dr.get("remark"), String.class);
         }
         return o;
     }

@@ -47,26 +47,27 @@ CREATE TABLE `tb_node`  (
 DROP TABLE IF EXISTS `tb_report`;
 CREATE TABLE `tb_report`  (
                               `id` int(0) NOT NULL AUTO_INCREMENT,
-                              `report_name` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL,
-                              `tran_id` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL COMMENT '事务id',
+                              `report_name` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
+                              `tran_id` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '事务id',
                               `task_id` int(0) NULL DEFAULT NULL,
-                              `nodes` varchar(2048) CHARACTER SET utf8mb4  NULL DEFAULT NULL,
-                              `nodes_info` text CHARACTER SET utf8mb4  NULL COMMENT '节点配置信息',
-                              `filter_table` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL,
-                              `filter_store` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL,
+                              `nodes` varchar(2048) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
+                              `nodes_info` text CHARACTER SET utf8mb4 NULL COMMENT '节点配置信息',
+                              `filter_table` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
+                              `filter_store` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
                               `begin_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
                               `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
                               `create_time` datetime(0) NULL DEFAULT NULL,
-                              `report_node_table` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL COMMENT 'report_node 表',
-                              `report_url_table` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL COMMENT 'report_url表',
-                              `task_name` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL,
+                              `report_node_table` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT 'report_node 表',
+                              `report_url_table` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT 'report_url表',
+                              `task_name` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL,
                               `filter_table_lines` int(0) NULL DEFAULT NULL,
                               `filter_table_error_lines` int(0) NULL DEFAULT NULL,
-                              `create_user` varchar(255) CHARACTER SET utf8mb4  NULL DEFAULT NULL COMMENT '用户',
+                              `create_user` varchar(255) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '用户',
                               `create_user_id` int(0) NULL DEFAULT NULL COMMENT '用户id',
+                              `remark` text CHARACTER SET utf8mb4 NULL COMMENT '备注信息',
                               PRIMARY KEY (`id`) USING BTREE,
                               UNIQUE INDEX `事务id`(`tran_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 280 CHARACTER SET = utf8mb4  ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 292 CHARACTER SET = utf8mb4  ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for tb_report_node_example

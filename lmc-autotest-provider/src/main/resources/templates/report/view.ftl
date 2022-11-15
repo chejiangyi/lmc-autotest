@@ -74,6 +74,10 @@ ${Html.s("pagetitle","压测报告")}
                 <p><a href="/task/edit?id=${model.task_id}">${model.task_name}</a></p>
             </li>
             <li>
+                <label>备注</label>
+                <p>${model.remark!}</p>
+            </li>
+            <li>
                 <label>参与节点</label>
                 <p>${model.nodes}</p>
                 <table>
@@ -199,6 +203,7 @@ ${Html.s("pagetitle","压测报告")}
                 <input datatype="attribute" id="level" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="level">重要级别</p>
                 <input datatype="attribute" id="test" type="checkbox" onchange="loadUrlReportChart()"/><p class="test">是否压测</p>
                 <input datatype="attribute" id="apiType" type="checkbox" onchange="loadUrlReportChart()"/><p class="apiType">接口类别</p>
+                <input datatype="attribute" id="env" type="checkbox" onchange="loadUrlReportChart()"/><p class="env">环境</p>
                 统计:
                 <input id="current" type="checkbox" checked="checked" onchange="loadUrlReportChart()"/><p class="current">现在值</p>
                 <input id="avg" type="checkbox" onchange="loadUrlReportChart()"/><p class="avg">平均值</p>
@@ -236,6 +241,7 @@ ${Html.s("pagetitle","压测报告")}
                                 <div class="level">级:{level}</div>
                                 <div class="test">测:{test}</div>
                                 <div class="apiType">类:{apiType}</div>
+                                <div class="env">环:{env}</div>
                             </td>
                             <td><div class="zhanbi">占:{sum_visit_num_per}</div>
                                 <div class="createtime">时:{create_time}</div>
@@ -465,7 +471,7 @@ ${Html.s("pagetitle","压测报告")}
                                 for (let key of Object.keys(attribute)) {
                                     html = html.replaceAll("{" + key + "}", attribute[key]);
                                 }
-                                html = html.replaceAll("{author}", '未知').replaceAll("{level}", '未知').replaceAll("{test}", '未知').replaceAll("{apiType}", '未知');
+                                html = html.replaceAll("{author}", '未知').replaceAll("{level}", '未知').replaceAll("{test}", '未知').replaceAll("{apiType}", '未知').replaceAll("{env}", '未知');
                             }
                             html =html.replaceAll("{index}",index);
                             html = html.replaceAll("{error_per}", toNumber("error_per",errorPer( r["throughput"],r["error"])));
@@ -507,6 +513,9 @@ ${Html.s("pagetitle","压测报告")}
                         })
                         $("#urlReport .test").each(function (){
                             $(this).attr("title","是否压测:无,需要,跳过");if(!$("#test").is(':checked')){$(this).hide();}
+                        })
+                        $("#urlReport .env").each(function (){
+                            $(this).attr("title","环境变量:使用bsf.env");if(!$("#env").is(':checked')){$(this).hide();}
                         })
                         $('#urlReport tr[data]').show();
                     }
