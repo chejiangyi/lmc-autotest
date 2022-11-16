@@ -48,12 +48,13 @@ mvn install
 * [java版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.java)
 
 ## 实践笔记
-* [k8s滚动升级验证](https://www.cnblogs.com/chejiangyi/p/16808139.html)
+* [自动化QPS核心和主要接口jenkins触发性能压测](/actual/README-5.md)
 * [自动化QPS核心和主要接口性能url压测](/actual/README-1.md)
 * [自动化QPS不同级别接口压测](/actual/README-2.md)
 * [自动化QPS不同开发人员接口压测](/actual/README-3.md)
 * [自动化QPS全链路接口压测](/actual/README-4.md)
 * 自动化QPS秒杀接口压测
+* [k8s滚动升级验证](https://www.cnblogs.com/chejiangyi/p/16808139.html)
   
 
 ## 兼容性
