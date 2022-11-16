@@ -43,12 +43,18 @@ mvn install
 
 ## 开发文档
 * [OPEN API](/README-OpenApi.md)
-* [java完整版自动录制样本流量sdk集成](/README-Code.md)
+* [java完整版自动录制样本流量sdk集成](/actual/README-1.md)
 * [C#版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.cs)
 * [java版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.java)
 
 ## 实践笔记
 * [k8s滚动升级验证](https://www.cnblogs.com/chejiangyi/p/16808139.html)
+* [自动化QPS核心和主要接口性能url压测](/actual/README-1.md)
+* [自动化QPS不同级别接口压测](/actual/README-2.md)
+* [自动化QPS不同开发人员接口压测](/actual/README-3.md)
+* [自动化QPS全链路接口压测](/actual/README-4.md)
+* 自动化QPS秒杀接口压测
+  
 
 ## 兼容性
 建议使用chrome浏览器
