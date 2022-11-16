@@ -48,6 +48,7 @@ mvn install
 * [java版本流量录制simple sdk](/doc/sdk/simpleSampleFilter.java)
 
 ## 实践笔记
+* [小白快速上手压测](/actual/README-6.md)
 * [自动化QPS核心和主要接口jenkins触发性能压测](/actual/README-5.md)
 * [自动化QPS核心和主要接口性能url压测](/actual/README-1.md)
 * [自动化QPS不同级别接口压测](/actual/README-2.md)
