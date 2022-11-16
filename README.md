@@ -39,6 +39,7 @@ mvn install
 * [任务编写案例2](/README-Demo2.md)
 * [计划任务编写案例](/README-Job.md)
 * [样本导入案例](/README-Sample.md)
+* [公共方法库案例](/README-PublicCode.md)
 
 ## 开发文档
 * [OPEN API](/README-OpenApi.md)
