@@ -27,8 +27,9 @@ public class DynamicScript {
     public static Object run(String scriptInfo, String script, LinkedHashMap requestJson){
         val api =  new ApiScript( scriptInfo,requestJson);
         try {
-            val compile= cache.get(DigestUtils.md5Hex(script.getBytes()), () -> {
-                return compile(scriptInfo,script);
+            val script2= PublicCodeUtils.getPublic()+"\r\n"+script;
+            val compile= cache.get(DigestUtils.md5Hex(script2.getBytes()), () -> {
+                return compile(scriptInfo,script2);
             });
             val bind = new SimpleBindings();
             bind.put("api",api);
@@ -43,7 +44,7 @@ public class DynamicScript {
         try {
             //ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
             ScriptEngine engine =  new NashornScriptEngineFactory().getScriptEngine(new String[]{"--language=es6"});//es6 //"--global-per-engine" 性能调优
-            val script2="function dynamicRunScript(){"+ PublicCodeUtils.getPublic()+"\r\n"+script+"}dynamicRunScript()";
+            val script2="function dynamicRunScript(){"+script+"}dynamicRunScript()";
             return ((Compilable) engine).compile(script2);
         }catch (Exception e){
             throw new BsfException("动态编译脚本出错:"+scriptInfo,e);
