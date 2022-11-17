@@ -56,6 +56,7 @@ mvn install
 * [自动化QPS不同开发人员接口压测](/actual/README-3.md)
 * [自动化QPS全链路接口压测](/actual/README-4.md)
 * 自动化QPS秒杀接口压测
+* 自动化TPS秒杀场景压测
 * [k8s滚动升级验证](https://www.cnblogs.com/chejiangyi/p/16808139.html)
   
 
