@@ -2,6 +2,7 @@
  安装分为docker版本安装和普通虚拟机安装两种模式。
 
 #### release包下载
+注意：建议在mysql8.0,jdk8环境运行。
 * [sql初始化脚本](/doc/install.sql )
 * [管理端provider包](https://gitee.com/chejiangyi/lmc-autotest/releases/ )
 * [节点端task包](https://gitee.com/chejiangyi/lmc-autotest/releases/ )

@@ -1,5 +1,5 @@
 # lmc-autotest BSF全链路压测工具
- 基于<a href='https://gitee.com/chejiangyi/free-bsf-all/tree/1.0-SNAPSHOT/'>BSF基础框架</a>构建全链路压测框架,从框架层面进行[流量录制](https://gitee.com/chejiangyi/free-bsf-all/tree/1.2-SNAPSHOT/free-bsf-autotest ),从工具层面进行流量回放，进行性能压测，自动输出压测报告，自动进行全链路功能验收，从而提升测试效能，指导网站性能优化。
+ 基于<a href='https://gitee.com/chejiangyi/free-bsf-all/tree/1.0-SNAPSHOT/'>BSF基础框架</a>构建全链路压测框架,从框架层面进行[流量录制](https://gitee.com/chejiangyi/free-bsf-all/tree/1.2-SNAPSHOT/free-bsf-autotest )或浏览器自定义录制,从工具层面进行流量回放，进行性能压测，自动输出压测报告，自动进行全链路功能验收，从而提升测试效能，指导网站性能优化。
 
 ![Image text](/doc/全链路压测设计图.jpg)
 ## 项目结构
@@ -18,6 +18,8 @@ lmc-autotest
 
 ## 项目编译
 ```
+#外网开发人员使用, 注意bsf-core.jar和bsf-autotest.jar包,可能出现包引用错误
+#请至gitee release中下载相应jar包。
 cd lmc-autotest
 mvn install
 ```
@@ -78,6 +80,9 @@ mvn install
 
 by [车江毅](https://www.cnblogs.com/chejiangyi/)
 
+
 ## 使用交流
+[全链路压测效能10倍提升的压测工具实践笔记](https://www.cnblogs.com/chejiangyi/p/16900586.html)
+
 工作微信,注明:全链路压测交流<br/>
 <img src="/doc/weixin/weixin.jpg" width="250">
